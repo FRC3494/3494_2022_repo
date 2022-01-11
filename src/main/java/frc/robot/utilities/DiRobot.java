@@ -47,6 +47,8 @@ public abstract class DiRobot extends TimedRobot {
         if (currentOpMode != null) disabledInit();
 
         //Get Auto OpMode from ShuffleBoard
+        
+        currentOpMode.Container.BindInstance(currentOpMode);
 
         if (currentOpMode != null) {
             try {
@@ -72,6 +74,7 @@ public abstract class DiRobot extends TimedRobot {
 
         currentOpMode = new Teleop();
 
+        currentOpMode.Container.BindInstance(currentOpMode);
         currentOpMode.Container.BindInstance(alliance);
         
         try {

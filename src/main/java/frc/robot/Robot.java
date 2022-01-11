@@ -21,15 +21,14 @@ import frc.robot.utilities.DiRobot;
 import frc.robot.sensors.Linebreaker;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Shooter;
 
 public class Robot extends DiRobot {
     @Override
     public void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
         //Container.BindInstance(new Compressor(0));
-        Container.BindInstance(new XboxController(0)).WithId("primaryXbox");
-        Container.BindInstance(new XboxController(1)).WithId("secondaryXbox");
-
         Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.leftMaster)).WithId("drivetrainLeftMaster");
         Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.leftSlave)).WithId("drivetrainLeftSlave");
         Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.rightMaster)).WithId("drivetrainRightMaster");
@@ -58,7 +57,9 @@ public class Robot extends DiRobot {
         Container.BindInstance(new Servo(RobotConfig.Climber.climberReleaseServo)).WithId("climberReleaseServo");
         
         Container.Bind(Drivetrain.class);
+        Container.Bind(Shooter.class);
         Container.Bind(Magazine.class);
+        Container.Bind(Intake.class);
         Container.Bind(Climber.class);
     }
 }

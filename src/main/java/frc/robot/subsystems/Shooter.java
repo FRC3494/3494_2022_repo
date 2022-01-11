@@ -39,4 +39,12 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable 
     public double GetRPM() {
         return shooterMotorSensors.getIntegratedSensorVelocity() * (600 / 2048);
     }
+
+    public void EnableAimBot() {
+        
+    }
+
+    public void DisableAimBot() {
+        
+    }
 }
