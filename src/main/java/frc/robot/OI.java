@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
-import frc.robot.utilities.di.DiInterfaces.ITickable;
 
 public class OI implements IInitializable, IDisposable {
     @Inject(id = "primaryXbox")
@@ -49,5 +48,9 @@ public class OI implements IInitializable, IDisposable {
 
     public double GetShooterPower() {
         return secondaryXbox.getRightTriggerAxis();
+    }
+
+    public boolean StartSinging() {
+        return secondaryXbox.getXButton(); // Disable this before comp lol
     }
 }

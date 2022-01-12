@@ -19,7 +19,7 @@ public class IntakeTask extends AutoTask {
 
     @Override
     public void Begin() {
-        intake.Intake(power);
+        intake.Run(power);
         magazine.Run(power);
     }
 

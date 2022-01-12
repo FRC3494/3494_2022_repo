@@ -36,6 +36,9 @@ public class Drive extends CommandBase implements IInitializable, ITickable, IDi
     @Inject
     private Shooter shooter;
 
+    public boolean singing = false;
+    public boolean startedSinging = false;
+
     @Override
     public void Initialize() {
         addRequirements(drivetrain);
@@ -47,23 +50,33 @@ public class Drive extends CommandBase implements IInitializable, ITickable, IDi
 
     @Override
     public void Tick() {
-        drivetrain.TankDrive(PowerCurve(oi.GetLeftDriveSpeed()), PowerCurve(oi.GetRightDriveSpeed()));
+        if (singing) {
+            if (!startedSinging) {
+                drivetrain.SingTheTheme();
+                startedSinging = true;
+            }
+            return;
+        }
 
-        intake.Intake(oi.GetIntakeSpeed());
+        drivetrain.Tank(PowerCurve(oi.GetLeftDriveSpeed()), PowerCurve(oi.GetRightDriveSpeed()));
+
+        intake.Run(oi.GetIntakeSpeed());
         magazine.Run((oi.GetNeedOuttake()) ? RobotConfig.Magazine.outtakeSpeed : ((oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.intakeSpeed : RobotConfig.Magazine.idleSpeed));
 
         if (oi.GetClimberRelease()) climber.ReleaseClimber();
-        climber.Climb(oi.GetClimberPower());
+        climber.Run(oi.GetClimberPower());
 
         shooter.Shoot(oi.GetShooterPower() * RobotConfig.Shooter.baseTargetRPM);
+
+        if (oi.StartSinging()) singing = true;
     }
 
     @Override
     public void Dispose() {
-        drivetrain.TankDrive(0, 0);
-        intake.Intake(0);
+        drivetrain.Tank(0, 0);
+        intake.Run(0);
         magazine.RunRaw(0);
-        climber.Climb(0);
+        climber.Run(0);
         shooter.Shoot(0);
     }
 

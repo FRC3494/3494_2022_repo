@@ -64,14 +64,14 @@ public class MovementTask extends AutoTask {
             computedSpeed = (speed * (1 - ((float)(now - rampDownTime)/(float)(stopTime - rampDownTime))));
         }
         
-        drivetrain.TankDrive(left * computedSpeed, right * computedSpeed);
+        drivetrain.Tank(left * computedSpeed, right * computedSpeed);
 
         return false;
     }
 
     @Override
     public void Stop() {
-        drivetrain.TankDrive(0, 0);
+        drivetrain.Tank(0, 0);
     }
 
     @Override

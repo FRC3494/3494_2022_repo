@@ -27,7 +27,7 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
         frontIntakeInnerMotor.follow(frontIntakeMotor);
     }
 
-    public void Intake(double power) {
+    public void Run(double power) {
         // add code for actuation when intake is requested
 
         frontIntakeMotor.set(ControlMode.PercentOutput, power);
@@ -35,6 +35,6 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
 
     @Override
     public void Dispose() {
-        Intake(0);
+        Run(0);
     }
 }

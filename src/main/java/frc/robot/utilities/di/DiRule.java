@@ -69,7 +69,8 @@ public class DiRule {
                 break;
             case Resolve:
                 if (instanceClass != null) return container.Resolve(instanceClass, context);
-
+            default:
+                break;
         }
         throw new DiExceptions.IncompleteBindingException();
     }

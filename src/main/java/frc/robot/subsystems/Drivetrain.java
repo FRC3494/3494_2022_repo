@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 
 import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiContainer.Inject;
@@ -20,8 +21,16 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
     @Inject(id = "drivetrainRightSlave")
     TalonFX rightSlave;
 
+    Orchestra orchestra = new Orchestra();
+
     @Override
     public void Initialize() {
+        orchestra.addInstrument(leftMaster);
+        orchestra.addInstrument(leftSlave);
+        
+        orchestra.addInstrument(rightMaster);
+        orchestra.addInstrument(rightSlave);
+
         leftMaster.setNeutralMode(NeutralMode.Brake);
         leftSlave.setNeutralMode(NeutralMode.Brake);
         rightMaster.setNeutralMode(NeutralMode.Brake);
@@ -34,13 +43,23 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
         rightSlave.follow(rightMaster);
     }
 
-    public void TankDrive(double leftPower, double rightPower) {
+    public void Tank(double leftPower, double rightPower) {
         leftMaster.set(ControlMode.PercentOutput, leftPower);
         rightMaster.set(ControlMode.PercentOutput, rightPower);
     }
 
+    public void SingTheTheme() {
+        orchestra.loadMusic("mbk.chrp");
+
+        orchestra.play();
+    }
+
+    public void PauseTheTheme() {
+        orchestra.pause();
+    }
+
     @Override
     public void Dispose() {
-        TankDrive(0, 0);
+        Tank(0, 0);
     }
 }

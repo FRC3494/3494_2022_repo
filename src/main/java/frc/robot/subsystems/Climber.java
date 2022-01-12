@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -34,7 +33,7 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
         climberReleaseServo.set(RobotConfig.Climber.holdingPosition);
     }
 
-    public void Climb(double power) {
+    public void Run(double power) {
         leftClimbMotor.set((hasReleased) ? power : 0);
     }
 
@@ -46,6 +45,6 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
 
     @Override
     public void Dispose() {
-        Climb(0);
+        Run(0);
     }
 }
