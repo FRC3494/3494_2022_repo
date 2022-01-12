@@ -16,21 +16,23 @@ public abstract class AutoTask {
             this.startTime = startTime;
             this.currentTime = currentTime;
             this.endTime = endTime;
-            hasEstimate = true;
+            this.hasEstimate = true;
         }
         public ETA() {
             this.currentTime = 0;
             this.endTime = 0;
-            hasEstimate = false;
+            this.hasEstimate = false;
         }
 
         public String formatETA() {
-            if (!hasEstimate) return "Unknown";
+            if (!this.hasEstimate) {
+                return "Unknown";
+            }
 
-            double totalTime = endTime - startTime;
-            double percent = -((endTime - currentTime) - totalTime) / totalTime;
+            double totalTime = this.endTime - this.startTime;
+            double percent = -((this.endTime - this.currentTime) - totalTime) / totalTime;
 
-            return (currentTime - startTime) + "/" + totalTime + " (" + percent + "%)";
+            return (this.currentTime - this.startTime) + "/" + totalTime + " (" + percent + "%)";
         }
     }
 }

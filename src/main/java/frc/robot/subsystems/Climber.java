@@ -20,7 +20,7 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
     @Inject(id = "climberReleaseServo")
     Servo climberReleaseServo;
 
-    boolean hasReleased = false;
+    private boolean m_hasReleased = false;
 
     @Override
     public void initialize() {
@@ -35,13 +35,13 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
     }
 
     public void Climb(double power) {
-        this.leftClimbMotor.set((hasReleased) ? power : 0);
+        this.leftClimbMotor.set((this.m_hasReleased) ? power : 0);
     }
 
     public void ReleaseClimber() {
         this.climberReleaseServo.set(RobotConfig.Climber.RELEASE_POSITION);
 
-        hasReleased = true;
+        this.m_hasReleased = true;
     }
 
     @Override

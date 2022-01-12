@@ -83,18 +83,18 @@ public abstract class DiRobot extends TimedRobot {
         this.currentOpMode.m_container.bindInstance(alliance);
         
         try {
-            currentOpMode.install();
+            this.currentOpMode.install();
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             System.out.println("Failed to start the autonomous OpMode.");
             e.printStackTrace();
         }
 
-        currentOpMode.m_container.initialize();
+        this.currentOpMode.m_container.initialize();
     }
     @Override
     public void teleopPeriodic() {
         if (currentOpMode != null) {
-            currentOpMode.m_container.tick();
+            this.currentOpMode.m_container.tick();
         }
     }
 }

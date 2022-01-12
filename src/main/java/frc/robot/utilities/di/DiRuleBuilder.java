@@ -20,30 +20,34 @@ public class DiRuleBuilder {
     }
 
     // User Facing
-    public DiRuleBuilder bind(Class<?> ...inClasses) {
-        if (m_bindDone) throw new DiExceptions.RuleBuilderException();
+    public DiRuleBuilder bind(Class<?>... inClasses) {
+        if (this.m_bindDone) {
+            throw (new DiExceptions.RuleBuilderException());
+        }
 
-        for (Class<?> inClass: inClasses) {
+        for (Class<?> inClass : inClasses) {
             DiRule rule = new DiRule(M_CONTAINER, inClass);
 
             this.M_TARGET_RULES.add(rule);
             this.M_CONTAINER.rules.add(rule);
         }
 
-        return this;
+        return (this);
     }
 
     public DiRuleBuilder bindInstance(Object instance) {
         this.bindInstances(instance);
 
-        return this;
+        return (this);
     }
 
     public DiRuleBuilder bindInstances(Object ...instances) {
-        if (m_bindDone || m_resolutionSet) throw new DiExceptions.RuleBuilderException();
+        if (this.m_bindDone || this.m_resolutionSet) {
+            throw (new DiExceptions.RuleBuilderException());
+        }
 
-        m_bindDone = true;
-        m_resolutionSet = true;
+        this.m_bindDone = true;
+        this.m_resolutionSet = true;
 
         for (Object instance : instances) {
             UUID uuid = UUID.randomUUID();
@@ -85,14 +89,14 @@ public class DiRuleBuilder {
     }
 
     public DiRuleBuilder asSingle() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        if (m_resolutionSet) {
-            throw new DiExceptions.RuleBuilderException();
+        if (this.m_resolutionSet) {
+            throw (new DiExceptions.RuleBuilderException());
         }
 
-        m_resolutionSet = true;
+        this.m_resolutionSet = true;
 
-        if (m_target != null) {
-            fromInstance(M_CONTAINER.instantiate(m_target));
+        if (this.m_target != null) {
+            this.fromInstance(M_CONTAINER.instantiate(m_target));
         } else {
             for (DiRule rule : this.M_TARGET_RULES) {
                 Object instance = this.M_CONTAINER.instantiate(rule.m_targetClass);
@@ -108,11 +112,11 @@ public class DiRuleBuilder {
     }
 
     public DiRuleBuilder asTransient() {
-        if (m_resolutionSet) {
-            throw new DiExceptions.RuleBuilderException();
+        if (this.m_resolutionSet) {
+            throw (new DiExceptions.RuleBuilderException());
         }
 
-        m_resolutionSet = true;
+        this.m_resolutionSet = true;
 
         if (this.m_target != null) {
             for (DiRule rule : this.M_TARGET_RULES) {
@@ -134,17 +138,17 @@ public class DiRuleBuilder {
 
     public DiRuleBuilder to(Class<?> inClass) {
         if (this.m_target != null) {
-            throw new DiExceptions.RuleBuilderException();
+            throw (new DiExceptions.RuleBuilderException());
         }
 
         this.m_target = inClass;
 
-        return this;
+        return (this);
     }
 
     public DiRuleBuilder fromInstance(Object instance) {
         if (this.m_resolutionSet) {
-            throw new DiExceptions.RuleBuilderException();
+            throw (new DiExceptions.RuleBuilderException());
         }
 
         this.m_resolutionSet = true;
