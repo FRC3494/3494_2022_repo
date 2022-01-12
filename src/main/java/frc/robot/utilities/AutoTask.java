@@ -1,10 +1,10 @@
 package frc.robot.utilities;
 
 public abstract class AutoTask {
-    public abstract void Begin();
-    public abstract boolean Execute();
-    public abstract void Stop();
-    public abstract ETA GetETA();
+    public abstract void begin();
+    public abstract boolean execute();
+    public abstract void stop();
+    public abstract ETA getETA();
 
     public class ETA {
         public double startTime;
@@ -24,7 +24,7 @@ public abstract class AutoTask {
             hasEstimate = false;
         }
 
-        public String FormatETA() {
+        public String formatETA() {
             if (!hasEstimate) return "Unknown";
 
             double totalTime = endTime - startTime;

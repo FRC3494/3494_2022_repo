@@ -6,75 +6,92 @@ import java.util.List;
 import java.util.UUID;
 
 public class DiRule {
-    protected DiContainer container;
-    protected RetrievalMode retrievalMode = RetrievalMode.None;
-    protected Class<?> targetClass;
-    protected Class<?> instanceClass;
-    protected UUID targetObject;
-    protected List<DiCondition> conditions = new ArrayList<>();
+    protected enum RetrievalMode {
+        None, Resolve, Return, Create
+    }
+
+    protected DiContainer m_container;
+    protected RetrievalMode m_retrievalMode = RetrievalMode.None;
+    protected Class<?> m_targetClass;
+    protected Class<?> m_instanceClass;
+    protected UUID m_targetObject;
+    protected List<DiCondition> m_conditions = new ArrayList<>();
 
     protected DiRule(DiContainer containerIn, Class<?> targetClassIn) {
-        container = containerIn;
-        targetClass = targetClassIn;
+        this.m_container = containerIn;
+        this.m_targetClass = targetClassIn;
     }
 
     protected void setupCreate(Class<?> instanceClassIn) {
-        instanceClass = instanceClassIn;
-        retrievalMode = RetrievalMode.Create;
+        this.m_instanceClass = instanceClassIn;
+        this.m_retrievalMode = RetrievalMode.Create;
     }
 
     protected void setupResolve(Class<?> instanceClassIn) {
-        if (targetClass == instanceClass) throw new DiExceptions.IncompleteBindingException();
+        if (this.m_targetClass == this.m_instanceClass) {
+            throw new DiExceptions.IncompleteBindingException();
+        }
 
-        instanceClass = instanceClassIn;
-        retrievalMode = RetrievalMode.Resolve;
+        this.m_instanceClass = instanceClassIn;
+        this.m_retrievalMode = RetrievalMode.Resolve;
     }
 
     protected void setupReturn(UUID targetObjectIn) {
-        targetObject = targetObjectIn;
-        retrievalMode = RetrievalMode.Return;
+        this.m_targetObject = targetObjectIn;
+        this.m_retrievalMode = RetrievalMode.Return;
     }
 
     protected boolean ruleApplies(DiContext context) {
-        boolean canAssignContextToTarget = context.memberClass.isAssignableFrom(targetClass);
-        boolean canAssignTargetToContext = targetClass.isAssignableFrom(context.memberClass);
+        boolean canAssignContextToTarget = context.memberClass.isAssignableFrom(this.m_targetClass);
+        boolean canAssignTargetToContext = this.m_targetClass.isAssignableFrom(context.memberClass);
 
-        if (!(canAssignContextToTarget || canAssignTargetToContext)) return false;
+        if (!(canAssignContextToTarget || canAssignTargetToContext)) {
+            return (false);
+        }
 
-        if (conditions.size() < 1) return true;
+        if (this.m_conditions.size() < 1) 
+        {
+            return (true);
+        }
 
         boolean applies = true;
 
-        for (DiCondition condition: conditions) {
+        for (DiCondition condition : m_conditions) {
             if (!condition.check(context)) {
                 applies = false;
                 break;
             }
         }
 
-        return applies;
+        return (applies);
     }
 
     protected Object getObjectValue(DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        switch (retrievalMode) {
+        switch (this.m_retrievalMode) {
             case Create:
-                if (instanceClass != null) return container.Instantiate(instanceClass, context);
+                if (this.m_instanceClass != null) 
+                {
+                    return (this.m_container.instantiate(this.m_instanceClass, context));
+                }
+
                 break;
             case Return:
-                if (targetObject != null) {
-                    Object instance = container.objectPool.get(targetObject);
+                if (m_targetObject != null) {
+                    Object instance = this.m_container.objectPool.get(this.m_targetObject);
 
-                    if (instance != null) return instance;
+                    if (instance != null) {
+                        return (instance);
+                    }
                 }
                 break;
             case Resolve:
-                if (instanceClass != null) return container.Resolve(instanceClass, context);
-
+                if (m_instanceClass != null) {
+                    return (this.m_container.resolve(m_instanceClass, context));
+                }
+            case None:
+                break;
         }
-        throw new DiExceptions.IncompleteBindingException();
-    }
 
-    protected enum RetrievalMode {
-        None, Resolve, Return, Create
+        throw (new DiExceptions.IncompleteBindingException());
     }
 }

@@ -9,85 +9,92 @@ import frc.robot.opmodes.teleop.Teleop;
 import frc.robot.utilities.di.DiContainer;
 
 public abstract class DiRobot extends TimedRobot {
-    public DiContainer Container = new DiContainer();
+    public DiContainer container = new DiContainer();
 
     public DiOpMode currentOpMode = null;
 
-    public abstract void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException;
+    public abstract void install() throws IllegalAccessException, InstantiationException, InvocationTargetException;
 
     @Override
     public void robotInit() {
         try {
-            Install();
+            install();
         } catch (Exception e) {
             System.out.println("Failed to start main robot.");
             e.printStackTrace();
         }
 
-        Container.Initialize();
+        this.container.initialize();
     }
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
 
-        Container.Tick();
+        this.container.tick();
     }
 
     @Override
     public void disabledInit() {
-        if (currentOpMode != null) {
-            currentOpMode.Container.Dispose();
-
-            currentOpMode = null;
+        if (this.currentOpMode != null) {
+            this.currentOpMode.m_container.dispose();
+            this.currentOpMode = null;
         }
     }
 
     @Override
     public void autonomousInit() {
-        if (currentOpMode != null) disabledInit();
+        if (this.currentOpMode != null) { 
+            disabledInit();
+        }
 
         //Get Auto OpMode from ShuffleBoard
         
-        currentOpMode.Container.BindInstance(currentOpMode);
+        this.currentOpMode.m_container.bindInstance(this.currentOpMode);
 
         if (currentOpMode != null) {
             try {
-                currentOpMode.Install();
+                this.currentOpMode.install();
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 System.out.println("Failed to start the autonomous OpMode.");
                 e.printStackTrace();
             }
 
-            currentOpMode.Container.Initialize();
+            this.currentOpMode.m_container.initialize();
         }
     }
     @Override
     public void autonomousPeriodic() {
-        if (currentOpMode != null) currentOpMode.Container.Tick();
+        if (currentOpMode != null) {
+            this.currentOpMode.m_container.tick();
+        }
     }
 
     @Override
     public void teleopInit() {
-        if (currentOpMode != null) disabledInit();
+        if (this.currentOpMode != null) {
+            disabledInit();
+        }
 
         DriverStation.Alliance alliance = DriverStation.getAlliance();
 
-        currentOpMode = new Teleop();
+        this.currentOpMode = new Teleop();
 
-        currentOpMode.Container.BindInstance(currentOpMode);
-        currentOpMode.Container.BindInstance(alliance);
+        this.currentOpMode.m_container.bindInstance(currentOpMode);
+        this.currentOpMode.m_container.bindInstance(alliance);
         
         try {
-            currentOpMode.Install();
+            currentOpMode.install();
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             System.out.println("Failed to start the autonomous OpMode.");
             e.printStackTrace();
         }
 
-        currentOpMode.Container.Initialize();
+        currentOpMode.m_container.initialize();
     }
     @Override
     public void teleopPeriodic() {
-        if (currentOpMode != null) currentOpMode.Container.Tick();
+        if (currentOpMode != null) {
+            currentOpMode.m_container.tick();
+        }
     }
 }

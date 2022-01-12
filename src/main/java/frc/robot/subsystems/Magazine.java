@@ -34,42 +34,42 @@ public class Magazine extends DiSubsystem implements IInitializable, IDisposable
     Linebreaker treeStemLinebreak;
 
     @Override
-    public void Initialize() {
-        leftTreeUpperMotor.setNeutralMode(NeutralMode.Brake);
-        leftTreeLowerMotor.setNeutralMode(NeutralMode.Brake);
-        rightTreeUpperMotor.setNeutralMode(NeutralMode.Brake);
-        rightTreeLowerMotor.setNeutralMode(NeutralMode.Brake);
-        treeStemLeftMotor.setNeutralMode(NeutralMode.Brake);
-        treeStemRightMotor.setNeutralMode(NeutralMode.Brake);
+    public void initialize() {
+        this.leftTreeUpperMotor.setNeutralMode(NeutralMode.Brake);
+        this.leftTreeLowerMotor.setNeutralMode(NeutralMode.Brake);
+        this.rightTreeUpperMotor.setNeutralMode(NeutralMode.Brake);
+        this.rightTreeLowerMotor.setNeutralMode(NeutralMode.Brake);
+        this.treeStemLeftMotor.setNeutralMode(NeutralMode.Brake);
+        this.treeStemRightMotor.setNeutralMode(NeutralMode.Brake);
 
-        leftTreeLowerMotor.setInverted(true);
-        rightTreeUpperMotor.setInverted(true);
-        treeStemLeftMotor.setInverted(true);
+        this.leftTreeLowerMotor.setInverted(true);
+        this.rightTreeUpperMotor.setInverted(true);
+        this.treeStemLeftMotor.setInverted(true);
 
-        leftTreeLowerMotor.follow(leftTreeUpperMotor);
-        rightTreeLowerMotor.follow(rightTreeUpperMotor);
-        treeStemRightMotor.follow(treeStemLeftMotor);
+        this.leftTreeLowerMotor.follow(leftTreeUpperMotor);
+        this.rightTreeLowerMotor.follow(rightTreeUpperMotor);
+        this.treeStemRightMotor.follow(treeStemLeftMotor);
     }
 
-    public void Run(double power) {
+    public void run(double power) {
         if (power <= 0) {
-            RunRaw(power);
+            this.runRaw(power);
             return;
         }
 
-        treeStemLeftMotor.set(ControlMode.PercentOutput, power);
-        leftTreeUpperMotor.set(ControlMode.PercentOutput, (treeStemLinebreak.Broken() && leftTreeLinebreak.Broken()) ? 0 : power);
-        rightTreeUpperMotor.set(ControlMode.PercentOutput, (treeStemLinebreak.Broken() && rightTreeLinebreak.Broken()) ? ((leftTreeLinebreak.Broken()) ? -Math.abs(power) : 0) : power);
+        this.treeStemLeftMotor.set(ControlMode.PercentOutput, power);
+        this.leftTreeUpperMotor.set(ControlMode.PercentOutput, (treeStemLinebreak.Broken() && leftTreeLinebreak.Broken()) ? 0 : power);
+        this.rightTreeUpperMotor.set(ControlMode.PercentOutput, (treeStemLinebreak.Broken() && rightTreeLinebreak.Broken()) ? ((leftTreeLinebreak.Broken()) ? -Math.abs(power) : 0) : power);
     }
 
-    public void RunRaw(double power) {
-        treeStemLeftMotor.set(ControlMode.PercentOutput, power);
-        leftTreeUpperMotor.set(ControlMode.PercentOutput, power);
-        rightTreeUpperMotor.set(ControlMode.PercentOutput, power);
+    public void runRaw(double power) {
+        this.treeStemLeftMotor.set(ControlMode.PercentOutput, power);
+        this.leftTreeUpperMotor.set(ControlMode.PercentOutput, power);
+        this.rightTreeUpperMotor.set(ControlMode.PercentOutput, power);
     }
 
     @Override
-    public void Dispose() {
-        RunRaw(0);
+    public void dispose() {
+        this.runRaw(0);
     }
 }

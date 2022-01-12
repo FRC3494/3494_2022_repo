@@ -14,21 +14,21 @@ public class OI implements IInitializable, IDisposable {
     public XboxController secondaryXbox;
 
     @Override
-    public void Initialize() {
+    public void initialize() {
         
     }
 
     @Override
-    public void Dispose() {
+    public void dispose() {
         
     }
 
     public double GetLeftDriveSpeed() {
-        return (primaryXbox.getLeftY() * RobotConfig.Drivetrain.forwardSensitivity) + (primaryXbox.getRightX() * RobotConfig.Drivetrain.turnSensitivity);
+        return (primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) + (primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
     }
 
     public double GetRightDriveSpeed() {
-        return (primaryXbox.getLeftY() * RobotConfig.Drivetrain.forwardSensitivity) - (primaryXbox.getRightX() * RobotConfig.Drivetrain.turnSensitivity);
+        return (primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) - (primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
     }
 
     public boolean GetNeedOuttake() {
@@ -36,7 +36,7 @@ public class OI implements IInitializable, IDisposable {
     }
 
     public double GetClimberPower() {
-        return (secondaryXbox.getYButton()) ? (secondaryXbox.getLeftY() * RobotConfig.Climber.climbSpeed) : 0;
+        return (secondaryXbox.getYButton()) ? (secondaryXbox.getLeftY() * RobotConfig.Climber.CLIMB_SPEED) : 0;
     }
 
     public boolean GetClimberRelease() {
@@ -44,7 +44,7 @@ public class OI implements IInitializable, IDisposable {
     }
 
     public double GetIntakeSpeed() {
-        return secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.intakeSpeed;
+        return secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.INTAKE_SPEED;
     }
 
     public double GetShooterPower() {

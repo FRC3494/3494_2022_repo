@@ -18,23 +18,23 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
     TalonSRX backIntakeMotor;
 
     @Override
-    public void Initialize() {
-        frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
-        frontIntakeInnerMotor.setNeutralMode(NeutralMode.Brake);
-        backIntakeMotor.setNeutralMode(NeutralMode.Brake);
+    public void initialize() {
+        this.frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
+        this.frontIntakeInnerMotor.setNeutralMode(NeutralMode.Brake);
+        this.backIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
-        backIntakeMotor.follow(frontIntakeMotor);
-        frontIntakeInnerMotor.follow(frontIntakeMotor);
+        this.backIntakeMotor.follow(frontIntakeMotor);
+        this.frontIntakeInnerMotor.follow(frontIntakeMotor);
     }
 
-    public void Intake(double power) {
+    public void run(double power) {
         // add code for actuation when intake is requested
 
-        frontIntakeMotor.set(ControlMode.PercentOutput, power);
+        this.frontIntakeMotor.set(ControlMode.PercentOutput, power);
     }
 
     @Override
-    public void Dispose() {
-        Intake(0);
+    public void dispose() {
+        this.run(0);
     }
 }

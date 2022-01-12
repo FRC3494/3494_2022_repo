@@ -23,29 +23,29 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
     boolean hasReleased = false;
 
     @Override
-    public void Initialize() {
-        leftClimbMotor.setIdleMode(IdleMode.kBrake);
-        rightClimbMotor.setIdleMode(IdleMode.kBrake);
+    public void initialize() {
+        this.leftClimbMotor.setIdleMode(IdleMode.kBrake);
+        this.rightClimbMotor.setIdleMode(IdleMode.kBrake);
 
-        leftClimbMotor.setInverted(true);
+        this.leftClimbMotor.setInverted(true);
 
-        rightClimbMotor.follow(leftClimbMotor);
+        this.rightClimbMotor.follow(leftClimbMotor);
 
-        climberReleaseServo.set(RobotConfig.Climber.holdingPosition);
+        this.climberReleaseServo.set(RobotConfig.Climber.HOLDING_POSITION);
     }
 
     public void Climb(double power) {
-        leftClimbMotor.set((hasReleased) ? power : 0);
+        this.leftClimbMotor.set((hasReleased) ? power : 0);
     }
 
     public void ReleaseClimber() {
-        climberReleaseServo.set(RobotConfig.Climber.releasePosition);
+        this.climberReleaseServo.set(RobotConfig.Climber.RELEASE_POSITION);
 
         hasReleased = true;
     }
 
     @Override
-    public void Dispose() {
+    public void dispose() {
         Climb(0);
     }
 }

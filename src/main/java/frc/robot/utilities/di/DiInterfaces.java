@@ -2,13 +2,13 @@ package frc.robot.utilities.di;
 
 public class DiInterfaces {
     public interface IInitializable {
-        void Initialize();
+        void initialize();
     }
     public interface ITickable {
-        void Tick();
+        void tick();
     }
     public interface IDisposable {
-        void Dispose();
+        void dispose();
     }
 }
 

@@ -2,57 +2,57 @@ package frc.robot;
 
 public final class RobotConfig {
     public static class Drivetrain {
-        public static final int leftMaster = 0;
-        public static final int leftSlave = 1;
+        public static final int LEFT_LEADER_MOTOR_ID = 0;
+        public static final int LEFT_FOLLOWER_MOTOR_ID = 1;
 
-        public static final int rightMaster = 2;
-        public static final int rightSlave = 3;
+        public static final int RIGHT_LEADER_MOTOR_ID = 2;
+        public static final int RIGHT_FOLLOWER_MOTOR_ID = 3;
 
-        public static final double forwardSensitivity = 0.7;
-        public static final double turnSensitivity = 0.7;
+        public static final double FORWARD_SENSITIVITY = 0.7;
+        public static final double TURN_SENSITIVITY = 0.7;
     }
 
     public static class Shooter {
-        public static final int shooterMotor = 4;
+        public static final int SHOOTER_MOTOR_ID = 4;
 
-        public static final double baseTargetRPM = 2000;
+        public static final double BASE_TARGET_RPM = 2000;
     }
 
     public static class Intake {
-        public static final int frontIntakeMotor = 5;
-        public static final int frontIntakeInnerMotor = 6;
-        public static final int backIntakeMotor = 7;
+        public static final int FRONT_INTAKE_MOTOR_ID = 5;
+        public static final int FRONT_INNER_MOTOR_ID = 6;
+        public static final int BACK_INTAKE_MOTOR_ID = 7;
 
-        public static final double intakeSpeed = 0.7;
+        public static final double INTAKE_SPEED = 0.7;
     }
 
     public static class Magazine {
-        public static final int leftTreeUpperMotor = 8;
-        public static final int leftTreeLowerMotor = 9;
-        public static final int leftTreeLinebreak = 0;
+        public static final int LEFT_TREE_UPPER_MOTOR_ID = 8;
+        public static final int LEFT_TREE_LOWER_MOTOR_ID = 9;
+        public static final int LEFT_TREE_LINEBREAK_ID = 0;
 
-        public static final int rightTreeUpperMotor = 10;
-        public static final int rightTreeLowerMotor = 11;
-        public static final int rightTreeLinebreak = 1;
+        public static final int RIGHT_TREE_UPPER_MOTOR_ID = 10;
+        public static final int RIGHT_TREE_LOWER_MOTOR_ID = 11;
+        public static final int RIGHT_TREE_LINEBREAK_ID = 1;
 
-        public static final int treeStemLeftMotor = 12;
-        public static final int treeStemRightMotor = 13;
-        public static final int treeStemLinebreak = 2;
+        public static final int STEM_LEFT_MOTOR_ID = 12;
+        public static final int STEM_RIGHT_MOTOR_ID = 13;
+        public static final int STEM_LINEBREAK_ID = 2;
 
-        public static final double idleSpeed = 0.35;
-        public static final double intakeSpeed = 0.7;
-        public static final double outtakeSpeed = -0.7;
+        public static final double IDLE_SPEED = 0.35;
+        public static final double INTAKE_SPEED = 0.7;
+        public static final double OUTTAKE_SPEED = -0.7;
     }
 
     public static class Climber {
-        public static final int leftClimbMotor = 14;
-        public static final int rightClimbMotor = 15;
+        public static final int LEFT_CLIMB_MOTOR_ID = 14;
+        public static final int RIGHT_CLIMB_MOTOR_ID = 15;
 
-        public static final int climberReleaseServo = 3;
+        public static final int CLIMBER_RELEASE_SERVO_ID = 3;
 
-        public static final double climbSpeed = 0.5;
+        public static final double CLIMB_SPEED = 0.5;
 
-        public static final double holdingPosition = 0;
-        public static final double releasePosition = 1;
+        public static final double HOLDING_POSITION = 0;
+        public static final double RELEASE_POSITION = 1;
     }
 }

@@ -17,34 +17,34 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable 
     TalonFXSensorCollection shooterMotorSensors;
 
     @Override
-    public void Initialize() {
-        shooterMotor.setNeutralMode(NeutralMode.Brake);
+    public void initialize() {
+        this.shooterMotor.setNeutralMode(NeutralMode.Brake);
 
-        shooterMotorSensors = shooterMotor.getSensorCollection();
+        this.shooterMotorSensors = shooterMotor.getSensorCollection();
     }
 
-    public void Shoot(double rpm) {
-        shooterMotor.set(ControlMode.Velocity, RPMToAngularVelocity(rpm));
+    public void shoot(double rpm) {
+        this.shooterMotor.set(ControlMode.Velocity, RPMToAngularVelocity(rpm));
     }
 
     @Override
-    public void Dispose() {
-        Shoot(0);
+    public void dispose() {
+        this.shoot(0);
     }
 
     public double RPMToAngularVelocity(double rpm) {
         return rpm * (2048 / 600);
     }
 
-    public double GetRPM() {
+    public double getRPM() {
         return shooterMotorSensors.getIntegratedSensorVelocity() * (600 / 2048);
     }
 
-    public void EnableAimBot() {
+    public void enableAimBot() {
         
     }
 
-    public void DisableAimBot() {
+    public void disableAimBot() {
         
     }
 }

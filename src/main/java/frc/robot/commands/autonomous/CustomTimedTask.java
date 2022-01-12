@@ -28,31 +28,31 @@ public abstract class CustomTimedTask extends AutoTask {
         this.millis = millis;
     }
 
-    public abstract void begin();
-    public abstract void execute();
-    public abstract void stop();
+    public abstract void customBegin();
+    public abstract boolean customExecute();
+    public abstract void customStop();
 
     @Override
-    public void Begin() {
-        begin();
+    public void begin() {
+        this.customBegin();
 
         endTime = System.currentTimeMillis() + millis;
     }
 
     @Override
-    public boolean Execute() {
-        execute();
+    public boolean execute() {
+        this.customExecute();
 
         return (endTime < System.currentTimeMillis());
     }
 
     @Override
-    public void Stop() {
-        stop();
+    public void stop() {
+        this.customStop();
     }
 
     @Override
-    public ETA GetETA() {
+    public ETA getETA() {
         return new ETA(endTime - millis, System.currentTimeMillis(), endTime);
     }
 }

@@ -7,120 +7,124 @@ import java.util.List;
 import java.util.UUID;
 
 public class DiRuleBuilder {
-    private final DiContainer container;
-    private final List<DiRule> targetRules = new ArrayList<>();
+    private final DiContainer M_CONTAINER;
+    private final List<DiRule> M_TARGET_RULES = new ArrayList<>();
 
-    private Boolean bindDone = false;
-    private Boolean resolutionSet = false;
+    private Boolean m_bindDone = false;
+    private Boolean m_resolutionSet = false;
 
-    private Class<?> target = null;
+    private Class<?> m_target = null;
 
     protected DiRuleBuilder(DiContainer containerIn) {
-        container = containerIn;
+        this.M_CONTAINER = containerIn;
     }
 
     // User Facing
-    public DiRuleBuilder Bind(Class<?> ...inClasses) {
-        if (bindDone) throw new DiExceptions.RuleBuilderException();
+    public DiRuleBuilder bind(Class<?> ...inClasses) {
+        if (m_bindDone) throw new DiExceptions.RuleBuilderException();
 
         for (Class<?> inClass: inClasses) {
-            DiRule rule = new DiRule(container, inClass);
+            DiRule rule = new DiRule(M_CONTAINER, inClass);
 
-            targetRules.add(rule);
-            container.rules.add(rule);
+            this.M_TARGET_RULES.add(rule);
+            this.M_CONTAINER.rules.add(rule);
         }
 
         return this;
     }
 
-    public DiRuleBuilder BindInstance(Object instance) {
-        BindInstances(instance);
+    public DiRuleBuilder bindInstance(Object instance) {
+        this.bindInstances(instance);
 
         return this;
     }
 
-    public DiRuleBuilder BindInstances(Object ...instances) {
-        if (bindDone || resolutionSet) throw new DiExceptions.RuleBuilderException();
+    public DiRuleBuilder bindInstances(Object ...instances) {
+        if (m_bindDone || m_resolutionSet) throw new DiExceptions.RuleBuilderException();
 
-        bindDone = true;
-        resolutionSet = true;
+        m_bindDone = true;
+        m_resolutionSet = true;
 
-        for (Object instance: instances) {
+        for (Object instance : instances) {
             UUID uuid = UUID.randomUUID();
 
-            container.objectPool.put(uuid, instance);
+            this.M_CONTAINER.objectPool.put(uuid, instance);
 
-            DiRule rule = new DiRule(container, instance.getClass());
+            DiRule rule = new DiRule(M_CONTAINER, instance.getClass());
 
             rule.setupReturn(uuid);
 
-            targetRules.add(rule);
-            container.rules.add(rule);
+            this.M_TARGET_RULES.add(rule);
+            this.M_CONTAINER.rules.add(rule);
         }
 
+        return (this);
+    }
+
+    public DiRuleBuilder bindInterfacesTo(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        this.bind(inClass.getInterfaces());
+
+        this.to(inClass);
+
+        this.asSingle();
+
         return this;
     }
 
-    public DiRuleBuilder BindInterfacesTo(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Bind(inClass.getInterfaces());
-
-        To(inClass);
-
-        AsSingle();
-
-        return this;
-    }
-
-    public DiRuleBuilder BindInterfacesAndSelfTo(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public DiRuleBuilder bindInterfacesAndSelfTo(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         List<Class<?>> classes = Arrays.asList(inClass.getInterfaces());
         classes.add(inClass);
 
-        Bind(classes.toArray(new Class<?>[0]));
+        this.bind(classes.toArray(new Class<?>[0]));
 
-        To(inClass);
+        this.to(inClass);
 
-        AsSingle();
+        this.asSingle();
 
-        return this;
+        return (this);
     }
 
-    public DiRuleBuilder AsSingle() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        if (resolutionSet) throw new DiExceptions.RuleBuilderException();
+    public DiRuleBuilder asSingle() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        if (m_resolutionSet) {
+            throw new DiExceptions.RuleBuilderException();
+        }
 
-        resolutionSet = true;
+        m_resolutionSet = true;
 
-        if (target != null) {
-            FromInstance(container.Instantiate(target));
+        if (m_target != null) {
+            fromInstance(M_CONTAINER.instantiate(m_target));
         } else {
-            for (DiRule rule: targetRules) {
-                Object instance = container.Instantiate(rule.targetClass);
+            for (DiRule rule : this.M_TARGET_RULES) {
+                Object instance = this.M_CONTAINER.instantiate(rule.m_targetClass);
                 UUID uuid = UUID.randomUUID();
 
-                container.objectPool.put(uuid, instance);
+                this.M_CONTAINER.objectPool.put(uuid, instance);
 
                 rule.setupReturn(uuid);
             }
         }
 
-        return this;
+        return (this);
     }
 
-    public DiRuleBuilder AsTransient() {
-        if (resolutionSet) throw new DiExceptions.RuleBuilderException();
+    public DiRuleBuilder asTransient() {
+        if (m_resolutionSet) {
+            throw new DiExceptions.RuleBuilderException();
+        }
 
-        resolutionSet = true;
+        m_resolutionSet = true;
 
-        if (target != null) {
-            for (DiRule rule: targetRules) {
-                rule.setupCreate(target);
+        if (this.m_target != null) {
+            for (DiRule rule : this.M_TARGET_RULES) {
+                rule.setupCreate(m_target);
             }
         } else {
-            for (DiRule rule: targetRules) {
-                rule.setupCreate(rule.targetClass);
+            for (DiRule rule : this.M_TARGET_RULES) {
+                rule.setupCreate(rule.m_targetClass);
             }
         }
 
-        return this;
+        return (this);
     }
 
     /*public DiRuleBuilder AsCached() {
@@ -128,41 +132,45 @@ public class DiRuleBuilder {
         return this;
     }*/
 
-    public DiRuleBuilder To(Class<?> inClass) {
-        if (target != null) throw new DiExceptions.RuleBuilderException();
+    public DiRuleBuilder to(Class<?> inClass) {
+        if (this.m_target != null) {
+            throw new DiExceptions.RuleBuilderException();
+        }
 
-        target = inClass;
+        this.m_target = inClass;
 
         return this;
     }
 
-    public DiRuleBuilder FromInstance(Object instance) {
-        if (resolutionSet) throw new DiExceptions.RuleBuilderException();
+    public DiRuleBuilder fromInstance(Object instance) {
+        if (this.m_resolutionSet) {
+            throw new DiExceptions.RuleBuilderException();
+        }
 
-        resolutionSet = true;
+        this.m_resolutionSet = true;
 
         UUID uuid = UUID.randomUUID();
 
-        container.objectPool.put(uuid, instance);
+        this.M_CONTAINER.objectPool.put(uuid, instance);
 
-        for (DiRule rule: targetRules) {
+        for (DiRule rule : this.M_TARGET_RULES) {
             rule.setupReturn(uuid);
         }
 
-        return this;
+        return (this);
     }
 
-    public DiRuleBuilder When(DiCondition condition) {
-        for (DiRule rule: targetRules) {
-            rule.conditions.add(condition);
+    public DiRuleBuilder when(DiCondition condition) {
+        for (DiRule rule: this.M_TARGET_RULES) {
+            rule.m_conditions.add(condition);
         }
 
-        return this;
+        return (this);
     }
 
-    public DiRuleBuilder WhenInjectedInto(Class<?> inClass) {
-        for (DiRule rule: targetRules) {
-            rule.conditions.add(new DiCondition() {
+    public DiRuleBuilder whenInjectedInto(Class<?> inClass) {
+        for (DiRule rule : this.M_TARGET_RULES) {
+            rule.m_conditions.add(new DiCondition() {
                 @Override
                 public Boolean check(DiContext context) {
                     return context.targetClass == inClass;
@@ -170,12 +178,12 @@ public class DiRuleBuilder {
             });
         }
 
-        return this;
+        return (this);
     }
 
-    public DiRuleBuilder WithId(String id) {
-        for (DiRule rule: targetRules) {
-            rule.conditions.add(new DiCondition() {
+    public DiRuleBuilder withId(String id) {
+        for (DiRule rule : this.M_TARGET_RULES) {
+            rule.m_conditions.add(new DiCondition() {
                 @Override
                 public Boolean check(DiContext context) {
                     return context.id.equals(id);
@@ -183,6 +191,6 @@ public class DiRuleBuilder {
             });
         }
 
-        return this;
+        return (this);
     }
 }

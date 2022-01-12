@@ -10,37 +10,37 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
-    @Inject(id = "drivetrainLeftMaster")
-    TalonFX leftMaster;
-    @Inject(id = "drivetrainLeftSlave")
-    TalonFX leftSlave;
+    @Inject(id = "drivetrainLeftLeader")
+    TalonFX leftLeader;
+    @Inject(id = "drivetrainLeftFollower")
+    TalonFX leftFollower;
 
-    @Inject(id = "drivetrainRightMaster")
-    TalonFX rightMaster;
-    @Inject(id = "drivetrainRightSlave")
-    TalonFX rightSlave;
-
-    @Override
-    public void Initialize() {
-        leftMaster.setNeutralMode(NeutralMode.Brake);
-        leftSlave.setNeutralMode(NeutralMode.Brake);
-        rightMaster.setNeutralMode(NeutralMode.Brake);
-        rightSlave.setNeutralMode(NeutralMode.Brake);
-
-        rightMaster.setInverted(true);
-        rightSlave.setInverted(true);
-
-        leftSlave.follow(leftMaster);
-        rightSlave.follow(rightMaster);
-    }
-
-    public void TankDrive(double leftPower, double rightPower) {
-        leftMaster.set(ControlMode.PercentOutput, leftPower);
-        rightMaster.set(ControlMode.PercentOutput, rightPower);
-    }
+    @Inject(id = "drivetrainRightLeader")
+    TalonFX rightLeader;
+    @Inject(id = "drivetrainRightFollower")
+    TalonFX rightFollwer;
 
     @Override
-    public void Dispose() {
-        TankDrive(0, 0);
+    public void initialize() {
+        this.leftLeader.setNeutralMode(NeutralMode.Brake);
+        this.leftFollower.setNeutralMode(NeutralMode.Brake);
+        this.rightLeader.setNeutralMode(NeutralMode.Brake);
+        this.rightFollwer.setNeutralMode(NeutralMode.Brake);
+
+        this.rightLeader.setInverted(true);
+        this.rightFollwer.setInverted(true);
+
+        this.leftFollower.follow(leftLeader);
+        this.rightFollwer.follow(rightLeader);
+    }
+
+    public void tankDrive(double leftPower, double rightPower) {
+        this.leftLeader.set(ControlMode.PercentOutput, leftPower);
+        this.rightLeader.set(ControlMode.PercentOutput, rightPower);
+    }
+
+    @Override
+    public void dispose() {
+        this.tankDrive(0, 0);
     }
 }

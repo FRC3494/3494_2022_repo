@@ -11,12 +11,16 @@ import frc.robot.utilities.di.DiContainer.Inject;
 public abstract class CustomTask extends AutoTask {
     @Inject
     Drivetrain drivetrain;
+
     @Inject
     Shooter shooter;
+
     @Inject
     Intake intake;
+
     @Inject
     Magazine magazine;
+    
     @Inject
     Climber climber;
 
@@ -24,27 +28,27 @@ public abstract class CustomTask extends AutoTask {
 
     }
 
-    public abstract void begin();
-    public abstract boolean execute();
-    public abstract void stop();
+    public abstract void customBegin();
+    public abstract boolean customExecute();
+    public abstract void customStop();
 
     @Override
-    public void Begin() {
-        begin();
+    public void begin() {
+        this.customBegin();
     }
 
     @Override
-    public boolean Execute() {
-        return execute();
+    public boolean execute() {
+        return (this.customExecute());
     }
 
     @Override
-    public void Stop() {
-        stop();
+    public void stop() {
+        this.customStop();
     }
 
     @Override
-    public ETA GetETA() {
-        return new ETA();
+    public ETA getETA() {
+        return (new ETA());
     }
 }

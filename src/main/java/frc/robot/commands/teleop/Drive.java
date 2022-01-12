@@ -37,34 +37,34 @@ public class Drive extends CommandBase implements IInitializable, ITickable, IDi
     private Shooter shooter;
 
     @Override
-    public void Initialize() {
-        addRequirements(drivetrain);
-        addRequirements(intake);
-        addRequirements(magazine);
-        addRequirements(climber);
-        addRequirements(shooter);
+    public void initialize() {
+        this.addRequirements(drivetrain);
+        this.addRequirements(intake);
+        this.addRequirements(magazine);
+        this.addRequirements(climber);
+        this.addRequirements(shooter);
     }
 
     @Override
-    public void Tick() {
-        drivetrain.TankDrive(PowerCurve(oi.GetLeftDriveSpeed()), PowerCurve(oi.GetRightDriveSpeed()));
+    public void tick() {
+        drivetrain.tankDrive(PowerCurve(oi.GetLeftDriveSpeed()), PowerCurve(oi.GetRightDriveSpeed()));
 
-        intake.Intake(oi.GetIntakeSpeed());
-        magazine.Run((oi.GetNeedOuttake()) ? RobotConfig.Magazine.outtakeSpeed : ((oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.intakeSpeed : RobotConfig.Magazine.idleSpeed));
+        intake.run(oi.GetIntakeSpeed());
+        magazine.run((oi.GetNeedOuttake()) ? RobotConfig.Magazine.OUTTAKE_SPEED : ((oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : RobotConfig.Magazine.IDLE_SPEED));
 
         if (oi.GetClimberRelease()) climber.ReleaseClimber();
         climber.Climb(oi.GetClimberPower());
 
-        shooter.Shoot(oi.GetShooterPower() * RobotConfig.Shooter.baseTargetRPM);
+        shooter.shoot(oi.GetShooterPower() * RobotConfig.Shooter.BASE_TARGET_RPM);
     }
 
     @Override
-    public void Dispose() {
-        drivetrain.TankDrive(0, 0);
-        intake.Intake(0);
-        magazine.RunRaw(0);
+    public void dispose() {
+        drivetrain.tankDrive(0, 0);
+        intake.run(0);
+        magazine.runRaw(0);
         climber.Climb(0);
-        shooter.Shoot(0);
+        shooter.shoot(0);
     }
 
     @Override
