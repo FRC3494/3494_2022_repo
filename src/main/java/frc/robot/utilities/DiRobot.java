@@ -70,7 +70,7 @@ public abstract class DiRobot extends TimedRobot {
     public void teleopInit() {
         if (currentOpMode != null) disabledInit();
 
-        DriverStation.Alliance alliance = DriverStation.getInstance().getAlliance();
+        DriverStation.Alliance alliance = DriverStation.getAlliance();
 
         currentOpMode = new Teleop();
 

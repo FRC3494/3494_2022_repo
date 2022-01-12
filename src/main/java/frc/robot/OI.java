@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
@@ -25,11 +24,11 @@ public class OI implements IInitializable, IDisposable {
     }
 
     public double GetLeftDriveSpeed() {
-        return (primaryXbox.getY(Hand.kLeft) * RobotConfig.Drivetrain.forwardSensitivity) + (primaryXbox.getX(Hand.kRight) * RobotConfig.Drivetrain.turnSensitivity);
+        return (primaryXbox.getLeftY() * RobotConfig.Drivetrain.forwardSensitivity) + (primaryXbox.getRightX() * RobotConfig.Drivetrain.turnSensitivity);
     }
 
     public double GetRightDriveSpeed() {
-        return (primaryXbox.getY(Hand.kLeft) * RobotConfig.Drivetrain.forwardSensitivity) - (primaryXbox.getX(Hand.kRight) * RobotConfig.Drivetrain.turnSensitivity);
+        return (primaryXbox.getLeftY() * RobotConfig.Drivetrain.forwardSensitivity) - (primaryXbox.getRightX() * RobotConfig.Drivetrain.turnSensitivity);
     }
 
     public boolean GetNeedOuttake() {
@@ -37,7 +36,7 @@ public class OI implements IInitializable, IDisposable {
     }
 
     public double GetClimberPower() {
-        return (secondaryXbox.getYButton()) ? (secondaryXbox.getY(Hand.kLeft) * RobotConfig.Climber.climbSpeed) : 0;
+        return (secondaryXbox.getYButton()) ? (secondaryXbox.getLeftY() * RobotConfig.Climber.climbSpeed) : 0;
     }
 
     public boolean GetClimberRelease() {
@@ -45,10 +44,10 @@ public class OI implements IInitializable, IDisposable {
     }
 
     public double GetIntakeSpeed() {
-        return secondaryXbox.getTriggerAxis(Hand.kLeft) * RobotConfig.Intake.intakeSpeed;
+        return secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.intakeSpeed;
     }
 
     public double GetShooterPower() {
-        return secondaryXbox.getTriggerAxis(Hand.kRight);
+        return secondaryXbox.getRightTriggerAxis();
     }
 }
