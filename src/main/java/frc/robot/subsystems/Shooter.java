@@ -18,18 +18,18 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable 
 
     @Override
     public void Initialize() {
-        shooterMotor.setNeutralMode(NeutralMode.Brake);
+        this.shooterMotor.setNeutralMode(NeutralMode.Brake);
 
-        shooterMotorSensors = shooterMotor.getSensorCollection();
+        this.shooterMotorSensors = this.shooterMotor.getSensorCollection();
     }
 
-    public void Shoot(double rpm) {
-        shooterMotor.set(ControlMode.Velocity, RPMToAngularVelocity(rpm));
+    public void Run(double rpm) {
+        this.shooterMotor.set(ControlMode.Velocity, this.RPMToAngularVelocity(rpm));
     }
 
     @Override
     public void Dispose() {
-        Shoot(0);
+        this.Run(0);
     }
 
     public double RPMToAngularVelocity(double rpm) {
@@ -37,14 +37,14 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable 
     }
 
     public double GetRPM() {
-        return shooterMotorSensors.getIntegratedSensorVelocity() * (600 / 2048);
+        return this.shooterMotorSensors.getIntegratedSensorVelocity() * (600 / 2048);
     }
 
     public void EnableAimBot() {
-        
+        //enable the aimbot here
     }
 
     public void DisableAimBot() {
-        
+        //disable the aimbot here
     }
 }

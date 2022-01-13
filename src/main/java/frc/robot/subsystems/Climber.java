@@ -23,24 +23,24 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
 
     @Override
     public void Initialize() {
-        leftClimbMotor.setIdleMode(IdleMode.kBrake);
-        rightClimbMotor.setIdleMode(IdleMode.kBrake);
+        this.leftClimbMotor.setIdleMode(IdleMode.kBrake);
+        this.rightClimbMotor.setIdleMode(IdleMode.kBrake);
 
-        leftClimbMotor.setInverted(true);
+        this.leftClimbMotor.setInverted(true);
 
-        rightClimbMotor.follow(leftClimbMotor);
+        this.rightClimbMotor.follow(this.leftClimbMotor);
 
-        climberReleaseServo.set(RobotConfig.Climber.holdingPosition);
+        this.climberReleaseServo.set(RobotConfig.Climber.HoldingPosition);
     }
 
     public void Run(double power) {
-        leftClimbMotor.set((hasReleased) ? power : 0);
+        this.leftClimbMotor.set((this.hasReleased) ? power : 0);
     }
 
     public void ReleaseClimber() {
-        climberReleaseServo.set(RobotConfig.Climber.releasePosition);
+        this.climberReleaseServo.set(RobotConfig.Climber.ReleasePosition);
 
-        hasReleased = true;
+        this.hasReleased = true;
     }
 
     @Override

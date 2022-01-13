@@ -30,17 +30,17 @@ public abstract class CustomTask extends AutoTask {
 
     @Override
     public void Begin() {
-        begin();
+        this.begin();
     }
 
     @Override
     public boolean Execute() {
-        return execute();
+        return this.execute();
     }
 
     @Override
     public void Stop() {
-        stop();
+        this.stop();
     }
 
     @Override

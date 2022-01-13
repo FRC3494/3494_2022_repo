@@ -25,41 +25,41 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
 
     @Override
     public void Initialize() {
-        orchestra.addInstrument(leftMaster);
-        orchestra.addInstrument(leftSlave);
+        this.orchestra.addInstrument(this.leftMaster);
+        this.orchestra.addInstrument(this.leftSlave);
         
-        orchestra.addInstrument(rightMaster);
-        orchestra.addInstrument(rightSlave);
+        this.orchestra.addInstrument(this.rightMaster);
+        this.orchestra.addInstrument(this.rightSlave);
 
-        leftMaster.setNeutralMode(NeutralMode.Brake);
-        leftSlave.setNeutralMode(NeutralMode.Brake);
-        rightMaster.setNeutralMode(NeutralMode.Brake);
-        rightSlave.setNeutralMode(NeutralMode.Brake);
+        this.leftMaster.setNeutralMode(NeutralMode.Brake);
+        this.leftSlave.setNeutralMode(NeutralMode.Brake);
+        this.rightMaster.setNeutralMode(NeutralMode.Brake);
+        this.rightSlave.setNeutralMode(NeutralMode.Brake);
 
-        rightMaster.setInverted(true);
-        rightSlave.setInverted(true);
+        this.rightMaster.setInverted(true);
+        this.rightSlave.setInverted(true);
 
-        leftSlave.follow(leftMaster);
-        rightSlave.follow(rightMaster);
+        this.leftSlave.follow(this.leftMaster);
+        this.rightSlave.follow(this.rightMaster);
     }
 
     public void Tank(double leftPower, double rightPower) {
-        leftMaster.set(ControlMode.PercentOutput, leftPower);
-        rightMaster.set(ControlMode.PercentOutput, rightPower);
+        this.leftMaster.set(ControlMode.PercentOutput, leftPower);
+        this.rightMaster.set(ControlMode.PercentOutput, rightPower);
     }
 
     public void SingTheTheme() {
-        orchestra.loadMusic("mbk.chrp");
+        this.orchestra.loadMusic("mbk.chrp");
 
-        orchestra.play();
+        this.orchestra.play();
     }
 
     public void PauseTheTheme() {
-        orchestra.pause();
+        this.orchestra.pause();
     }
 
     @Override
     public void Dispose() {
-        Tank(0, 0);
+        this.Tank(0, 0);
     }
 }

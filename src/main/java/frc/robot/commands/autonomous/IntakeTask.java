@@ -19,8 +19,8 @@ public class IntakeTask extends AutoTask {
 
     @Override
     public void Begin() {
-        intake.Run(power);
-        magazine.Run(power);
+        this.intake.Run(this.power);
+        this.magazine.Run(this.power);
     }
 
     @Override

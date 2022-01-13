@@ -8,13 +8,13 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
 
 public abstract class AutoOpMode extends DiOpMode {
-    AutoSequencer Sequencer;
+    public AutoSequencer Sequencer;
 
     public void Install() {
-        Sequencer = new AutoSequencer();
-        Container.BindInstance(Sequencer);
+        this.Sequencer = new AutoSequencer();
+        this.Container.BindInstance(this.Sequencer);
 
-        Sequence();
+        this.Sequence();
     }
 
     public abstract void Sequence();
@@ -30,11 +30,11 @@ public abstract class AutoOpMode extends DiOpMode {
         private String currentTaskName = "Unknown";
 
         public void LateInitialize() {
-            for (int i = 0; i < tasks.size(); i++) {
+            for (int i = 0; i < this.tasks.size(); i++) {
                 try {
-                    tasks.set(i, (AutoTask) opMode.Container.Inject(tasks.get(i)));
+                    this.tasks.set(i, (AutoTask) this.opMode.Container.Inject(this.tasks.get(i)));
                 } catch (Exception e) {
-                    System.out.println("Failed to initialize task #" + i + " (" + tasks.get(i).getClass().getSimpleName() + ")");
+                    System.out.println("Failed to initialize task #" + i + " (" + this.tasks.get(i).getClass().getSimpleName() + ")");
                     e.printStackTrace();
                     return;
                 }
@@ -43,39 +43,39 @@ public abstract class AutoOpMode extends DiOpMode {
 
         @Override
         public void Tick() {
-            if (!hasInitlate) {
-                LateInitialize();
-                hasInitlate = true;
+            if (!this.hasInitlate) {
+                this.LateInitialize();
+                this.hasInitlate = true;
             }
 
-            if (tasks.size() < 1) {
+            if (this.tasks.size() < 1) {
                 System.out.println("Auto Status: Waiting for more tasks...");
                 return;
-            } else if (!hasInitTask) {
-                tasks.get(0).Begin();
-                currentTaskName = tasks.get(0).getClass().getName();
-                hasInitTask = true;
+            } else if (!this.hasInitTask) {
+                this.tasks.get(0).Begin();
+                this.currentTaskName = this.tasks.get(0).getClass().getName();
+                this.hasInitTask = true;
             }
     
-            System.out.println("Auto Status: Running " + currentTaskName + "\n ETA: " + tasks.get(0).GetETA().FormatETA());
+            System.out.println("Auto Status: Running " + this.currentTaskName + "\n ETA: " + this.tasks.get(0).GetETA().FormatETA());
     
-            if (tasks.get(0).Execute()) {
-                tasks.get(0).Stop();
-                tasks.remove(0);
-                hasInitTask = false;
-                currentTaskName = "Unknown";
+            if (this.tasks.get(0).Execute()) {
+                this.tasks.get(0).Stop();
+                this.tasks.remove(0);
+                this.hasInitTask = false;
+                this.currentTaskName = "Unknown";
             }
         }
         
         @Override
         public void Dispose() {
-            for (AutoTask task : tasks) {
+            for (AutoTask task : this.tasks) {
                 task.Stop();
             }
         }
 
         public void Queue(AutoTask task) {
-            tasks.add(task);
+            this.tasks.add(task);
         }
     }
 }

@@ -7,10 +7,10 @@ import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class OI implements IInitializable, IDisposable {
     @Inject(id = "primaryXbox")
-    public XboxController primaryXbox;
+    XboxController primaryXbox;
 
     @Inject(id = "secondaryXbox")
-    public XboxController secondaryXbox;
+    XboxController secondaryXbox;
 
     @Override
     public void Initialize() {
@@ -23,34 +23,34 @@ public class OI implements IInitializable, IDisposable {
     }
 
     public double GetLeftDriveSpeed() {
-        return (primaryXbox.getLeftY() * RobotConfig.Drivetrain.forwardSensitivity) + (primaryXbox.getRightX() * RobotConfig.Drivetrain.turnSensitivity);
+        return (this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.ForwardSensitivity) + (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TurnSensitivity);
     }
 
     public double GetRightDriveSpeed() {
-        return (primaryXbox.getLeftY() * RobotConfig.Drivetrain.forwardSensitivity) - (primaryXbox.getRightX() * RobotConfig.Drivetrain.turnSensitivity);
+        return (this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.ForwardSensitivity) - (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TurnSensitivity);
     }
 
     public boolean GetNeedOuttake() {
-        return secondaryXbox.getAButton();
+        return this.secondaryXbox.getAButton();
     }
 
     public double GetClimberPower() {
-        return (secondaryXbox.getYButton()) ? (secondaryXbox.getLeftY() * RobotConfig.Climber.climbSpeed) : 0;
+        return (this.secondaryXbox.getYButton()) ? (this.secondaryXbox.getLeftY() * RobotConfig.Climber.ClimbSpeed) : 0;
     }
 
     public boolean GetClimberRelease() {
-        return secondaryXbox.getBButton() && secondaryXbox.getYButton();
+        return this.secondaryXbox.getBButton() && this.secondaryXbox.getYButton();
     }
 
     public double GetIntakeSpeed() {
-        return secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.intakeSpeed;
+        return this.secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.IntakeSpeed;
     }
 
     public double GetShooterPower() {
-        return secondaryXbox.getRightTriggerAxis();
+        return this.secondaryXbox.getRightTriggerAxis();
     }
 
     public boolean StartSinging() {
-        return secondaryXbox.getXButton(); // Disable this before comp lol
+        return this.secondaryXbox.getXButton(); // Disable this before comp lol
     }
 }

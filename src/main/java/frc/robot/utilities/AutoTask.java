@@ -7,30 +7,30 @@ public abstract class AutoTask {
     public abstract ETA GetETA();
 
     public class ETA {
-        public double startTime;
-        public double currentTime = 0;
-        public double endTime = 0;
-        public boolean hasEstimate = false;
+        public double StartTime;
+        public double CurrentTime = 0;
+        public double EndTime = 0;
+        public boolean HasEstimate = false;
 
         public ETA(double startTime, double currentTime, double endTime) {
-            this.startTime = startTime;
-            this.currentTime = currentTime;
-            this.endTime = endTime;
-            hasEstimate = true;
+            this.StartTime = startTime;
+            this.CurrentTime = currentTime;
+            this.EndTime = endTime;
+            this.HasEstimate = true;
         }
         public ETA() {
-            this.currentTime = 0;
-            this.endTime = 0;
-            hasEstimate = false;
+            this.CurrentTime = 0;
+            this.EndTime = 0;
+            this.HasEstimate = false;
         }
 
         public String FormatETA() {
-            if (!hasEstimate) return "Unknown";
+            if (!this.HasEstimate) return "Unknown";
 
-            double totalTime = endTime - startTime;
-            double percent = -((endTime - currentTime) - totalTime) / totalTime;
+            double totalTime = this.EndTime - this.StartTime;
+            double percent = -((this.EndTime - this.CurrentTime) - totalTime) / totalTime;
 
-            return (currentTime - startTime) + "/" + totalTime + " (" + percent + "%)";
+            return (this.CurrentTime - this.StartTime) + "/" + totalTime + " (" + percent + "%)";
         }
     }
 }

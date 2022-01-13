@@ -14,38 +14,64 @@ public class DiRule {
     protected List<DiCondition> conditions = new ArrayList<>();
 
     protected DiRule(DiContainer containerIn, Class<?> targetClassIn) {
-        container = containerIn;
-        targetClass = targetClassIn;
+        this.container = containerIn;
+        this.targetClass = targetClassIn;
     }
 
+    /**
+    * Sets up this rule to create new instances when requested
+    *
+    * @param instanceClassIn The class to create
+    * @see DiContainer
+    */
     protected void setupCreate(Class<?> instanceClassIn) {
-        instanceClass = instanceClassIn;
-        retrievalMode = RetrievalMode.Create;
+        this.instanceClass = instanceClassIn;
+        this.retrievalMode = RetrievalMode.Create;
     }
 
+    /**
+    * Sets up this rule to resolve a different class when requested
+    *
+    * @param instanceClassIn The class to resolve
+    * @throws DiExceptions.IncompleteBindingException Caused if the rule tries to resolve itself in order to prevent deadlocks
+    * @see DiContainer
+    */
     protected void setupResolve(Class<?> instanceClassIn) {
-        if (targetClass == instanceClass) throw new DiExceptions.IncompleteBindingException();
+        if (this.targetClass == instanceClassIn) throw new DiExceptions.IncompleteBindingException();
 
-        instanceClass = instanceClassIn;
-        retrievalMode = RetrievalMode.Resolve;
+        this.instanceClass = instanceClassIn;
+        this.retrievalMode = RetrievalMode.Resolve;
     }
 
+    /**
+    * Sets up this rule to return an instance when requested
+    *
+    * @param targetObjectIn The UUID of the object in the object pool
+    * @see DiContainer
+    */
     protected void setupReturn(UUID targetObjectIn) {
-        targetObject = targetObjectIn;
-        retrievalMode = RetrievalMode.Return;
+        this.targetObject = targetObjectIn;
+        this.retrievalMode = RetrievalMode.Return;
     }
 
+    /**
+    * Checks if this rule applies to a specific Context
+    *
+    * @param context The given Context to check against
+    * @return Whether or not this rule applies to a given Context
+    * @see DiContainer
+    */
     protected boolean ruleApplies(DiContext context) {
-        boolean canAssignContextToTarget = context.memberClass.isAssignableFrom(targetClass);
-        boolean canAssignTargetToContext = targetClass.isAssignableFrom(context.memberClass);
+        boolean canAssignContextToTarget = context.MemberClass.isAssignableFrom(this.targetClass);
+        boolean canAssignTargetToContext = this.targetClass.isAssignableFrom(context.MemberClass);
 
         if (!(canAssignContextToTarget || canAssignTargetToContext)) return false;
 
-        if (conditions.size() < 1) return true;
+        if (this.conditions.size() < 1) return true;
 
         boolean applies = true;
 
-        for (DiCondition condition: conditions) {
+        for (DiCondition condition: this.conditions) {
             if (!condition.check(context)) {
                 applies = false;
                 break;
@@ -55,20 +81,31 @@ public class DiRule {
         return applies;
     }
 
+    /**
+    * Returns an object instance using which ever method it was configured for earlier
+    *
+    * @param context The given Context to use during some operations
+    * @return The object instance this Rule grabs
+    * @throws IllegalAccessException Can be caused by the reflection, out of my control
+    * @throws InvocationTargetException Can be caused by the reflection, out of my control
+    * @throws InstantiateException Can be caused if the Container fails to instantiate a class
+    * @throws DiExceptions.IncompleteBindingException Caused if the rule was never configured
+    * @see DiContainer
+    */
     protected Object getObjectValue(DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        switch (retrievalMode) {
+        switch (this.retrievalMode) {
             case Create:
-                if (instanceClass != null) return container.Instantiate(instanceClass, context);
+                if (this.instanceClass != null) return this.container.Instantiate(this.instanceClass, context);
                 break;
             case Return:
-                if (targetObject != null) {
-                    Object instance = container.objectPool.get(targetObject);
+                if (this.targetObject != null) {
+                    Object instance = this.container.objectPool.get(this.targetObject);
 
                     if (instance != null) return instance;
                 }
                 break;
             case Resolve:
-                if (instanceClass != null) return container.Resolve(instanceClass, context);
+                if (this.instanceClass != null) return this.container.Resolve(this.instanceClass, context);
             default:
                 break;
         }

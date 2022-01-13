@@ -40,42 +40,42 @@ public class MovementTask extends AutoTask {
 
     @Override
     public void Begin() {
-        now = System.currentTimeMillis();
+        this.now = System.currentTimeMillis();
 
-        startTime = now;
-        stopTime = startTime + millis;
+        this.startTime = now;
+        this.stopTime = this.startTime + this.millis;
 
-        rampDuration = (long) (0.4 * millis);
-        rampUpTime = startTime + rampDuration;
-        rampDownTime = stopTime - rampDuration;
+        this.rampDuration = (long) (0.4 * this.millis);
+        this.rampUpTime = this.startTime + this.rampDuration;
+        this.rampDownTime = this.stopTime - this.rampDuration;
     }
 
     @Override
     public boolean Execute() {
-        now = System.currentTimeMillis();
+        this.now = System.currentTimeMillis();
 
-        if (now >= stopTime) return true;
+        if (this.now >= this.stopTime) return true;
 
-        double computedSpeed = speed;
+        double computedSpeed = this.speed;
 
-        if (now < rampUpTime){
-            computedSpeed = (speed * Math.min(((float)(now-startTime)/(float)(rampUpTime-startTime)), 1));
+        if (this.now < this.rampUpTime){
+            computedSpeed = (this.speed * Math.min(((float)(this.now-this.startTime)/(float)(this.rampUpTime-this.startTime)), 1));
         } else if (now > rampDownTime) {
-            computedSpeed = (speed * (1 - ((float)(now - rampDownTime)/(float)(stopTime - rampDownTime))));
+            computedSpeed = (this.speed * (1 - ((float)(this.now - this.rampDownTime)/(float)(this.stopTime - this.rampDownTime))));
         }
         
-        drivetrain.Tank(left * computedSpeed, right * computedSpeed);
+        this.drivetrain.Tank(this.left * computedSpeed, this.right * computedSpeed);
 
         return false;
     }
 
     @Override
     public void Stop() {
-        drivetrain.Tank(0, 0);
+        this.drivetrain.Tank(0, 0);
     }
 
     @Override
     public ETA GetETA() {
-        return new ETA(startTime, now, stopTime);
+        return new ETA(this.startTime, this.now, this.stopTime);
     }
 }

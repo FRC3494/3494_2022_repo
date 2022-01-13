@@ -20,37 +20,37 @@ public class Robot extends DiRobot {
     @Override
     public void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
         //Container.BindInstance(new Compressor(0));
-        Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.leftMaster)).WithId("drivetrainLeftMaster");
-        Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.leftSlave)).WithId("drivetrainLeftSlave");
-        Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.rightMaster)).WithId("drivetrainRightMaster");
-        Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.rightSlave)).WithId("drivetrainRightSlave");
+        this.Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.LeftMasterChannel)).WithId("drivetrainLeftMaster");
+        this.Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.LeftSlaveChannel)).WithId("drivetrainLeftSlave");
+        this.Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.RightMasterChannel)).WithId("drivetrainRightMaster");
+        this.Container.BindInstance(new TalonFX(RobotConfig.Drivetrain.RightSlaveChannel)).WithId("drivetrainRightSlave");
 
-        Container.BindInstance(new TalonFX(RobotConfig.Shooter.shooterMotor)).WithId("shooterMotor");
+        this.Container.BindInstance(new TalonFX(RobotConfig.Shooter.ShooterMotorChannel)).WithId("shooterMotor");
 
-        Container.BindInstance(new TalonSRX(RobotConfig.Intake.frontIntakeMotor)).WithId("frontIntakeMotor");
-        Container.BindInstance(new TalonSRX(RobotConfig.Intake.frontIntakeInnerMotor)).WithId("frontIntakeInnerMotor");
-        Container.BindInstance(new TalonSRX(RobotConfig.Intake.backIntakeMotor)).WithId("backIntakeMotor");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Intake.FrontIntakeMotorChannel)).WithId("frontIntakeMotor");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Intake.FrontIntakeInnerMotorChannel)).WithId("frontIntakeInnerMotor");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Intake.BackIntakeMotorChannel)).WithId("backIntakeMotor");
 
-        Container.BindInstance(new TalonSRX(RobotConfig.Magazine.leftTreeUpperMotor)).WithId("leftTreeUpperMotor");
-        Container.BindInstance(new TalonSRX(RobotConfig.Magazine.leftTreeLowerMotor)).WithId("leftTreeLowerMotor");
-        Container.BindInstance(new Linebreaker(RobotConfig.Magazine.leftTreeLinebreak)).WithId("leftTreeLinebreak");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Magazine.LeftTreeUpperMotorChannel)).WithId("leftTreeUpperMotor");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Magazine.LeftTreeLowerMotorChannel)).WithId("leftTreeLowerMotor");
+        this.Container.BindInstance(new Linebreaker(RobotConfig.Magazine.LeftTreeLinebreakChannel)).WithId("leftTreeLinebreak");
 
-        Container.BindInstance(new TalonSRX(RobotConfig.Magazine.rightTreeUpperMotor)).WithId("rightTreeUpperMotor");
-        Container.BindInstance(new TalonSRX(RobotConfig.Magazine.rightTreeLowerMotor)).WithId("rightTreeLowerMotor");
-        Container.BindInstance(new Linebreaker(RobotConfig.Magazine.rightTreeUpperMotor)).WithId("rightTreeLinebreak");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Magazine.RightTreeUpperMotorChannel)).WithId("rightTreeUpperMotor");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Magazine.RightTreeLowerMotorChannel)).WithId("rightTreeLowerMotor");
+        this.Container.BindInstance(new Linebreaker(RobotConfig.Magazine.RightTreeUpperMotorChannel)).WithId("rightTreeLinebreak");
 
-        Container.BindInstance(new TalonSRX(RobotConfig.Magazine.treeStemLeftMotor)).WithId("treeStemLeftMotor");
-        Container.BindInstance(new TalonSRX(RobotConfig.Magazine.treeStemRightMotor)).WithId("treeStemRightMotor");
-        Container.BindInstance(new Linebreaker(RobotConfig.Magazine.treeStemLinebreak)).WithId("treeStemLinebreak");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Magazine.TreeStemLeftMotorChannel)).WithId("treeStemLeftMotor");
+        this.Container.BindInstance(new TalonSRX(RobotConfig.Magazine.TreeStemRightMotorChannel)).WithId("treeStemRightMotor");
+        this.Container.BindInstance(new Linebreaker(RobotConfig.Magazine.TreeStemLinebreakChannel)).WithId("treeStemLinebreak");
 
-        Container.BindInstance(new CANSparkMax(RobotConfig.Climber.leftClimbMotor, MotorType.kBrushless)).WithId("leftClimbMotor");
-        Container.BindInstance(new CANSparkMax(RobotConfig.Climber.rightClimbMotor, MotorType.kBrushless)).WithId("rightClimbMotor");
-        Container.BindInstance(new Servo(RobotConfig.Climber.climberReleaseServo)).WithId("climberReleaseServo");
+        this.Container.BindInstance(new CANSparkMax(RobotConfig.Climber.LeftClimbMotorChannel, MotorType.kBrushless)).WithId("leftClimbMotor");
+        this.Container.BindInstance(new CANSparkMax(RobotConfig.Climber.RightClimbMotorChannel, MotorType.kBrushless)).WithId("rightClimbMotor");
+        this.Container.BindInstance(new Servo(RobotConfig.Climber.ClimberReleaseServoChannel)).WithId("climberReleaseServo");
         
-        Container.Bind(Drivetrain.class);
-        Container.Bind(Shooter.class);
-        Container.Bind(Magazine.class);
-        Container.Bind(Intake.class);
-        Container.Bind(Climber.class);
+        this.Container.Bind(Drivetrain.class);
+        this.Container.Bind(Shooter.class);
+        this.Container.Bind(Magazine.class);
+        this.Container.Bind(Intake.class);
+        this.Container.Bind(Climber.class);
     }
 }

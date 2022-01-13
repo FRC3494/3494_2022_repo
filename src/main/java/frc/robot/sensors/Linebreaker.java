@@ -3,7 +3,7 @@ package frc.robot.sensors;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Linebreaker {
-    private DigitalInput digitalInput;
+    DigitalInput digitalInput;
 
     public Linebreaker(int port) {
         this.digitalInput = new DigitalInput(port);

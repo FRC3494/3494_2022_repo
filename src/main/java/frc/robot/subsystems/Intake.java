@@ -19,22 +19,22 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
 
     @Override
     public void Initialize() {
-        frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
-        frontIntakeInnerMotor.setNeutralMode(NeutralMode.Brake);
-        backIntakeMotor.setNeutralMode(NeutralMode.Brake);
+        this.frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
+        this.frontIntakeInnerMotor.setNeutralMode(NeutralMode.Brake);
+        this.backIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
-        backIntakeMotor.follow(frontIntakeMotor);
-        frontIntakeInnerMotor.follow(frontIntakeMotor);
+        this.backIntakeMotor.follow(this.frontIntakeMotor);
+        this.frontIntakeInnerMotor.follow(this.frontIntakeMotor);
     }
 
     public void Run(double power) {
         // add code for actuation when intake is requested
 
-        frontIntakeMotor.set(ControlMode.PercentOutput, power);
+        this.frontIntakeMotor.set(ControlMode.PercentOutput, power);
     }
 
     @Override
     public void Dispose() {
-        Run(0);
+        this.Run(0);
     }
 }

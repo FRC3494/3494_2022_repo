@@ -16,68 +16,68 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class Drive extends CommandBase implements IInitializable, ITickable, IDisposable {
     @Inject
-    private OI oi;
+    OI oi;
 
     @Inject
-    private DriverStation.Alliance alliance;
+    DriverStation.Alliance alliance;
 
     @Inject
-    private Drivetrain drivetrain;
+    Drivetrain drivetrain;
 
     @Inject
-    private Intake intake;
+    Intake intake;
 
     @Inject
-    private Magazine magazine;
+    Magazine magazine;
 
     @Inject
-    private Climber climber;
+    Climber climber;
 
     @Inject
-    private Shooter shooter;
+    Shooter shooter;
 
-    public boolean singing = false;
-    public boolean startedSinging = false;
+    boolean singing = false;
+    boolean startedSinging = false;
 
     @Override
     public void Initialize() {
-        addRequirements(drivetrain);
-        addRequirements(intake);
-        addRequirements(magazine);
-        addRequirements(climber);
-        addRequirements(shooter);
+        addRequirements(this.drivetrain);
+        addRequirements(this.intake);
+        addRequirements(this.magazine);
+        addRequirements(this.climber);
+        addRequirements(this.shooter);
     }
 
     @Override
     public void Tick() {
-        if (singing) {
-            if (!startedSinging) {
-                drivetrain.SingTheTheme();
-                startedSinging = true;
+        if (this.singing) {
+            if (!this.startedSinging) {
+                this.drivetrain.SingTheTheme();
+                this.startedSinging = true;
             }
             return;
         }
 
-        drivetrain.Tank(PowerCurve(oi.GetLeftDriveSpeed()), PowerCurve(oi.GetRightDriveSpeed()));
+        this.drivetrain.Tank(this.PowerCurve(this.oi.GetLeftDriveSpeed()), this.PowerCurve(this.oi.GetRightDriveSpeed()));
 
-        intake.Run(oi.GetIntakeSpeed());
-        magazine.Run((oi.GetNeedOuttake()) ? RobotConfig.Magazine.outtakeSpeed : ((oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.intakeSpeed : RobotConfig.Magazine.idleSpeed));
+        this.intake.Run(this.oi.GetIntakeSpeed());
+        this.magazine.Run((this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OuttakeSpeed : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.IntakeSpeed : RobotConfig.Magazine.IdleSpeed));
 
-        if (oi.GetClimberRelease()) climber.ReleaseClimber();
-        climber.Run(oi.GetClimberPower());
+        if (this.oi.GetClimberRelease()) this.climber.ReleaseClimber();
+        this.climber.Run(this.oi.GetClimberPower());
 
-        shooter.Shoot(oi.GetShooterPower() * RobotConfig.Shooter.baseTargetRPM);
+        this.shooter.Run(this.oi.GetShooterPower() * RobotConfig.Shooter.BaseTargetRPM);
 
-        if (oi.StartSinging()) singing = true;
+        if (this.oi.StartSinging()) this.singing = true;
     }
 
     @Override
     public void Dispose() {
-        drivetrain.Tank(0, 0);
-        intake.Run(0);
-        magazine.RunRaw(0);
-        climber.Run(0);
-        shooter.Shoot(0);
+        this.drivetrain.Tank(0, 0);
+        this.intake.Run(0);
+        this.magazine.RunRaw(0);
+        this.climber.Run(0);
+        this.shooter.Run(0);
     }
 
     @Override
