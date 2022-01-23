@@ -57,6 +57,8 @@ public class Drive extends CommandBase implements ITickable, IDisposable {
 
         this.shooter.run(this.oi.GetShooterPower() * RobotConfig.Shooter.BASE_TARGET_RPM);
 
+        this.shooter.runTurret(this.oi.GetTurretPower());
+
         if (this.oi.StartSinging()) this.singing = true;
     }
 
@@ -66,6 +68,7 @@ public class Drive extends CommandBase implements ITickable, IDisposable {
         this.magazine.runRaw(0);
         this.climber.run(0);
         this.shooter.run(0);
+        this.shooter.runTurret(0);
     }
 
     public double PowerCurve(double x) {

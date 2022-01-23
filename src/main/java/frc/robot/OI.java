@@ -48,6 +48,10 @@ public class OI implements IInitializable, IDisposable {
         return this.secondaryXbox.getRightTriggerAxis();
     }
 
+    public double GetTurretPower() {
+        return this.secondaryXbox.getLeftX() * RobotConfig.Shooter.TURRET_SPEED;
+    }
+
     public boolean StartSinging() {
         return this.secondaryXbox.getXButton(); // Disable this before comp lol
     }

@@ -5,17 +5,17 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 
-import frc.robot.RobotConfig;
+import frc.robot.RobotMap;
 import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
-    TalonFX leftMaster = new TalonFX(RobotConfig.Drivetrain.LEFT_LEADER_CHANNEL);
-    TalonFX leftSlave = new TalonFX(RobotConfig.Drivetrain.LEFT_FOLLOWER_CHANNEL);
+    TalonFX leftMaster = new TalonFX(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);
+    TalonFX leftSlave = new TalonFX(RobotMap.Drivetrain.LEFT_FOLLOWER_CHANNEL);
 
-    TalonFX rightMaster = new TalonFX(RobotConfig.Drivetrain.RIGHT_LEADER_CHANNEL);
-    TalonFX rightSlave = new TalonFX(RobotConfig.Drivetrain.RIGHT_FOLLOWER_CHANNEL);
+    TalonFX rightMaster = new TalonFX(RobotMap.Drivetrain.RIGHT_LEADER_CHANNEL);
+    TalonFX rightSlave = new TalonFX(RobotMap.Drivetrain.RIGHT_FOLLOWER_CHANNEL);
 
     Orchestra orchestra = new Orchestra();
 
@@ -53,7 +53,6 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
         this.orchestra.pause();
     }
 
-    @Override
     public void onDispose() {
         this.run(0, 0);
     }
