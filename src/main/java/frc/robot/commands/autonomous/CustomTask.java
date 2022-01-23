@@ -24,27 +24,27 @@ public abstract class CustomTask extends AutoTask {
 
     }
 
-    public abstract void begin();
-    public abstract boolean execute();
-    public abstract void stop();
+    public abstract void customBegin();
+    public abstract boolean customExecute();
+    public abstract void customStop();
 
     @Override
-    public void Begin() {
-        this.begin();
+    public void begin() {
+        this.customBegin();
     }
 
     @Override
-    public boolean Execute() {
-        return this.execute();
+    public boolean execute() {
+        return this.customExecute();
     }
 
     @Override
-    public void Stop() {
-        this.stop();
+    public void stop() {
+        this.customStop();
     }
 
     @Override
-    public ETA GetETA() {
+    public ETA getETA() {
         return new ETA();
     }
 }

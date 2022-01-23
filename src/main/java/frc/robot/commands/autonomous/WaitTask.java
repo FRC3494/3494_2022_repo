@@ -12,20 +12,20 @@ public class WaitTask extends AutoTask {
     }
 
     @Override
-    public void Begin() {
+    public void begin() {
         this.endTime = System.currentTimeMillis() + this.millis;
     }
 
     @Override
-    public boolean Execute() {
+    public boolean execute() {
         return (this.endTime < System.currentTimeMillis());
     }
 
     @Override
-    public void Stop() { }
+    public void stop() { }
 
     @Override
-    public ETA GetETA() {
+    public ETA getETA() {
         return new ETA(this.endTime - this.millis, System.currentTimeMillis(), this.endTime);
     }
 }

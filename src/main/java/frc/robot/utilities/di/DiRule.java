@@ -62,8 +62,8 @@ public class DiRule {
     * @see DiContainer
     */
     protected boolean ruleApplies(DiContext context) {
-        boolean canAssignContextToTarget = context.MemberClass.isAssignableFrom(this.targetClass);
-        boolean canAssignTargetToContext = this.targetClass.isAssignableFrom(context.MemberClass);
+        boolean canAssignContextToTarget = context.memberClass.isAssignableFrom(this.targetClass);
+        boolean canAssignTargetToContext = this.targetClass.isAssignableFrom(context.memberClass);
 
         if (!(canAssignContextToTarget || canAssignTargetToContext)) return false;
 
@@ -95,7 +95,7 @@ public class DiRule {
     protected Object getObjectValue(DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         switch (this.retrievalMode) {
             case Create:
-                if (this.instanceClass != null) return this.container.Instantiate(this.instanceClass, context);
+                if (this.instanceClass != null) return this.container.instantiate(this.instanceClass, context);
                 break;
             case Return:
                 if (this.targetObject != null) {
@@ -105,10 +105,11 @@ public class DiRule {
                 }
                 break;
             case Resolve:
-                if (this.instanceClass != null) return this.container.Resolve(this.instanceClass, context);
+                if (this.instanceClass != null) return this.container.resolve(this.instanceClass, context);
             default:
                 break;
         }
+
         throw new DiExceptions.IncompleteBindingException();
     }
 

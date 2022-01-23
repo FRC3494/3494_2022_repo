@@ -27,10 +27,10 @@ public class DiRuleBuilder {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder Bind(Class<?> ...inClasses) {
+    public DiRuleBuilder bind(Class<?>... inClasses) {
         if (this.bindDone) throw new DiExceptions.RuleBuilderException();
 
-        for (Class<?> inClass: inClasses) {
+        for (Class<?> inClass : inClasses) {
             DiRule rule = new DiRule(this.container, inClass);
 
             this.targetRules.add(rule);
@@ -48,8 +48,8 @@ public class DiRuleBuilder {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder BindInstance(Object instance) {
-        this.BindInstances(instance);
+    public DiRuleBuilder bindInstance(Object instance) {
+        this.bindInstances(instance);
 
         return this;
     }
@@ -62,13 +62,13 @@ public class DiRuleBuilder {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder BindInstances(Object ...instances) {
+    public DiRuleBuilder bindInstances(Object... instances) {
         if (this.bindDone || this.resolutionSet) throw new DiExceptions.RuleBuilderException();
 
         this.bindDone = true;
         this.resolutionSet = true;
 
-        for (Object instance: instances) {
+        for (Object instance : instances) {
             UUID uuid = UUID.randomUUID();
 
             this.container.objectPool.put(uuid, instance);
@@ -94,12 +94,12 @@ public class DiRuleBuilder {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiRule
     */
-    public DiRuleBuilder BindInterfacesTo(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        this.Bind(inClass.getInterfaces());
+    public DiRuleBuilder bindInterfacesTo(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        this.bind(inClass.getInterfaces());
 
-        this.To(inClass);
+        this.to(inClass);
 
-        this.AsSingle();
+        this.asSingle();
 
         return this;
     }
@@ -114,15 +114,15 @@ public class DiRuleBuilder {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiRule
     */
-    public DiRuleBuilder BindInterfacesAndSelfTo(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public DiRuleBuilder bindInterfacesAndSelfTo(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         List<Class<?>> classes = Arrays.asList(inClass.getInterfaces());
         classes.add(inClass);
 
-        this.Bind(classes.toArray(new Class<?>[0]));
+        this.bind(classes.toArray(new Class<?>[0]));
 
-        this.To(inClass);
+        this.to(inClass);
 
-        this.AsSingle();
+        this.asSingle();
 
         return this;
     }
@@ -134,16 +134,17 @@ public class DiRuleBuilder {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder AsSingle() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public DiRuleBuilder asSingle() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         if (this.resolutionSet) throw new DiExceptions.RuleBuilderException();
+        
 
         this.resolutionSet = true;
 
         if (this.target != null) {
-            this.FromInstance(this.container.Instantiate(this.target));
+            this.fromInstance(this.container.instantiate(this.target));
         } else {
-            for (DiRule rule: this.targetRules) {
-                Object instance = this.container.Instantiate(rule.targetClass);
+            for (DiRule rule : this.targetRules) {
+                Object instance = this.container.instantiate(rule.targetClass);
                 UUID uuid = UUID.randomUUID();
 
                 this.container.objectPool.put(uuid, instance);
@@ -163,17 +164,17 @@ public class DiRuleBuilder {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder AsTransient() {
+    public DiRuleBuilder asTransient() {
         if (this.resolutionSet) throw new DiExceptions.RuleBuilderException();
 
         this.resolutionSet = true;
 
         if (this.target != null) {
-            for (DiRule rule: this.targetRules) {
+            for (DiRule rule : this.targetRules) {
                 rule.setupCreate(this.target);
             }
         } else {
-            for (DiRule rule: this.targetRules) {
+            for (DiRule rule : this.targetRules) {
                 rule.setupCreate(rule.targetClass);
             }
         }
@@ -195,7 +196,7 @@ public class DiRuleBuilder {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder To(Class<?> inClass) {
+    public DiRuleBuilder to(Class<?> inClass) {
         if (this.target != null) throw new DiExceptions.RuleBuilderException();
 
         this.target = inClass;
@@ -211,8 +212,10 @@ public class DiRuleBuilder {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder FromInstance(Object instance) {
-        if (this.resolutionSet) throw new DiExceptions.RuleBuilderException();
+    public DiRuleBuilder fromInstance(Object instance) {
+        if (this.resolutionSet) {
+            throw new DiExceptions.RuleBuilderException();
+        }
 
         this.resolutionSet = true;
 
@@ -220,7 +223,7 @@ public class DiRuleBuilder {
 
         this.container.objectPool.put(uuid, instance);
 
-        for (DiRule rule: this.targetRules) {
+        for (DiRule rule : this.targetRules) {
             rule.setupReturn(uuid);
         }
 
@@ -234,8 +237,8 @@ public class DiRuleBuilder {
     * @return A new RuleBuilder 
     * @see DiRule
     */
-    public DiRuleBuilder When(DiCondition condition) {
-        for (DiRule rule: this.targetRules) {
+    public DiRuleBuilder when(DiCondition condition) {
+        for (DiRule rule : this.targetRules) {
             rule.conditions.add(condition);
         }
 
@@ -249,12 +252,12 @@ public class DiRuleBuilder {
     * @return A new RuleBuilder 
     * @see DiRule
     */
-    public DiRuleBuilder WhenInjectedInto(Class<?> inClass) {
-        for (DiRule rule: this.targetRules) {
+    public DiRuleBuilder whenInjectedInto(Class<?> inClass) {
+        for (DiRule rule : this.targetRules) {
             rule.conditions.add(new DiCondition() {
                 @Override
                 public Boolean check(DiContext context) {
-                    return context.TargetClass == inClass;
+                    return context.targetClass == inClass;
                 }
             });
         }
@@ -269,12 +272,12 @@ public class DiRuleBuilder {
     * @return A new RuleBuilder 
     * @see DiRule
     */
-    public DiRuleBuilder WithId(String id) {
-        for (DiRule rule: this.targetRules) {
+    public DiRuleBuilder withId(String id) {
+        for (DiRule rule : this.targetRules) {
             rule.conditions.add(new DiCondition() {
                 @Override
                 public Boolean check(DiContext context) {
-                    return context.Id.equals(id);
+                    return context.id.equals(id);
                 }
             });
         }

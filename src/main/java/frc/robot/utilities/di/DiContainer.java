@@ -16,8 +16,8 @@ public class DiContainer {
     /**
     * An Annotation to mark the Field to be injected by the Container
     *
-    * @param Id The optional Id of the instance
-    * @param Optional Whetheher or not injecting the field is mandatory or not
+    * @param id The optional Id of the instance
+    * @param optional Whetheher or not injecting the field is mandatory or not
     * @see DiContainer
     */
     @Retention(RetentionPolicy.RUNTIME)
@@ -38,10 +38,10 @@ public class DiContainer {
     *
     * @see DiContext
     */
-    public void Initialize() {
-        for (Object objectInstance: this.objectPool.values()) {
+    public void onInject() {
+        for (Object objectInstance : this.objectPool.values()) {
             if (objectInstance instanceof DiInterfaces.IInitializable) {
-                ((DiInterfaces.IInitializable) objectInstance).Initialize();
+                ((DiInterfaces.IInitializable) objectInstance).onInject();
             }
         }
     }
@@ -51,10 +51,10 @@ public class DiContainer {
     *
     * @see DiContext
     */
-    public void Tick() {
-        for (Object objectInstance: this.objectPool.values()) {
+    public void onTick() {
+        for (Object objectInstance : this.objectPool.values()) {
             if (objectInstance instanceof DiInterfaces.ITickable) {
-                ((DiInterfaces.ITickable) objectInstance).Tick();
+                ((DiInterfaces.ITickable) objectInstance).onTick();
             }
         }
     }
@@ -64,10 +64,10 @@ public class DiContainer {
     *
     * @see DiContext
     */
-    public void Dispose() {
-        for (Object objectInstance: this.objectPool.values()) {
+    public void onDispose() {
+        for (Object objectInstance : this.objectPool.values()) {
             if (objectInstance instanceof DiInterfaces.IDisposable) {
-                ((DiInterfaces.IDisposable) objectInstance).Dispose();
+                ((DiInterfaces.IDisposable) objectInstance).onDispose();
             }
         }
     }
@@ -79,7 +79,7 @@ public class DiContainer {
     * @param parent The Container to set as a parent
     * @see DiContainer
     */
-    public void SetParent(DiContainer parent) {
+    public void setParent(DiContainer parent) {
         this.parentContainer = parent;
     }
 
@@ -94,17 +94,19 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiContainer
     */
-    protected List<Object> ResolveAll(Class<?> searchClass, DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    protected List<Object> resolveAll(Class<?> searchClass, DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         List<Object> values = new ArrayList<>();
-        context.MemberClass = searchClass;
+        context.memberClass = searchClass;
 
-        for (DiRule rule: this.rules) {
+        for (DiRule rule : this.rules) {
             if (rule.ruleApplies(context)) {
                 values.add(rule.getObjectValue(context));
             }
         }
 
-        if (this.parentContainer != null) values.addAll(this.parentContainer.ResolveAll(searchClass, context));
+        if (this.parentContainer != null) {
+            values.addAll(this.parentContainer.resolveAll(searchClass, context));
+        }
 
         return values;
     }
@@ -122,8 +124,8 @@ public class DiContainer {
     * @throws DiExceptions.InstanceNotFoundException Caused if no instances are found
     * @see DiContainer
     */
-    protected Object Resolve(Class<?> searchClass, DiContext context) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        List<Object> values = this.ResolveAll(searchClass, context);
+    protected Object resolve(Class<?> searchClass, DiContext context) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        List<Object> values = this.resolveAll(searchClass, context);
 
         if (values.size() > 1) throw new DiExceptions.MultipleInstancesFoundException();
         if (values.size() < 1) throw new DiExceptions.InstanceNotFoundException();
@@ -142,20 +144,20 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiContainer
     */
-    protected Object Instantiate(Class<?> inClass, DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    protected Object instantiate(Class<?> inClass, DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<?>[] constructors = inClass.getConstructors();
         Class<?>[] parameterClasses = constructors[0].getParameterTypes();
         List<Object> parameterValues = new ArrayList<>();
 
-        context.TargetClass = inClass;
+        context.targetClass = inClass;
 
-        for (Class<?> parameterClass: parameterClasses) {
-            parameterValues.add(this.Resolve(parameterClass, context));
+        for (Class<?> parameterClass : parameterClasses) {
+            parameterValues.add(this.resolve(parameterClass, context));
         }
 
         Object instance = constructors[0].newInstance(parameterValues.toArray(new Object[0]));
 
-        return this.Inject(instance, context);
+        return this.inject(instance, context);
     }
 
     /**
@@ -169,7 +171,7 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiContainer
     */
-    protected Object Inject(Object instance, DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    protected Object inject(Object instance, DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Field[] fields = instance.getClass().getFields();
 
         for (Field field: fields) {
@@ -177,17 +179,20 @@ public class DiContainer {
             Inject inject = field.getAnnotation(Inject.class);
 
             try {
-                context.Id = inject.id();
+                context.id = inject.id();
 
-                if (context.Id.equals("")) context.Id = null;
+                if (context.id.equals("")) {
+                    context.id = null;
+                }
             } catch (NullPointerException e) {
-                context.Id = null;
+                context.id = null;
             }
-            context.Optional = inject.optional();
-            context.MemberName = field.getName();
-            context.MemberClass = field.getType();
 
-            field.set(instance, this.Resolve(field.getType(), context));
+            context.optional = inject.optional();
+            context.memberName = field.getName();
+            context.memberClass = field.getType();
+
+            field.set(instance, this.resolve(field.getType(), context));
         }
 
         return instance;
@@ -203,10 +208,10 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiContainer
     */
-    public Object Inject(Object instance) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public Object inject(Object instance) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         DiContext context = new DiContext(null, instance.getClass(), instance, "", null, false, this);
 
-        return this.Inject(instance, context);
+        return this.inject(instance, context);
     }
 
     /**
@@ -219,10 +224,10 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiContainer
     */
-    public Object Instantiate(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public Object instantiate(Class<?> inClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         DiContext context = new DiContext(null, inClass, null, "", null, false, this);
 
-        return this.Instantiate(inClass, context);
+        return this.instantiate(inClass, context);
     }
 
     /**
@@ -235,10 +240,10 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiContainer
     */
-    public Object Resolve(Class<?> searchClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public Object resolve(Class<?> searchClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         DiContext context = new DiContext(null, searchClass, null, "", null, false, this);
 
-        return this.Resolve(searchClass, context);
+        return this.resolve(searchClass, context);
     }
 
     /**
@@ -252,10 +257,10 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiContainer
     */
-    public Object ResolveId(Class<?> searchClass, String id) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public Object resolveId(Class<?> searchClass, String id) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         DiContext context = new DiContext(id, searchClass, null, "", null, false, this);
 
-        return this.Resolve(searchClass, context);
+        return this.resolve(searchClass, context);
     }
 
     /**
@@ -268,10 +273,10 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiContainer
     */
-    public List<Object> ResolveAll(Class<?> searchClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public List<Object> resolveAll(Class<?> searchClass) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         DiContext context = new DiContext(null, searchClass, null, "", null, false, this);
 
-        return this.ResolveAll(searchClass, context);
+        return this.resolveAll(searchClass, context);
     }
 
     /**
@@ -281,11 +286,11 @@ public class DiContainer {
     * @return The instance of the class or null
     * @see DiContainer
     */
-    public Object TryResolve(Class<?> searchClass) {
+    public Object tryResolve(Class<?> searchClass) {
         DiContext context = new DiContext(null, searchClass, null, "", null, false, this);
 
         try {
-            return this.Resolve(searchClass, context);
+            return this.resolve(searchClass, context);
         } catch (Exception e) {
             return null;
         }
@@ -299,11 +304,11 @@ public class DiContainer {
     * @return The instance of the class or null
     * @see DiContainer
     */
-    public Object TryResolveId(Class<?> searchClass, String id) {
+    public Object tryResolveId(Class<?> searchClass, String id) {
         DiContext context = new DiContext(id, searchClass, null, "", null, false, this);
 
         try {
-            return this.Resolve(searchClass, context);
+            return this.resolve(searchClass, context);
         } catch (Exception e) {
             return null;
         }
@@ -317,10 +322,10 @@ public class DiContainer {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder Bind(Class<?> ...inClasses) {
+    public DiRuleBuilder bind(Class<?>... inClasses) {
         DiRuleBuilder diRuleBuilder = new DiRuleBuilder(this);
 
-        diRuleBuilder.Bind(inClasses);
+        diRuleBuilder.bind(inClasses);
 
         return diRuleBuilder;
     }
@@ -333,10 +338,10 @@ public class DiContainer {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder BindInstance(Object instance) {
+    public DiRuleBuilder bindInstance(Object instance) {
         DiRuleBuilder diRuleBuilder = new DiRuleBuilder(this);
 
-        diRuleBuilder.BindInstance(instance);
+        diRuleBuilder.bindInstance(instance);
 
         return diRuleBuilder;
     }
@@ -349,10 +354,10 @@ public class DiContainer {
     * @throws DiExceptions.RuleBuilderException Caused by having an improper configuration prior to trying to set resolution
     * @see DiRule
     */
-    public DiRuleBuilder BindInstances(Object ...instances) {
+    public DiRuleBuilder bindInstances(Object... instances) {
         DiRuleBuilder diRuleBuilder = new DiRuleBuilder(this);
 
-        diRuleBuilder.BindInstances(instances);
+        diRuleBuilder.bindInstances(instances);
 
         return diRuleBuilder;
     }
@@ -367,10 +372,10 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiRule
     */
-    public DiRuleBuilder BindInterfacesTo(Class<?> inClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public DiRuleBuilder bindInterfacesTo(Class<?> inClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         DiRuleBuilder diRuleBuilder = new DiRuleBuilder(this);
 
-        diRuleBuilder.BindInterfacesTo(inClass);
+        diRuleBuilder.bindInterfacesTo(inClass);
 
         return diRuleBuilder;
     }
@@ -385,10 +390,10 @@ public class DiContainer {
     * @throws InstantiateException Can be caused if the Container fails to instantiate a class
     * @see DiRule
     */
-    public DiRuleBuilder BindInterfacesAndSelfTo(Class<?> inClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public DiRuleBuilder bindInterfacesAndSelfTo(Class<?> inClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         DiRuleBuilder diRuleBuilder = new DiRuleBuilder(this);
 
-        diRuleBuilder.BindInterfacesAndSelfTo(inClass);
+        diRuleBuilder.bindInterfacesAndSelfTo(inClass);
 
         return diRuleBuilder;
     }

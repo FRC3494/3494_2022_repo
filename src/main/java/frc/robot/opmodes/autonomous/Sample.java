@@ -4,7 +4,7 @@ import frc.robot.utilities.AutoOpMode;
 
 public class Sample extends AutoOpMode {
     @Override
-    public void Sequence() {
+    public void sequence() {
 
     }
 }

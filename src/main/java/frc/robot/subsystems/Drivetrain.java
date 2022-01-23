@@ -11,16 +11,16 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
-    TalonFX leftMaster = new TalonFX(RobotConfig.Drivetrain.LeftMasterChannel);
-    TalonFX leftSlave = new TalonFX(RobotConfig.Drivetrain.LeftSlaveChannel);
+    TalonFX leftMaster = new TalonFX(RobotConfig.Drivetrain.LEFT_LEADER_CHANNEL);
+    TalonFX leftSlave = new TalonFX(RobotConfig.Drivetrain.LEFT_FOLLOWER_CHANNEL);
 
-    TalonFX rightMaster = new TalonFX(RobotConfig.Drivetrain.RightMasterChannel);
-    TalonFX rightSlave = new TalonFX(RobotConfig.Drivetrain.RightSlaveChannel);
+    TalonFX rightMaster = new TalonFX(RobotConfig.Drivetrain.RIGHT_LEADER_CHANNEL);
+    TalonFX rightSlave = new TalonFX(RobotConfig.Drivetrain.RIGHT_FOLLOWER_CHANNEL);
 
     Orchestra orchestra = new Orchestra();
 
     @Override
-    public void Initialize() {
+    public void onInject() {
         this.orchestra.addInstrument(this.leftMaster);
         this.orchestra.addInstrument(this.leftSlave);
         
@@ -39,23 +39,23 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
         this.rightSlave.follow(this.rightMaster);
     }
 
-    public void Tank(double leftPower, double rightPower) {
+    public void run(double leftPower, double rightPower) {
         this.leftMaster.set(ControlMode.PercentOutput, leftPower);
         this.rightMaster.set(ControlMode.PercentOutput, rightPower);
     }
 
-    public void SingTheTheme() {
+    public void singTheTheme() {
         this.orchestra.loadMusic("mbk.chrp");
 
         this.orchestra.play();
     }
 
-    public void PauseTheTheme() {
+    public void pauseTheTheme() {
         this.orchestra.pause();
     }
 
     @Override
-    public void Dispose() {
-        this.Tank(0, 0);
+    public void onDispose() {
+        this.run(0, 0);
     }
 }

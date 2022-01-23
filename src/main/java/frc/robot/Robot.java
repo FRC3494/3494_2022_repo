@@ -11,10 +11,10 @@ import frc.robot.subsystems.Shooter;
 public class Robot extends DiRobot {
     @Override
     public void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        this.Container.Bind(Drivetrain.class);
-        this.Container.Bind(Shooter.class);
-        this.Container.Bind(Magazine.class);
-        this.Container.Bind(Intake.class);
-        this.Container.Bind(Climber.class);
+        this.Container.bind(Drivetrain.class);
+        this.Container.bind(Shooter.class);
+        this.Container.bind(Magazine.class);
+        this.Container.bind(Intake.class);
+        this.Container.bind(Climber.class);
     }
 }
