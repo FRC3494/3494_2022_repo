@@ -43,11 +43,11 @@ public abstract class DiRobot extends TimedRobot {
 
         //Get Auto OpMode from ShuffleBoard
         
-        this.currentOpMode.Container.BindInstance(this.currentOpMode);
+        this.currentOpMode.Container.bindInstance(this.currentOpMode);
 
         if (this.currentOpMode != null) {
             try {
-                this.currentOpMode.Install();
+                this.currentOpMode.install();
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 System.out.println("Failed to start the autonomous OpMode.");
 
@@ -66,11 +66,11 @@ public abstract class DiRobot extends TimedRobot {
 
         this.currentOpMode = new Teleop();
 
-        this.currentOpMode.Container.BindInstance(this.currentOpMode);
-        this.currentOpMode.Container.BindInstance(alliance);
+        this.currentOpMode.Container.bindInstance(this.currentOpMode);
+        this.currentOpMode.Container.bindInstance(alliance);
         
         try {
-            this.currentOpMode.Install();
+            this.currentOpMode.install();
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             System.out.println("Failed to start the autonomous OpMode.");
 

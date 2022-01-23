@@ -11,15 +11,15 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Climber extends DiSubsystem implements IInitializable, IDisposable {
-    CANSparkMax leftClimbMotor = new CANSparkMax(RobotConfig.Climber.LeftClimbMotorChannel, MotorType.kBrushless);
-    CANSparkMax rightClimbMotor = new CANSparkMax(RobotConfig.Climber.RightClimbMotorChannel, MotorType.kBrushless);
+    CANSparkMax leftClimbMotor = new CANSparkMax(RobotConfig.Climber.LEFT_CLIMB_MOTOR_CHANNEL, MotorType.kBrushless);
+    CANSparkMax rightClimbMotor = new CANSparkMax(RobotConfig.Climber.RIGHT_CLIMB_MOTOR_CHANNEL, MotorType.kBrushless);
 
-    Servo climberReleaseServo = new Servo(RobotConfig.Climber.ClimberReleaseServoChannel);
+    Servo climberReleaseServo = new Servo(RobotConfig.Climber.RELEASE_SERVO_CHANNEL);
 
     boolean hasReleased = false;
 
     @Override
-    public void Initialize() {
+    public void onInject() {
         this.leftClimbMotor.setIdleMode(IdleMode.kBrake);
         this.rightClimbMotor.setIdleMode(IdleMode.kBrake);
 
@@ -27,21 +27,21 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
 
         this.rightClimbMotor.follow(this.leftClimbMotor);
 
-        this.climberReleaseServo.set(RobotConfig.Climber.HoldingPosition);
+        this.climberReleaseServo.set(RobotConfig.Climber.HOLDING_POSITION);
     }
 
-    public void Run(double power) {
+    public void run(double power) {
         this.leftClimbMotor.set((this.hasReleased) ? power : 0);
     }
 
-    public void ReleaseClimber() {
-        this.climberReleaseServo.set(RobotConfig.Climber.ReleasePosition);
+    public void release() {
+        this.climberReleaseServo.set(RobotConfig.Climber.RELEASE_POSITION);
 
         this.hasReleased = true;
     }
 
     @Override
-    public void Dispose() {
-        Run(0);
+    public void onDispose() {
+        run(0);
     }
 }

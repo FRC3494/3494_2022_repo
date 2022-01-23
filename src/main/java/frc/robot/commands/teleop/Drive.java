@@ -39,35 +39,35 @@ public class Drive extends CommandBase implements ITickable, IDisposable {
     boolean startedSinging = false;
 
     @Override
-    public void Tick() {
+    public void onTick() {
         if (this.singing) {
             if (!this.startedSinging) {
-                this.drivetrain.SingTheTheme();
+                this.drivetrain.singTheTheme();
                 this.startedSinging = true;
             }
             return;
         }
 
-        this.drivetrain.Tank(this.PowerCurve(this.oi.GetLeftDriveSpeed()), this.PowerCurve(this.oi.GetRightDriveSpeed()));
+        this.drivetrain.run(this.PowerCurve(this.oi.GetLeftDriveSpeed()), this.PowerCurve(this.oi.GetRightDriveSpeed()));
 
-        this.intake.Run(this.oi.GetIntakeSpeed());
-        this.magazine.Run((this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OuttakeSpeed : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.IntakeSpeed : RobotConfig.Magazine.IdleSpeed));
+        this.intake.run(this.oi.GetIntakeSpeed());
+        this.magazine.run((this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OUTTAKE_SPEED : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : RobotConfig.Magazine.IDLE_SPEED));
 
-        if (this.oi.GetClimberRelease()) this.climber.ReleaseClimber();
-        this.climber.Run(this.oi.GetClimberPower());
+        if (this.oi.GetClimberRelease()) this.climber.release();
+        this.climber.run(this.oi.GetClimberPower());
 
-        this.shooter.Run(this.oi.GetShooterPower() * RobotConfig.Shooter.BaseTargetRPM);
+        this.shooter.run(this.oi.GetShooterPower() * RobotConfig.Shooter.BASE_TARGET_RPM);
 
         if (this.oi.StartSinging()) this.singing = true;
     }
 
     @Override
-    public void Dispose() {
-        this.drivetrain.Tank(0, 0);
-        this.intake.Run(0);
-        this.magazine.RunRaw(0);
-        this.climber.Run(0);
-        this.shooter.Run(0);
+    public void onDispose() {
+        this.drivetrain.run(0, 0);
+        this.intake.run(0);
+        this.magazine.runRaw(0);
+        this.climber.run(0);
+        this.shooter.run(0);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class DiInterfaces {
         *
         * @see DiContainer
         */
-        void Initialize();
+        void onInject();
     }
     public interface ITickable {
         /**
@@ -23,7 +23,7 @@ public class DiInterfaces {
         *
         * @see DiContainer
         */
-        void Tick();
+        void onTick();
     }
     public interface IDisposable {
         /**
@@ -31,7 +31,7 @@ public class DiInterfaces {
         *
         * @see DiContainer
         */
-        void Dispose();
+        void onDispose();
     }
 }
 

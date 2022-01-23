@@ -10,25 +10,25 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Intake extends DiSubsystem implements IInitializable, IDisposable {
-    TalonSRX frontIntakeMotor = new TalonSRX(RobotConfig.Intake.FrontIntakeMotorChannel);
-    TalonSRX backIntakeMotor = new TalonSRX(RobotConfig.Intake.BackIntakeMotorChannel);
+    TalonSRX frontIntakeMotor = new TalonSRX(RobotConfig.Intake.FRONT_INTAKE_MOTOR_CHANNEL);
+    TalonSRX backIntakeMotor = new TalonSRX(RobotConfig.Intake.BACK_INTAKE_MOTOR_CHANNEL);
 
     @Override
-    public void Initialize() {
+    public void onInject() {
         this.frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
         this.backIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
         this.backIntakeMotor.follow(this.frontIntakeMotor);
     }
 
-    public void Run(double power) {
+    public void run(double power) {
         // add code for actuation when intake is requested
 
         this.frontIntakeMotor.set(ControlMode.PercentOutput, power);
     }
 
     @Override
-    public void Dispose() {
-        this.Run(0);
+    public void onDispose() {
+        this.run(0);
     }
 }
