@@ -71,11 +71,15 @@ public abstract class DiCommand extends CommandBase implements IInjected {
 
     @Override
     public void execute() {
-        if (needsInitialization && !waitingForInject && !waitingForInitialize) {
-            internalInitialize();
+        if (needsInitialization) {
+            if (!waitingForInject && !waitingForInitialize) {
+                internalInitialize();
+    
+                needsInitialization = false;
+            }
 
-            needsInitialization = false;
-        }
+            return;
+        } 
 
         if (this.isTickable) ((ITickable) this).Tick();
     }
