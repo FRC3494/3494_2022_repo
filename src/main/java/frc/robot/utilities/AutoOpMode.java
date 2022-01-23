@@ -10,14 +10,14 @@ import frc.robot.utilities.di.DiInterfaces.ITickable;
 public abstract class AutoOpMode extends DiOpMode {
     public AutoSequencer Sequencer;
 
-    public void Install() {
+    public void install() {
         this.Sequencer = new AutoSequencer();
-        this.Container.BindInstance(this.Sequencer);
+        this.Container.bindInstance(this.Sequencer);
 
-        this.Sequence();
+        this.sequence();
     }
 
-    public abstract void Sequence();
+    public abstract void sequence();
 
     public class AutoSequencer implements ITickable, IDisposable {
         @Inject
@@ -29,10 +29,10 @@ public abstract class AutoOpMode extends DiOpMode {
         private boolean hasInitlate = false;
         private String currentTaskName = "Unknown";
 
-        public void LateInitialize() {
+        public void lateInitialize() {
             for (int i = 0; i < this.tasks.size(); i++) {
                 try {
-                    this.tasks.set(i, (AutoTask) this.opMode.Container.Inject(this.tasks.get(i)));
+                    this.tasks.set(i, (AutoTask) this.opMode.Container.inject(this.tasks.get(i)));
                 } catch (Exception e) {
                     System.out.println("Failed to initialize task #" + i + " (" + this.tasks.get(i).getClass().getSimpleName() + ")");
                     e.printStackTrace();
@@ -42,9 +42,9 @@ public abstract class AutoOpMode extends DiOpMode {
         }
 
         @Override
-        public void Tick() {
+        public void onTick() {
             if (!this.hasInitlate) {
-                this.LateInitialize();
+                this.lateInitialize();
                 this.hasInitlate = true;
             }
 
@@ -52,15 +52,15 @@ public abstract class AutoOpMode extends DiOpMode {
                 System.out.println("Auto Status: Waiting for more tasks...");
                 return;
             } else if (!this.hasInitTask) {
-                this.tasks.get(0).Begin();
+                this.tasks.get(0).begin();
                 this.currentTaskName = this.tasks.get(0).getClass().getName();
                 this.hasInitTask = true;
             }
     
-            System.out.println("Auto Status: Running " + this.currentTaskName + "\n ETA: " + this.tasks.get(0).GetETA().FormatETA());
+            System.out.println("Auto Status: Running " + this.currentTaskName + "\n ETA: " + this.tasks.get(0).getETA().formatETA());
     
-            if (this.tasks.get(0).Execute()) {
-                this.tasks.get(0).Stop();
+            if (this.tasks.get(0).execute()) {
+                this.tasks.get(0).stop();
                 this.tasks.remove(0);
                 this.hasInitTask = false;
                 this.currentTaskName = "Unknown";
@@ -68,13 +68,13 @@ public abstract class AutoOpMode extends DiOpMode {
         }
         
         @Override
-        public void Dispose() {
+        public void onDispose() {
             for (AutoTask task : this.tasks) {
-                task.Stop();
+                task.stop();
             }
         }
 
-        public void Queue(AutoTask task) {
+        public void queue(AutoTask task) {
             this.tasks.add(task);
         }
     }

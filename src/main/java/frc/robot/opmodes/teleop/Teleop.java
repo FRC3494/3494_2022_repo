@@ -9,12 +9,12 @@ import frc.robot.utilities.DiOpMode;
 
 public class Teleop extends DiOpMode {
     @Override
-    public void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        this.Container.BindInstance(new XboxController(0)).WithId("primaryXbox");
-        this.Container.BindInstance(new XboxController(1)).WithId("secondaryXbox");
+    public void install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        this.Container.bindInstance(new XboxController(0)).withId("primaryXbox");
+        this.Container.bindInstance(new XboxController(1)).withId("secondaryXbox");
         
-        this.Container.Bind(OI.class);
+        this.Container.bind(OI.class);
 
-        this.Container.Bind(Drive.class);
+        this.Container.bind(Drive.class);
     }
 }

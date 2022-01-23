@@ -11,20 +11,20 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Magazine extends DiSubsystem implements IInitializable, IDisposable {
-    TalonSRX leftTreeUpperMotor = new TalonSRX(RobotConfig.Magazine.LeftTreeUpperMotorChannel);
-    TalonSRX leftTreeLowerMotor = new TalonSRX(RobotConfig.Magazine.LeftTreeLowerMotorChannel);
-    Linebreaker leftTreeLinebreak = new Linebreaker(RobotConfig.Magazine.LeftTreeLinebreakChannel);
+    TalonSRX leftTreeUpperMotor = new TalonSRX(RobotConfig.Magazine.LEFT_TREE_UPPER_MOTOR_CHANNEL);
+    TalonSRX leftTreeLowerMotor = new TalonSRX(RobotConfig.Magazine.LEFT_TREE_LOWER_MOTOR_CHANNEL);
+    Linebreaker leftTreeLinebreak = new Linebreaker(RobotConfig.Magazine.LEFT_TREE_LINEBREAK_CHANNEL);
     
-    TalonSRX rightTreeUpperMotor = new TalonSRX(RobotConfig.Magazine.RightTreeUpperMotorChannel);
-    TalonSRX rightTreeLowerMotor = new TalonSRX(RobotConfig.Magazine.RightTreeLowerMotorChannel);
-    Linebreaker rightTreeLinebreak = new Linebreaker(RobotConfig.Magazine.RightTreeUpperMotorChannel);
+    TalonSRX rightTreeUpperMotor = new TalonSRX(RobotConfig.Magazine.RIGHT_TREE_UPPER_MOTOR_CHANNEL);
+    TalonSRX rightTreeLowerMotor = new TalonSRX(RobotConfig.Magazine.RIGHT_TREE_LOWER_MOTOR_CHANNEL);
+    Linebreaker rightTreeLinebreak = new Linebreaker(RobotConfig.Magazine.RIGHT_TREE_UPPER_MOTOR_CHANNEL);
     
-    TalonSRX treeStemLeftMotor = new TalonSRX(RobotConfig.Magazine.TreeStemLeftMotorChannel);
-    TalonSRX treeStemRightMotor = new TalonSRX(RobotConfig.Magazine.TreeStemRightMotorChannel);
-    Linebreaker treeStemLinebreak = new Linebreaker(RobotConfig.Magazine.TreeStemLinebreakChannel);
+    TalonSRX treeStemLeftMotor = new TalonSRX(RobotConfig.Magazine.TREE_STEM_LEFT_MOTOR_CHANNEL);
+    TalonSRX treeStemRightMotor = new TalonSRX(RobotConfig.Magazine.TREE_STEM_RIGHT_MOTOR_CHANNEL);
+    Linebreaker treeStemLinebreak = new Linebreaker(RobotConfig.Magazine.TREE_STEM_LINEBREAK_CHANNEL);
 
     @Override
-    public void Initialize() {
+    public void onInject() {
         this.leftTreeUpperMotor.setNeutralMode(NeutralMode.Brake);
         this.leftTreeLowerMotor.setNeutralMode(NeutralMode.Brake);
         this.rightTreeUpperMotor.setNeutralMode(NeutralMode.Brake);
@@ -41,9 +41,9 @@ public class Magazine extends DiSubsystem implements IInitializable, IDisposable
         this.treeStemRightMotor.follow(this.treeStemLeftMotor);
     }
 
-    public void Run(double power) {
+    public void run(double power) {
         if (power <= 0) {
-            this.RunRaw(power);
+            this.runRaw(power);
             return;
         }
 
@@ -52,14 +52,14 @@ public class Magazine extends DiSubsystem implements IInitializable, IDisposable
         this.rightTreeUpperMotor.set(ControlMode.PercentOutput, (this.treeStemLinebreak.Broken() && this.rightTreeLinebreak.Broken()) ? ((this.leftTreeLinebreak.Broken()) ? -Math.abs(power) : 0) : power);
     }
 
-    public void RunRaw(double power) {
+    public void runRaw(double power) {
         this.treeStemLeftMotor.set(ControlMode.PercentOutput, power);
         this.leftTreeUpperMotor.set(ControlMode.PercentOutput, power);
         this.rightTreeUpperMotor.set(ControlMode.PercentOutput, power);
     }
 
     @Override
-    public void Dispose() {
-        this.RunRaw(0);
+    public void onDispose() {
+        this.runRaw(0);
     }
 }

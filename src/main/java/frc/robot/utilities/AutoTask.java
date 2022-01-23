@@ -1,36 +1,36 @@
 package frc.robot.utilities;
 
 public abstract class AutoTask {
-    public abstract void Begin();
-    public abstract boolean Execute();
-    public abstract void Stop();
-    public abstract ETA GetETA();
+    public abstract void begin();
+    public abstract boolean execute();
+    public abstract void stop();
+    public abstract ETA getETA();
 
     public class ETA {
-        public double StartTime;
-        public double CurrentTime = 0;
-        public double EndTime = 0;
-        public boolean HasEstimate = false;
+        public double startTime;
+        public double currentTime = 0;
+        public double endTime = 0;
+        public boolean asEstimate = false;
 
         public ETA(double startTime, double currentTime, double endTime) {
-            this.StartTime = startTime;
-            this.CurrentTime = currentTime;
-            this.EndTime = endTime;
-            this.HasEstimate = true;
+            this.startTime = startTime;
+            this.currentTime = currentTime;
+            this.endTime = endTime;
+            this.asEstimate = true;
         }
         public ETA() {
-            this.CurrentTime = 0;
-            this.EndTime = 0;
-            this.HasEstimate = false;
+            this.currentTime = 0;
+            this.endTime = 0;
+            this.asEstimate = false;
         }
 
-        public String FormatETA() {
-            if (!this.HasEstimate) return "Unknown";
+        public String formatETA() {
+            if (!this.asEstimate) return "Unknown";
 
-            double totalTime = this.EndTime - this.StartTime;
-            double percent = -((this.EndTime - this.CurrentTime) - totalTime) / totalTime;
+            double totalTime = this.endTime - this.startTime;
+            double percent = -((this.endTime - this.currentTime) - totalTime) / totalTime;
 
-            return (this.CurrentTime - this.StartTime) + "/" + totalTime + " (" + percent + "%)";
+            return (this.currentTime - this.startTime) + "/" + totalTime + " (" + percent + "%)";
         }
     }
 }

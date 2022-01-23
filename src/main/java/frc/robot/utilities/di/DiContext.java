@@ -1,13 +1,13 @@
 package frc.robot.utilities.di;
 
 public class DiContext {
-    public String Id;
-    public Class<?> TargetClass;
-    public Object ObjectInstance;
-    public String MemberName;
-    public Class<?> MemberClass;
-    public boolean Optional;
-    public DiContainer Container;
+    public String id;
+    public Class<?> targetClass;
+    public Object objectInstance;
+    public String memberName;
+    public Class<?> memberClass;
+    public boolean optional;
+    public DiContainer container;
 
     /**
     * Initializes a new Context
@@ -22,12 +22,12 @@ public class DiContext {
     * @see DiContainer
     */
     protected DiContext(String id, Class<?> targetClass, Object objectInstance, String memberName, Class<?> memberClass, boolean optional, DiContainer container) {
-        this.Id = id;
-        this.TargetClass = targetClass;
-        this.ObjectInstance = objectInstance;
-        this.MemberName = memberName;
-        this.MemberClass = memberClass;
-        this.Optional = optional;
-        this.Container = container;
+        this.id = id;
+        this.targetClass = targetClass;
+        this.objectInstance = objectInstance;
+        this.memberName = memberName;
+        this.memberClass = memberClass;
+        this.optional = optional;
+        this.container = container;
     }
 }

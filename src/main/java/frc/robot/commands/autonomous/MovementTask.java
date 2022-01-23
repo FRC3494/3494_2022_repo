@@ -39,7 +39,7 @@ public class MovementTask extends AutoTask {
     }
 
     @Override
-    public void Begin() {
+    public void begin() {
         this.now = System.currentTimeMillis();
 
         this.startTime = now;
@@ -51,7 +51,7 @@ public class MovementTask extends AutoTask {
     }
 
     @Override
-    public boolean Execute() {
+    public boolean execute() {
         this.now = System.currentTimeMillis();
 
         if (this.now >= this.stopTime) return true;
@@ -64,18 +64,18 @@ public class MovementTask extends AutoTask {
             computedSpeed = (this.speed * (1 - ((float)(this.now - this.rampDownTime)/(float)(this.stopTime - this.rampDownTime))));
         }
         
-        this.drivetrain.Tank(this.left * computedSpeed, this.right * computedSpeed);
+        this.drivetrain.run(this.left * computedSpeed, this.right * computedSpeed);
 
         return false;
     }
 
     @Override
-    public void Stop() {
-        this.drivetrain.Tank(0, 0);
+    public void stop() {
+        this.drivetrain.run(0, 0);
     }
 
     @Override
-    public ETA GetETA() {
+    public ETA getETA() {
         return new ETA(this.startTime, this.now, this.stopTime);
     }
 }

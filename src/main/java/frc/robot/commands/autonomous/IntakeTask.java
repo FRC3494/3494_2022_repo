@@ -18,21 +18,21 @@ public class IntakeTask extends AutoTask {
     }
 
     @Override
-    public void Begin() {
-        this.intake.Run(this.power);
-        this.magazine.Run(this.power);
+    public void begin() {
+        this.intake.run(this.power);
+        this.magazine.run(this.power);
     }
 
     @Override
-    public boolean Execute() {
+    public boolean execute() {
         return true;
     }
 
     @Override
-    public void Stop() {}
+    public void stop() {}
 
     @Override
-    public ETA GetETA() {
+    public ETA getETA() {
         return new ETA();
     }
 }
