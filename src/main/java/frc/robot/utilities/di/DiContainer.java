@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import frc.robot.utilities.di.DiInterfaces.IInjected;
+
 public class DiContainer {
     /**
     * An Annotation to mark the Field to be injected by the Container
@@ -189,6 +191,8 @@ public class DiContainer {
 
             field.set(instance, this.Resolve(field.getType(), context));
         }
+
+        if (instance instanceof IInjected) ((IInjected) instance).Inject();
 
         return instance;
     }

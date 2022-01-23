@@ -2,22 +2,19 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Servo;
 import frc.robot.RobotConfig;
 import frc.robot.utilities.DiSubsystem;
-import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Climber extends DiSubsystem implements IInitializable, IDisposable {
-    @Inject(id = "leftClimbMotor")
-    CANSparkMax leftClimbMotor;
-    @Inject(id = "rightClimbMotor")
-    CANSparkMax rightClimbMotor;
+    CANSparkMax leftClimbMotor = new CANSparkMax(RobotConfig.Climber.LeftClimbMotorChannel, MotorType.kBrushless);
+    CANSparkMax rightClimbMotor = new CANSparkMax(RobotConfig.Climber.RightClimbMotorChannel, MotorType.kBrushless);
 
-    @Inject(id = "climberReleaseServo")
-    Servo climberReleaseServo;
+    Servo climberReleaseServo = new Servo(RobotConfig.Climber.ClimberReleaseServoChannel);
 
     boolean hasReleased = false;
 

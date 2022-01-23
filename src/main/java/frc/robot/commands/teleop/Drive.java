@@ -2,7 +2,6 @@ package frc.robot.commands.teleop;
 
 import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
 import frc.robot.OI;
 import frc.robot.RobotConfig;
@@ -14,7 +13,7 @@ import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class Drive extends CommandBase implements IInitializable, ITickable, IDisposable {
+public class Drive extends CommandBase implements ITickable, IDisposable {
     @Inject
     OI oi;
 
@@ -38,15 +37,6 @@ public class Drive extends CommandBase implements IInitializable, ITickable, IDi
 
     boolean singing = false;
     boolean startedSinging = false;
-
-    @Override
-    public void Initialize() {
-        addRequirements(this.drivetrain);
-        addRequirements(this.intake);
-        addRequirements(this.magazine);
-        addRequirements(this.climber);
-        addRequirements(this.shooter);
-    }
 
     @Override
     public void Tick() {

@@ -5,14 +5,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import frc.robot.RobotConfig;
 import frc.robot.utilities.DiSubsystem;
-import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Shooter extends DiSubsystem implements IInitializable, IDisposable {
-    @Inject(id = "shooterMotor")
-    TalonFX shooterMotor;
+    TalonFX shooterMotor = new TalonFX(RobotConfig.Shooter.ShooterMotorChannel);
 
     TalonFXSensorCollection shooterMotorSensors;
 
