@@ -13,8 +13,7 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
     TalonSRX frontIntakeMotor = new TalonSRX(RobotConfig.Intake.FRONT_INTAKE_MOTOR_CHANNEL);
     TalonSRX backIntakeMotor = new TalonSRX(RobotConfig.Intake.BACK_INTAKE_MOTOR_CHANNEL);
 
-    @Override
-    public void onInject() {
+    public void onInitialize() {
         this.frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
         this.backIntakeMotor.setNeutralMode(NeutralMode.Brake);
 

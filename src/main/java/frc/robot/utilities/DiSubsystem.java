@@ -12,14 +12,14 @@ public abstract class DiSubsystem extends SubsystemBase implements IInjected {
 
     private boolean needsInitialization = true;
 
-    public void Inject() {
+    public void onInject() {
         if (!needsInitialization) return;
 
         internalInitialize();
     }
 
     private void internalInitialize() {
-        if (this instanceof IInitializable) ((IInitializable) this).Initialize();
+        if (this instanceof IInitializable) ((IInitializable) this).onInitialize();
         if (this instanceof ITickable) isTickable = true;
     }
 
@@ -27,6 +27,6 @@ public abstract class DiSubsystem extends SubsystemBase implements IInjected {
     public void periodic() {
         if (needsInitialization) return;
 
-        if (this.isTickable) ((ITickable) this).Tick();
+        if (this.isTickable) ((ITickable) this).onTick();
     }
 }

@@ -15,8 +15,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable 
 
     TalonFXSensorCollection shooterMotorSensors;
 
-    @Override
-    public void onInject() {
+    public void onInitialize() {
         this.shooterMotor.setNeutralMode(NeutralMode.Brake);
 
         this.shooterMotorSensors = this.shooterMotor.getSensorCollection();

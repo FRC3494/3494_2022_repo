@@ -38,7 +38,6 @@ public class Drive extends CommandBase implements ITickable, IDisposable {
     boolean singing = false;
     boolean startedSinging = false;
 
-    @Override
     public void onTick() {
         if (this.singing) {
             if (!this.startedSinging) {
@@ -61,18 +60,12 @@ public class Drive extends CommandBase implements ITickable, IDisposable {
         if (this.oi.StartSinging()) this.singing = true;
     }
 
-    @Override
     public void onDispose() {
         this.drivetrain.run(0, 0);
         this.intake.run(0);
         this.magazine.runRaw(0);
         this.climber.run(0);
         this.shooter.run(0);
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 
     public double PowerCurve(double x) {

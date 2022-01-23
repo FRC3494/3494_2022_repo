@@ -23,8 +23,7 @@ public class Magazine extends DiSubsystem implements IInitializable, IDisposable
     TalonSRX treeStemRightMotor = new TalonSRX(RobotConfig.Magazine.TREE_STEM_RIGHT_MOTOR_CHANNEL);
     Linebreaker treeStemLinebreak = new Linebreaker(RobotConfig.Magazine.TREE_STEM_LINEBREAK_CHANNEL);
 
-    @Override
-    public void onInject() {
+    public void onInitialize() {
         this.leftTreeUpperMotor.setNeutralMode(NeutralMode.Brake);
         this.leftTreeLowerMotor.setNeutralMode(NeutralMode.Brake);
         this.rightTreeUpperMotor.setNeutralMode(NeutralMode.Brake);

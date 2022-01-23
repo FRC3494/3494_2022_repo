@@ -7,7 +7,7 @@ public class DiInterfaces {
         *
         * @see DiContainer
         */
-        void Inject();
+        void onInject();
     }
     public interface IInitializable {
         /**
@@ -15,7 +15,7 @@ public class DiInterfaces {
         *
         * @see DiContainer
         */
-        void onInject();
+        void onInitialize();
     }
     public interface ITickable {
         /**

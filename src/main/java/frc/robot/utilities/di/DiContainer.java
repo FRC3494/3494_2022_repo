@@ -43,7 +43,7 @@ public class DiContainer {
     public void onInject() {
         for (Object objectInstance : this.objectPool.values()) {
             if (objectInstance instanceof DiInterfaces.IInitializable) {
-                ((DiInterfaces.IInitializable) objectInstance).onInject();
+                ((DiInterfaces.IInitializable) objectInstance).onInitialize();
             }
         }
     }
@@ -197,7 +197,7 @@ public class DiContainer {
             field.set(instance, this.resolve(field.getType(), context));
         }
 
-        if (instance instanceof IInjected) ((IInjected) instance).Inject();
+        if (instance instanceof IInjected) ((IInjected) instance).onInject();
 
         return instance;
     }

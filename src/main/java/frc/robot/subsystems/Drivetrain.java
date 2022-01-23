@@ -19,8 +19,7 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
 
     Orchestra orchestra = new Orchestra();
 
-    @Override
-    public void onInject() {
+    public void onInitialize() {
         this.orchestra.addInstrument(this.leftMaster);
         this.orchestra.addInstrument(this.leftSlave);
         

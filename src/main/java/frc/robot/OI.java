@@ -12,12 +12,10 @@ public class OI implements IInitializable, IDisposable {
     @Inject(id = "secondaryXbox")
     XboxController secondaryXbox;
 
-    @Override
-    public void onInject() {
+    public void onInitialize() {
         
     }
 
-    @Override
     public void onDispose() {
         
     }

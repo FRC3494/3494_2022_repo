@@ -18,8 +18,7 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
 
     boolean hasReleased = false;
 
-    @Override
-    public void onInject() {
+    public void onInitialize() {
         this.leftClimbMotor.setIdleMode(IdleMode.kBrake);
         this.rightClimbMotor.setIdleMode(IdleMode.kBrake);
 

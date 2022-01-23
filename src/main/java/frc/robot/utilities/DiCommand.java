@@ -20,7 +20,7 @@ public abstract class DiCommand extends CommandBase implements IInjected {
     private boolean waitingForInject = true;
     private boolean waitingForInitialize = true;
 
-    public void Inject() {
+    public void onInject() {
         if (!needsInitialization) return;
 
         waitingForInject = false;
@@ -66,7 +66,7 @@ public abstract class DiCommand extends CommandBase implements IInjected {
             }
         }
 
-        if (isInitializable) ((IInitializable) this).Initialize();
+        if (isInitializable) ((IInitializable) this).onInitialize();
     }
 
     @Override
@@ -81,12 +81,12 @@ public abstract class DiCommand extends CommandBase implements IInjected {
             return;
         } 
 
-        if (this.isTickable) ((ITickable) this).Tick();
+        if (this.isTickable) ((ITickable) this).onTick();
     }
 
     @Override
     public void end(boolean interrupted) {
-        if (isDisposable) ((IDisposable) this).Dispose();
+        if (isDisposable) ((IDisposable) this).onDispose();
     }
   
     @Override
