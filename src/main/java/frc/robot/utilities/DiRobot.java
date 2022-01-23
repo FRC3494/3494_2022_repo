@@ -21,25 +21,20 @@ public abstract class DiRobot extends TimedRobot {
             this.Install();
         } catch (Exception e) {
             System.out.println("Failed to start main robot.");
-            e.printStackTrace();
-        }
 
-        this.Container.onInject();
+            e.printStackTrace();
+
+            return;
+        }
     }
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-
-        this.Container.onTick();
     }
 
     @Override
     public void disabledInit() {
-        if (this.currentOpMode != null) {
-            this.currentOpMode.Container.onDispose();
-
-            this.currentOpMode = null;
-        }
+        this.currentOpMode = null;
     }
 
     @Override
@@ -55,15 +50,12 @@ public abstract class DiRobot extends TimedRobot {
                 this.currentOpMode.install();
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 System.out.println("Failed to start the autonomous OpMode.");
-                e.printStackTrace();
-            }
 
-            this.currentOpMode.Container.onInject();
+                e.printStackTrace();
+
+                return;
+            }
         }
-    }
-    @Override
-    public void autonomousPeriodic() {
-        if (this.currentOpMode != null) this.currentOpMode.Container.onTick();
     }
 
     @Override
@@ -81,13 +73,10 @@ public abstract class DiRobot extends TimedRobot {
             this.currentOpMode.install();
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             System.out.println("Failed to start the autonomous OpMode.");
-            e.printStackTrace();
-        }
 
-        this.currentOpMode.Container.onInject();
-    }
-    @Override
-    public void teleopPeriodic() {
-        if (this.currentOpMode != null) this.currentOpMode.Container.onTick();
+            e.printStackTrace();
+
+            return;
+        }
     }
 }
