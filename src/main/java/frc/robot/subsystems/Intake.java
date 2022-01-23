@@ -4,27 +4,21 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import frc.robot.RobotConfig;
 import frc.robot.utilities.DiSubsystem;
-import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Intake extends DiSubsystem implements IInitializable, IDisposable {
-    @Inject(id = "frontIntakeMotor")
-    TalonSRX frontIntakeMotor;
-    @Inject(id = "frontIntakeInnerMotor")
-    TalonSRX frontIntakeInnerMotor;
-    @Inject(id = "backIntakeMotor")
-    TalonSRX backIntakeMotor;
+    TalonSRX frontIntakeMotor = new TalonSRX(RobotConfig.Intake.FrontIntakeMotorChannel);
+    TalonSRX backIntakeMotor = new TalonSRX(RobotConfig.Intake.BackIntakeMotorChannel);
 
     @Override
     public void Initialize() {
         this.frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
-        this.frontIntakeInnerMotor.setNeutralMode(NeutralMode.Brake);
         this.backIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
         this.backIntakeMotor.follow(this.frontIntakeMotor);
-        this.frontIntakeInnerMotor.follow(this.frontIntakeMotor);
     }
 
     public void Run(double power) {

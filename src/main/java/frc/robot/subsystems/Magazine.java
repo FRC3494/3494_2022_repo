@@ -4,33 +4,24 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import frc.robot.RobotConfig;
 import frc.robot.sensors.Linebreaker;
 import frc.robot.utilities.DiSubsystem;
-import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Magazine extends DiSubsystem implements IInitializable, IDisposable {
-    @Inject(id = "leftTreeUpperMotor")
-    TalonSRX leftTreeUpperMotor;
-    @Inject(id = "leftTreeLowerMotor")
-    TalonSRX leftTreeLowerMotor;
-    @Inject(id = "leftTreeLinebreak")
-    Linebreaker leftTreeLinebreak;
+    TalonSRX leftTreeUpperMotor = new TalonSRX(RobotConfig.Magazine.LeftTreeUpperMotorChannel);
+    TalonSRX leftTreeLowerMotor = new TalonSRX(RobotConfig.Magazine.LeftTreeLowerMotorChannel);
+    Linebreaker leftTreeLinebreak = new Linebreaker(RobotConfig.Magazine.LeftTreeLinebreakChannel);
     
-    @Inject(id = "rightTreeUpperMotor")
-    TalonSRX rightTreeUpperMotor;
-    @Inject(id = "rightTreeLowerMotor")
-    TalonSRX rightTreeLowerMotor;
-    @Inject(id = "rightTreeLinebreak")
-    Linebreaker rightTreeLinebreak;
+    TalonSRX rightTreeUpperMotor = new TalonSRX(RobotConfig.Magazine.RightTreeUpperMotorChannel);
+    TalonSRX rightTreeLowerMotor = new TalonSRX(RobotConfig.Magazine.RightTreeLowerMotorChannel);
+    Linebreaker rightTreeLinebreak = new Linebreaker(RobotConfig.Magazine.RightTreeUpperMotorChannel);
     
-    @Inject(id = "treeStemLeftMotor")
-    TalonSRX treeStemLeftMotor;
-    @Inject(id = "treeStemRightMotor")
-    TalonSRX treeStemRightMotor;
-    @Inject(id = "treeStemLinebreak")
-    Linebreaker treeStemLinebreak;
+    TalonSRX treeStemLeftMotor = new TalonSRX(RobotConfig.Magazine.TreeStemLeftMotorChannel);
+    TalonSRX treeStemRightMotor = new TalonSRX(RobotConfig.Magazine.TreeStemRightMotorChannel);
+    Linebreaker treeStemLinebreak = new Linebreaker(RobotConfig.Magazine.TreeStemLinebreakChannel);
 
     @Override
     public void Initialize() {

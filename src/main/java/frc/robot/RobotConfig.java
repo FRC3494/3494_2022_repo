@@ -20,7 +20,6 @@ public final class RobotConfig {
 
     public static class Intake {
         public static final int FrontIntakeMotorChannel = 5;
-        public static final int FrontIntakeInnerMotorChannel = 6;
         public static final int BackIntakeMotorChannel = 7;
 
         public static final double IntakeSpeed = 0.7;

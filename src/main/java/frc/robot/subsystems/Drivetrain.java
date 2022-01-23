@@ -5,21 +5,17 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 
+import frc.robot.RobotConfig;
 import frc.robot.utilities.DiSubsystem;
-import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
-    @Inject(id = "drivetrainLeftMaster")
-    TalonFX leftMaster;
-    @Inject(id = "drivetrainLeftSlave")
-    TalonFX leftSlave;
+    TalonFX leftMaster = new TalonFX(RobotConfig.Drivetrain.LeftMasterChannel);
+    TalonFX leftSlave = new TalonFX(RobotConfig.Drivetrain.LeftSlaveChannel);
 
-    @Inject(id = "drivetrainRightMaster")
-    TalonFX rightMaster;
-    @Inject(id = "drivetrainRightSlave")
-    TalonFX rightSlave;
+    TalonFX rightMaster = new TalonFX(RobotConfig.Drivetrain.RightMasterChannel);
+    TalonFX rightSlave = new TalonFX(RobotConfig.Drivetrain.RightSlaveChannel);
 
     Orchestra orchestra = new Orchestra();
 
