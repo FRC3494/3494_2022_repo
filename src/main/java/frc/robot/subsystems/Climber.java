@@ -12,11 +12,11 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Climber extends DiSubsystem implements IInitializable, IDisposable {
-    CANSparkMax climbMotor = new CANSparkMax(RobotMap.Climber.CLIMB_MOTOR_CHANNEL, MotorType.kBrushless);
+    private CANSparkMax climbMotor = new CANSparkMax(RobotMap.Climber.CLIMB_MOTOR_CHANNEL, MotorType.kBrushless);
 
-    Servo climberReleaseServo = new Servo(RobotMap.Climber.RELEASE_SERVO_CHANNEL);
+    private Servo climberReleaseServo = new Servo(RobotMap.Climber.RELEASE_SERVO_CHANNEL);
 
-    boolean hasReleased = false;
+    private boolean hasReleased = false;
 
     public void onInitialize() {
         this.climbMotor.setIdleMode(IdleMode.kBrake);
@@ -35,6 +35,6 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
     }
 
     public void onDispose() {
-        run(0);
+        this.run(0);
     }
 }

@@ -13,14 +13,14 @@ import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
 
 public class Shooter extends DiSubsystem implements IInitializable, IDisposable, ITickable {
-    TalonFX shooterMotor = new TalonFX(RobotMap.Shooter.SHOOTER_MOTOR_CHANNEL);
+    private TalonFX shooterMotor = new TalonFX(RobotMap.Shooter.SHOOTER_MOTOR_CHANNEL);
     
-    TalonSRX hoodMotor = new TalonSRX(RobotMap.Shooter.HOOD_MOTOR_CHANNEL);
-    TalonSRX turretMotor = new TalonSRX(RobotMap.Shooter.TURRET_MOTOR_CHANNEL);
+    private TalonSRX hoodMotor = new TalonSRX(RobotMap.Shooter.HOOD_MOTOR_CHANNEL);
+    private TalonSRX turretMotor = new TalonSRX(RobotMap.Shooter.TURRET_MOTOR_CHANNEL);
 
-    TalonFXSensorCollection shooterMotorSensors;
+    private TalonFXSensorCollection shooterMotorSensors;
 
-    boolean aimbotEnabled = false;
+    private boolean aimbotEnabled = false;
 
     public void onInitialize() {
         this.shooterMotor.setNeutralMode(NeutralMode.Brake);
@@ -33,13 +33,13 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     }
 
     public void runHood(double power) {
-        hoodMotor.set(ControlMode.PercentOutput, power);
+        this.hoodMotor.set(ControlMode.PercentOutput, power);
     }
 
     public void runTurret(double power) {
-        if (aimbotEnabled) return;
+        if (this.aimbotEnabled) return;
 
-        turretMotor.set(ControlMode.PercentOutput, power);
+        this.turretMotor.set(ControlMode.PercentOutput, power);
     }
 
     public void onDispose() {
@@ -55,15 +55,15 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     }
 
     public void enableAimBot() {
-        aimbotEnabled = true;
+        this.aimbotEnabled = true;
     }
 
     public void disableAimBot() {
-        aimbotEnabled = false;
+        this.aimbotEnabled = false;
     }
 
     public void onTick() {
-        if (aimbotEnabled) {
+        if (this.aimbotEnabled) {
             // aimbot code here
         }
     }

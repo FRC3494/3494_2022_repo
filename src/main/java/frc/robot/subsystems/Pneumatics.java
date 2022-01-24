@@ -7,14 +7,13 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Pneumatics extends DiSubsystem implements IInitializable, IDisposable {
-    Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-    boolean hasReleased = false;
+    private Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
     public void onInitialize() {
-        compressor.enableDigital();
+        this.compressor.enableDigital();
     }
 
     public void onDispose() {
-        compressor.disable();
+        this.compressor.disable();
     }
 }

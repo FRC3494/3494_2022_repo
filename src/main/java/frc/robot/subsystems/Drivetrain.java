@@ -11,13 +11,13 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
-    TalonFX leftMaster = new TalonFX(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);
-    TalonFX leftSlave = new TalonFX(RobotMap.Drivetrain.LEFT_FOLLOWER_CHANNEL);
+    private TalonFX leftMaster = new TalonFX(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);
+    private TalonFX leftSlave = new TalonFX(RobotMap.Drivetrain.LEFT_FOLLOWER_CHANNEL);
 
-    TalonFX rightMaster = new TalonFX(RobotMap.Drivetrain.RIGHT_LEADER_CHANNEL);
-    TalonFX rightSlave = new TalonFX(RobotMap.Drivetrain.RIGHT_FOLLOWER_CHANNEL);
+    private TalonFX rightMaster = new TalonFX(RobotMap.Drivetrain.RIGHT_LEADER_CHANNEL);
+    private TalonFX rightSlave = new TalonFX(RobotMap.Drivetrain.RIGHT_FOLLOWER_CHANNEL);
 
-    Orchestra orchestra = new Orchestra();
+    private Orchestra orchestra = new Orchestra();
 
     public void onInitialize() {
         this.orchestra.addInstrument(this.leftMaster);
