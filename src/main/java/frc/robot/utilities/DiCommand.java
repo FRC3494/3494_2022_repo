@@ -21,61 +21,61 @@ public abstract class DiCommand extends CommandBase implements IInjected {
     private boolean waitingForInitialize = true;
 
     public void onInject() {
-        if (!needsInitialization) return;
+        if (!this.needsInitialization) return;
 
-        waitingForInject = false;
+        this.waitingForInject = false;
 
-        if (!waitingForInitialize) {
-            internalInitialize();
+        if (!this.waitingForInitialize) {
+            this.internalInitialize();
 
-            needsInitialization = false;
+            this.needsInitialization = false;
         }
     }
 
     @Override
     public void initialize() {
-        if (!needsInitialization) return;
+        if (!this.needsInitialization) return;
 
-        waitingForInitialize = false;
+        this.waitingForInitialize = false;
 
-        if (!waitingForInject) {
-            internalInitialize();
+        if (!this.waitingForInject) {
+            this.internalInitialize();
 
-            needsInitialization = false;
+            this.needsInitialization = false;
         }
     }
 
     private void internalInitialize() {
-        if (this instanceof IInitializable) isInitializable = true;
-        if (this instanceof ITickable) isTickable = true;
-        if (this instanceof IDisposable) isDisposable = true;
+        if (this instanceof IInitializable) this.isInitializable = true;
+        if (this instanceof ITickable) this.isTickable = true;
+        if (this instanceof IDisposable) this.isDisposable = true;
 
         for (Field field : this.getClass().getFields()) {
             if (!field.getType().isAssignableFrom(Subsystem.class)) continue;
 
             try {
-                addRequirements((Subsystem) field.get(this));
+                this.addRequirements((Subsystem) field.get(this));
             } catch (Exception e) {
-                isInitializable = false;
-                isTickable = false;
-                isDisposable = false;
+                this.isInitializable = false;
+                this.isTickable = false;
+                this.isDisposable = false;
                 
-                isFinished = true;
+                this.isFinished = true;
                 
                 e.printStackTrace();
             }
         }
 
-        if (isInitializable) ((IInitializable) this).onInitialize();
+        if (this.isInitializable) ((IInitializable) this).onInitialize();
     }
 
     @Override
     public void execute() {
-        if (needsInitialization) {
-            if (!waitingForInject && !waitingForInitialize) {
-                internalInitialize();
+        if (this.needsInitialization) {
+            if (!this.waitingForInject && !this.waitingForInitialize) {
+                this.internalInitialize();
     
-                needsInitialization = false;
+                this.needsInitialization = false;
             }
 
             return;
@@ -86,11 +86,11 @@ public abstract class DiCommand extends CommandBase implements IInjected {
 
     @Override
     public void end(boolean interrupted) {
-        if (isDisposable) ((IDisposable) this).onDispose();
+        if (this.isDisposable) ((IDisposable) this).onDispose();
     }
   
     @Override
     public boolean isFinished() {
-        return isFinished;
+        return this.isFinished;
     }
 }

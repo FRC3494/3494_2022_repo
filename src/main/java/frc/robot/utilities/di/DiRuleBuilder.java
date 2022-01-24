@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class DiRuleBuilder {
     private final DiContainer container;
@@ -237,7 +238,7 @@ public class DiRuleBuilder {
     * @return A new RuleBuilder 
     * @see DiRule
     */
-    public DiRuleBuilder when(DiCondition condition) {
+    public DiRuleBuilder when(Function<DiContext, Boolean> condition) {
         for (DiRule rule : this.targetRules) {
             rule.conditions.add(condition);
         }
@@ -254,12 +255,7 @@ public class DiRuleBuilder {
     */
     public DiRuleBuilder whenInjectedInto(Class<?> inClass) {
         for (DiRule rule : this.targetRules) {
-            rule.conditions.add(new DiCondition() {
-                @Override
-                public Boolean check(DiContext context) {
-                    return context.targetClass == inClass;
-                }
-            });
+            rule.conditions.add(context -> context.targetClass == inClass);
         }
 
         return this;
@@ -274,12 +270,7 @@ public class DiRuleBuilder {
     */
     public DiRuleBuilder withId(String id) {
         for (DiRule rule : this.targetRules) {
-            rule.conditions.add(new DiCondition() {
-                @Override
-                public Boolean check(DiContext context) {
-                    return context.id.equals(id);
-                }
-            });
+            rule.conditions.add((context) -> context.id.equals(id));
         }
 
         return this;

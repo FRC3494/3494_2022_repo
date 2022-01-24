@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class DiRule {
     protected DiContainer container;
@@ -11,7 +12,7 @@ public class DiRule {
     protected Class<?> targetClass;
     protected Class<?> instanceClass;
     protected UUID targetObject;
-    protected List<DiCondition> conditions = new ArrayList<>();
+    protected List<Function<DiContext, Boolean>> conditions = new ArrayList<>();
 
     protected DiRule(DiContainer containerIn, Class<?> targetClassIn) {
         this.container = containerIn;
@@ -71,8 +72,8 @@ public class DiRule {
 
         boolean applies = true;
 
-        for (DiCondition condition: this.conditions) {
-            if (!condition.check(context)) {
+        for (Function<DiContext, Boolean> condition: this.conditions) {
+            if (!condition.apply(context)) {
                 applies = false;
                 break;
             }
