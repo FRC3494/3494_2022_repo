@@ -2,11 +2,11 @@ package frc.robot;
 
 public class RobotMap {
     public static class Drivetrain {
-        public static final int LEFT_DOM_CHANNEL = 0;
-        public static final int LEFT_SUB_CHANNEL = 1;
+        public static final int LEFT_LEADER_CHANNEL = 0;
+        public static final int LEFT_FOLLOWER_CHANNEL = 1;
 
-        public static final int RIGHT_DOM_CHANNEL = 2;
-        public static final int RIGHT_SUB_CHANNEL = 3;
+        public static final int RIGHT_LEADER_CHANNEL = 2;
+        public static final int RIGHT_FOLLOWER_CHANNEL = 3;
     }
 
     public static class Shooter {
