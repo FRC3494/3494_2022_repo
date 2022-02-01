@@ -11,11 +11,11 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
-    private WPI_TalonFX leftLeader = new TalonFX_WPI(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);
-    private WPI_TalonFX leftFollower = new TalonFX_WPI(RobotMap.Drivetrain.LEFT_FOLLOWER_CHANNEL);
+    private WPI_TalonFX leftLeader = new WPI_TalonFX(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);
+    private WPI_TalonFX leftFollower = new WPI_TalonFX(RobotMap.Drivetrain.LEFT_FOLLOWER_CHANNEL);
 
-    private WPI_TalonFX rightLeader = new TalonFX_WPI(RobotMap.Drivetrain.RIGHT_LEADER_CHANNEL);
-    private WPI_TalonFX rightFollower = new TalonFX_WPI(RobotMap.Drivetrain.RIGHT_FOLLOWER_CHANNEL);
+    private WPI_TalonFX rightLeader = new WPI_TalonFX(RobotMap.Drivetrain.RIGHT_LEADER_CHANNEL);
+    private WPI_TalonFX rightFollower = new WPI_TalonFX(RobotMap.Drivetrain.RIGHT_FOLLOWER_CHANNEL);
 
     private Orchestra orchestra = new Orchestra();
 
