@@ -21,6 +21,7 @@ public abstract class DiCommand extends CommandBase implements IInjected {
     private boolean waitingForInitialize = true;
 
     public void onInject() {
+        System.out.println("commandy init1");
         if (!this.needsInitialization) return;
 
         this.waitingForInject = false;
@@ -34,6 +35,7 @@ public abstract class DiCommand extends CommandBase implements IInjected {
 
     @Override
     public void initialize() {
+        System.out.println("commandy init2");
         if (!this.needsInitialization) return;
 
         this.waitingForInitialize = false;
@@ -46,6 +48,8 @@ public abstract class DiCommand extends CommandBase implements IInjected {
     }
 
     private void internalInitialize() {
+        System.out.println("commandy init!");
+
         if (this instanceof IInitializable) this.isInitializable = true;
         if (this instanceof ITickable) this.isTickable = true;
         if (this instanceof IDisposable) this.isDisposable = true;
@@ -71,6 +75,8 @@ public abstract class DiCommand extends CommandBase implements IInjected {
 
     @Override
     public void execute() {
+        System.out.println("commandy ticky");
+        
         if (this.needsInitialization) {
             if (!this.waitingForInject && !this.waitingForInitialize) {
                 this.internalInitialize();

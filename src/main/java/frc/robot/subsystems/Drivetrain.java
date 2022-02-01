@@ -11,36 +11,36 @@ import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
-    private TalonFX leftMaster = new TalonFX(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);
-    private TalonFX leftSlave = new TalonFX(RobotMap.Drivetrain.LEFT_FOLLOWER_CHANNEL);
+    private TalonFX leftDom = new TalonFX(RobotMap.Drivetrain.LEFT_DOM_CHANNEL);
+    private TalonFX leftSub = new TalonFX(RobotMap.Drivetrain.LEFT_SUB_CHANNEL);
 
-    private TalonFX rightMaster = new TalonFX(RobotMap.Drivetrain.RIGHT_LEADER_CHANNEL);
-    private TalonFX rightSlave = new TalonFX(RobotMap.Drivetrain.RIGHT_FOLLOWER_CHANNEL);
+    private TalonFX rightDom = new TalonFX(RobotMap.Drivetrain.RIGHT_DOM_CHANNEL);
+    private TalonFX rightSub = new TalonFX(RobotMap.Drivetrain.RIGHT_SUB_CHANNEL);
 
     private Orchestra orchestra = new Orchestra();
 
     public void onInitialize() {
-        this.orchestra.addInstrument(this.leftMaster);
-        this.orchestra.addInstrument(this.leftSlave);
+        this.orchestra.addInstrument(this.leftDom);
+        this.orchestra.addInstrument(this.leftSub);
         
-        this.orchestra.addInstrument(this.rightMaster);
-        this.orchestra.addInstrument(this.rightSlave);
+        this.orchestra.addInstrument(this.rightDom);
+        this.orchestra.addInstrument(this.rightSub);
 
-        this.leftMaster.setNeutralMode(NeutralMode.Brake);
-        this.leftSlave.setNeutralMode(NeutralMode.Brake);
-        this.rightMaster.setNeutralMode(NeutralMode.Brake);
-        this.rightSlave.setNeutralMode(NeutralMode.Brake);
+        this.leftDom.setNeutralMode(NeutralMode.Brake);
+        this.leftSub.setNeutralMode(NeutralMode.Brake);
+        this.rightDom.setNeutralMode(NeutralMode.Brake);
+        this.rightSub.setNeutralMode(NeutralMode.Brake);
 
-        this.rightMaster.setInverted(true);
-        this.rightSlave.setInverted(true);
+        this.rightDom.setInverted(true);
+        this.rightSub.setInverted(true);
 
-        this.leftSlave.follow(this.leftMaster);
-        this.rightSlave.follow(this.rightMaster);
+        this.leftSub.follow(this.leftDom);
+        this.rightSub.follow(this.rightDom);
     }
 
     public void run(double leftPower, double rightPower) {
-        this.leftMaster.set(ControlMode.PercentOutput, leftPower);
-        this.rightMaster.set(ControlMode.PercentOutput, rightPower);
+        this.leftDom.set(ControlMode.PercentOutput, leftPower);
+        this.rightDom.set(ControlMode.PercentOutput, rightPower);
     }
 
     public void singTheTheme() {

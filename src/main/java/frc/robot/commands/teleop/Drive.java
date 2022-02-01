@@ -39,6 +39,8 @@ public class Drive extends CommandBase implements ITickable, IDisposable {
     boolean startedSinging = false;
 
     public void onTick() {
+        System.out.println("driving");
+
         if (this.singing) {
             if (!this.startedSinging) {
                 this.drivetrain.singTheTheme();
@@ -52,7 +54,6 @@ public class Drive extends CommandBase implements ITickable, IDisposable {
         this.intake.run(this.oi.GetIntakeSpeed());
         this.magazine.run((this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OUTTAKE_SPEED : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : RobotConfig.Magazine.IDLE_SPEED));
 
-        if (this.oi.GetClimberRelease()) this.climber.release();
         this.climber.run(this.oi.GetClimberPower());
 
         this.shooter.run(this.oi.GetShooterPower() * RobotConfig.Shooter.BASE_TARGET_RPM);

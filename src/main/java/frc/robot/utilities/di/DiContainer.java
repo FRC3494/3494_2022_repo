@@ -41,6 +41,8 @@ public class DiContainer {
     * @see DiContext
     */
     public void onInject() {
+        System.out.println(this.objectPool.values());
+
         for (Object objectInstance : this.objectPool.values()) {
             if (objectInstance instanceof DiInterfaces.IInitializable) {
                 ((DiInterfaces.IInitializable) objectInstance).onInitialize();

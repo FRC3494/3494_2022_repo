@@ -27,8 +27,5 @@ public final class RobotConfig {
 
     public static class Climber {
         public static final double CLIMB_SPEED = 0.5;
-
-        public static final double HOLDING_POSITION = 0;
-        public static final double RELEASE_POSITION = 1;
     }
 }

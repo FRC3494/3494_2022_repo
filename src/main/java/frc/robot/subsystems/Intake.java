@@ -4,18 +4,24 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import frc.robot.RobotConfig;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
 import frc.robot.utilities.DiSubsystem;
+import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Intake extends DiSubsystem implements IInitializable, IDisposable {
+    @Inject
+    private Pneumatics pneumatics;
+    
     private TalonSRX frontIntakeMotor = new TalonSRX(RobotMap.Intake.FRONT_INTAKE_MOTOR_CHANNEL);
     private TalonSRX backIntakeMotor = new TalonSRX(RobotMap.Intake.BACK_INTAKE_MOTOR_CHANNEL);
     
-    private TalonSRX frontIntakeDeployMotor = new TalonSRX(RobotMap.Intake.FRONT_INTAKE_DEPLOY_MOTOR_CHANNEL);
-    private TalonSRX backIntakeDeployMotor = new TalonSRX(RobotMap.Intake.BACK_INTAKE_DEPLOY_MOTOR_CHANNEL);
+    private DoubleSolenoid frontIntakeDeploySolenoid = new DoubleSolenoid(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Intake.FRONT_INTAKE_DEPLOY_SOLENOID_CHANNEL, RobotMap.Intake.FRONT_INTAKE_DEPLOY_SOLENOID_CHANNEL + 1);
+    private DoubleSolenoid backIntakeDeploySolenoid = new DoubleSolenoid(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Intake.BACK_INTAKE_DEPLOY_SOLENOID_CHANNEL, RobotMap.Intake.BACK_INTAKE_DEPLOY_SOLENOID_CHANNEL + 1);
 
     public void onInitialize() {
         this.frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
@@ -26,11 +32,11 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
 
     public void run(double power) {
         if (power == 0) {
-            this.frontIntakeDeployMotor.set(ControlMode.Position, 0);
-            this.backIntakeDeployMotor.set(ControlMode.Position, 0);
+            this.frontIntakeDeploySolenoid.set(Value.kReverse);
+            this.backIntakeDeploySolenoid.set(Value.kReverse);
         } else {
-            this.frontIntakeDeployMotor.set(ControlMode.Position, RobotConfig.Intake.FRONT_DEPLOY_ANGLE);
-            this.backIntakeDeployMotor.set(ControlMode.Position, RobotConfig.Intake.BACK_DEPLOY_ANGLE);
+            this.frontIntakeDeploySolenoid.set(Value.kForward);
+            this.backIntakeDeploySolenoid.set(Value.kForward);
         }
 
         this.frontIntakeMotor.set(ControlMode.PercentOutput, power);

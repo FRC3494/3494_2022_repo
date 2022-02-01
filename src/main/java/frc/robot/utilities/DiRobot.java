@@ -19,6 +19,8 @@ public abstract class DiRobot extends TimedRobot {
     public void robotInit() {
         try {
             this.Install();
+            
+            this.Container.onInject();
         } catch (Exception e) {
             System.out.println("Failed to start main robot.");
 
@@ -48,6 +50,8 @@ public abstract class DiRobot extends TimedRobot {
         if (this.currentOpMode != null) {
             try {
                 this.currentOpMode.install();
+
+                this.currentOpMode.Container.onInject();
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 System.out.println("Failed to start the autonomous OpMode.");
 
@@ -71,8 +75,10 @@ public abstract class DiRobot extends TimedRobot {
         
         try {
             this.currentOpMode.install();
+
+            this.currentOpMode.Container.onInject();
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            System.out.println("Failed to start the autonomous OpMode.");
+            System.out.println("Failed to start the teleop OpMode.");
 
             e.printStackTrace();
 

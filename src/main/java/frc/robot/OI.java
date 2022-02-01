@@ -36,10 +36,6 @@ public class OI implements IInitializable, IDisposable {
         return (this.secondaryXbox.getYButton()) ? (this.secondaryXbox.getLeftY() * RobotConfig.Climber.CLIMB_SPEED) : 0;
     }
 
-    public boolean GetClimberRelease() {
-        return this.secondaryXbox.getBButton() && this.secondaryXbox.getYButton();
-    }
-
     public double GetIntakeSpeed() {
         return this.secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.INTAKE_SPEED;
     }
