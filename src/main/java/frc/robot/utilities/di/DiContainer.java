@@ -41,8 +41,6 @@ public class DiContainer {
     * @see DiContext
     */
     public void onInject() {
-        System.out.println(this.objectPool.values());
-
         for (Object objectInstance : this.objectPool.values()) {
             if (objectInstance instanceof DiInterfaces.IInitializable) {
                 ((DiInterfaces.IInitializable) objectInstance).onInitialize();
@@ -176,9 +174,10 @@ public class DiContainer {
     * @see DiContainer
     */
     protected Object inject(Object instance, DiContext context) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Field[] fields = instance.getClass().getFields();
+        Field[] fields = instance.getClass().getDeclaredFields();
 
         for (Field field: fields) {
+            field.setAccessible(true);
             if (!field.isAnnotationPresent(Inject.class)) continue;
             Inject inject = field.getAnnotation(Inject.class);
 

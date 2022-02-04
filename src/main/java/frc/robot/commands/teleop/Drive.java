@@ -1,7 +1,9 @@
 package frc.robot.commands.teleop;
 
+import frc.robot.utilities.DiCommand;
 import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
+import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
 import frc.robot.OI;
 import frc.robot.RobotConfig;
@@ -11,9 +13,8 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class Drive extends CommandBase implements ITickable, IDisposable {
+public class Drive extends DiCommand implements IInitializable, ITickable, IDisposable {
     @Inject
     OI oi;
 
@@ -38,9 +39,11 @@ public class Drive extends CommandBase implements ITickable, IDisposable {
     boolean singing = false;
     boolean startedSinging = false;
 
-    public void onTick() {
-        System.out.println("driving");
+    public void onInitialize() {
+        drivetrain.setDefaultCommand(this);
+    }
 
+    public void onTick() {
         if (this.singing) {
             if (!this.startedSinging) {
                 this.drivetrain.singTheTheme();

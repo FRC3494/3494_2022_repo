@@ -1,8 +1,9 @@
 package frc.robot;
 
 import java.lang.reflect.InvocationTargetException;
+
 import frc.robot.utilities.DiRobot;
-import frc.robot.RobotMap.Pneumatics;
+import frc.robot.subsystems.Pneumatics;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -18,5 +19,7 @@ public class Robot extends DiRobot {
         this.Container.bind(Magazine.class).asSingle();
         this.Container.bind(Intake.class).asSingle();
         this.Container.bind(Climber.class).asSingle();
+        
+        this.Container.bind(OI.class).asSingle();
     }
 }

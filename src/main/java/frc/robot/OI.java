@@ -1,16 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class OI implements IInitializable, IDisposable {
-    @Inject(id = "primaryXbox")
-    XboxController primaryXbox;
+    XboxController primaryXbox = new XboxController(0);
 
-    @Inject(id = "secondaryXbox")
-    XboxController secondaryXbox;
+    XboxController secondaryXbox = new XboxController(1);
 
     public void onInitialize() {
         
@@ -33,7 +30,7 @@ public class OI implements IInitializable, IDisposable {
     }
 
     public double GetClimberPower() {
-        return (this.secondaryXbox.getYButton()) ? (this.secondaryXbox.getLeftY() * RobotConfig.Climber.CLIMB_SPEED) : 0;
+        return (this.primaryXbox.getYButton()) ? ((this.primaryXbox.getLeftTriggerAxis() - this.primaryXbox.getRightTriggerAxis()) * RobotConfig.Climber.CLIMB_SPEED) : 0;
     }
 
     public double GetIntakeSpeed() {
@@ -49,6 +46,6 @@ public class OI implements IInitializable, IDisposable {
     }
 
     public boolean StartSinging() {
-        return this.secondaryXbox.getXButton(); // Disable this before comp lol
+        return this.primaryXbox.getAButton() && this.primaryXbox.getBButton() && this.primaryXbox.getXButton() && this.primaryXbox.getYButton() && this.secondaryXbox.getAButton() && this.secondaryXbox.getBButton() && this.secondaryXbox.getXButton() && this.secondaryXbox.getYButton(); // Disable this before comp lol
     }
 }

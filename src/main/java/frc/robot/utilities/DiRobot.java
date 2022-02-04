@@ -20,7 +20,7 @@ public abstract class DiRobot extends TimedRobot {
         try {
             this.Install();
             
-            this.Container.onInject();
+            //this.Container.onInject();
         } catch (Exception e) {
             System.out.println("Failed to start main robot.");
 
@@ -45,13 +45,15 @@ public abstract class DiRobot extends TimedRobot {
 
         //Get Auto OpMode from ShuffleBoard
         
+        this.currentOpMode.Container.setParent(this.Container);
+        
         this.currentOpMode.Container.bindInstance(this.currentOpMode);
 
         if (this.currentOpMode != null) {
             try {
                 this.currentOpMode.install();
 
-                this.currentOpMode.Container.onInject();
+                //this.currentOpMode.Container.onInject();
             } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
                 System.out.println("Failed to start the autonomous OpMode.");
 
@@ -70,13 +72,15 @@ public abstract class DiRobot extends TimedRobot {
 
         this.currentOpMode = new Teleop();
 
+        this.currentOpMode.Container.setParent(this.Container);
+
         this.currentOpMode.Container.bindInstance(this.currentOpMode);
         this.currentOpMode.Container.bindInstance(alliance);
         
         try {
             this.currentOpMode.install();
 
-            this.currentOpMode.Container.onInject();
+            //this.currentOpMode.Container.onInject();
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             System.out.println("Failed to start the teleop OpMode.");
 
