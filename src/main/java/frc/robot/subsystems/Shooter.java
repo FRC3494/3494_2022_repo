@@ -28,7 +28,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     private SparkMaxPIDController shooterPidController;
     private RelativeEncoder shooterMotorEncoder;
     
-    private TalonSRX turretMotor = new TalonSRX(RobotMap.Shooter.TURRET_MOTOR_CHANNEL);
+    private CANSparkMax turretMotor = new CANSparkMax(RobotMap.Shooter.TURRET_MOTOR_CHANNEL, MotorType.kBrushless);
 
     private DoubleSolenoid hoodMainSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_MAIN_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_MAIN_SOLENOID_CHANNEL + 1);
     private DoubleSolenoid hoodSecondarySolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SECONDARY_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SECONDARY_SOLENOID_CHANNEL + 1);
@@ -59,7 +59,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     public void runTurret(double power) {
         if (this.aimbotEnabled) return;
 
-        this.turretMotor.set(ControlMode.PercentOutput, power);
+        this.turretMotor.set(power);
     }
 
     public void onDispose() {
