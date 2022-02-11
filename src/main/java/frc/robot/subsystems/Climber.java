@@ -43,10 +43,8 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
 
         builder.setActuator(true);
 
-        builder.setSafeState(() -> this.run(0));
-
         builder.addDoubleProperty("Climber Speed", this.climbMotor::get, (double value) -> { });
-        
+
         builder.addBooleanProperty("Rachet Engage", () -> {
             return this.releaseSolenoid.get() == Value.kReverse;
         }, (boolean value) -> { });

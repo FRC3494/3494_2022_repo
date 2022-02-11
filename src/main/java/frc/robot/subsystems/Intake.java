@@ -53,8 +53,6 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
 
         builder.setActuator(true);
 
-        builder.setSafeState(() -> this.run(0));
-
         builder.addDoubleProperty("Front Speed", this.frontIntakeMotor::getMotorOutputPercent, (double value) -> { });
         builder.addBooleanProperty("Front Deployed", () -> {
             return this.frontIntakeDeploySolenoid.get() == Value.kForward;

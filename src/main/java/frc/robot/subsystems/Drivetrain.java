@@ -49,8 +49,6 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
         builder.setSmartDashboardType("DifferentialDrive");
 
         builder.setActuator(true);
-        
-        builder.setSafeState(() -> this.run(0, 0));
 
         builder.addDoubleProperty("Left Motor Speed", this.leftLeader::get, (double value) -> { });
         builder.addDoubleProperty("Right Motor Speed", this.rightLeader::get, (double value) -> { });

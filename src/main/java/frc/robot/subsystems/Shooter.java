@@ -87,8 +87,6 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
         builder.setActuator(true);
 
-        builder.setSafeState(() -> this.run(0));
-
         builder.addDoubleProperty("Shooter RPM", this::getRPM, (double value) -> { });
 
         builder.addBooleanProperty("Hood Up", () -> {
