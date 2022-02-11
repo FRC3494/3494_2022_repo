@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -28,8 +29,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     
     private CANSparkMax turretMotor = new CANSparkMax(RobotMap.Shooter.TURRET_MOTOR_CHANNEL, MotorType.kBrushless);
 
-    private DoubleSolenoid hoodMainSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_MAIN_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_MAIN_SOLENOID_CHANNEL + 1);
-    private DoubleSolenoid hoodSecondarySolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SECONDARY_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SECONDARY_SOLENOID_CHANNEL + 1);
+    private DoubleSolenoid hoodMainSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
 
     private boolean aimbotEnabled = false;
 
@@ -51,7 +51,6 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     public void runHood(boolean position) {
         this.hoodMainSolenoid.set((position) ? Value.kForward : Value.kReverse);
-        this.hoodSecondarySolenoid.set(Value.kReverse);
     }
 
     public void runTurret(double power) {
@@ -80,5 +79,24 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         if (this.aimbotEnabled) {
             // aimbot code here
         }
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Shooter");
+
+        builder.setActuator(true);
+
+        builder.setSafeState(() -> this.run(0));
+
+        builder.addDoubleProperty("Shooter RPM", this::getRPM, (double value) -> { });
+
+        builder.addBooleanProperty("Hood Up", () -> {
+            return this.hoodMainSolenoid.get() == Value.kForward;
+        }, (boolean value) -> { });
+
+        builder.addBooleanProperty("Aimbot Enabled", () -> {
+            return this.aimbotEnabled;
+        }, (boolean value) -> { });
     }
 }

@@ -1,23 +1,20 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.RobotMap;
 import frc.robot.utilities.DiSubsystem;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
-public class Pneumatics extends DiSubsystem implements IInitializable {
+public class Pneumatics extends DiSubsystem {
     private Compressor compressor = new Compressor(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM);
 
-    public void onInitialize() {
-        
-    }
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Pneumatics");
 
-    public void enable() {
-        this.compressor.enableDigital();
-    }
-
-    public void disable() {
-        this.compressor.disable();
+        builder.addBooleanProperty("Compressing", () -> {
+            return this.compressor.getPressureSwitchValue();
+        }, (boolean value) -> { });
     }
 }

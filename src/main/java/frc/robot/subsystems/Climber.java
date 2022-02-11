@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -34,5 +35,20 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
 
     public void onDispose() {
         this.run(0);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Climber");
+
+        builder.setActuator(true);
+
+        builder.setSafeState(() -> this.run(0));
+
+        builder.addDoubleProperty("Climber Speed", this.climbMotor::get, (double value) -> { });
+        
+        builder.addBooleanProperty("Rachet Engage", () -> {
+            return this.releaseSolenoid.get() == Value.kReverse;
+        }, (boolean value) -> { });
     }
 }

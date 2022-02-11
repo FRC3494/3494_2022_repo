@@ -13,8 +13,7 @@ public class RobotMap {
         public static final int SHOOTER_MOTOR_CHANNEL = 4;
         public static final int TURRET_MOTOR_CHANNEL = 6;
         
-        public static final int HOOD_MAIN_SOLENOID_CHANNEL = 0;
-        public static final int HOOD_SECONDARY_SOLENOID_CHANNEL = 2;
+        public static final int HOOD_SOLENOID_CHANNEL = 0;
     }
 
     public static class Intake {
