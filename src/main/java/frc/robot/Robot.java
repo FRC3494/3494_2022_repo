@@ -9,6 +9,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Electronics;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.Shooter;
 
 public class Robot extends DiRobot {
@@ -16,6 +17,7 @@ public class Robot extends DiRobot {
     public void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
         this.Container.bind(Electronics.class).asSingle();
         this.Container.bind(Pneumatics.class).asSingle();
+        this.Container.bind(NavX.class).asSingle();
 
         this.Container.bind(Drivetrain.class).asSingle();
         this.Container.bind(Shooter.class).asSingle();
