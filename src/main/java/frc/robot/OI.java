@@ -37,6 +37,10 @@ public class OI implements IInitializable, IDisposable {
         return this.secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.INTAKE_SPEED;
     }
 
+    public boolean GetOverrideMagazineStateMachine() {
+        return this.secondaryXbox.getYButton();
+    }
+
     public double GetShooterPower() {
         return this.secondaryXbox.getRightTriggerAxis();
     }

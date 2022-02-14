@@ -49,19 +49,29 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
                 this.drivetrain.singTheTheme();
                 this.startedSinging = true;
             }
+
+            if (this.drivetrain.isDoneSinging()) {
+                this.singing = false;
+                this.startedSinging = false;
+            }
+
             return;
         }
 
-        this.drivetrain.run(this.PowerCurve(this.oi.GetLeftDriveSpeed()), this.PowerCurve(this.oi.GetRightDriveSpeed()));
+        this.drivetrain.run(RobotConfig.Drivetrain.PowerCurve(this.oi.GetLeftDriveSpeed()), RobotConfig.Drivetrain.PowerCurve(this.oi.GetRightDriveSpeed()));
 
-        this.intake.run(this.oi.GetIntakeSpeed());
-        this.magazine.run((this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OUTTAKE_SPEED : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : RobotConfig.Magazine.IDLE_SPEED));
+        this.intake.run(RobotConfig.Intake.PowerCurve(this.oi.GetIntakeSpeed()));
 
-        this.climber.run(this.oi.GetClimberPower());
+        double magazineSpeed = (this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OUTTAKE_SPEED : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : RobotConfig.Magazine.IDLE_SPEED);
+        
+        if (this.oi.GetOverrideMagazineStateMachine()) this.magazine.runRaw(magazineSpeed);
+        else this.magazine.run(magazineSpeed);
 
-        this.shooter.run(this.oi.GetShooterPower() * RobotConfig.Shooter.BASE_TARGET_RPM);
+        this.climber.run(RobotConfig.Climber.PowerCurve(this.oi.GetClimberPower()));
 
-        this.shooter.runTurret(this.oi.GetTurretPower());
+        this.shooter.run(RobotConfig.Shooter.RPMPowerCurve(this.oi.GetShooterPower()) * RobotConfig.Shooter.BASE_TARGET_RPM);
+
+        this.shooter.runTurret(RobotConfig.Shooter.TurretPowerCurve(this.oi.GetTurretPower()));
 
         if (this.oi.StartSinging()) this.singing = true;
     }
@@ -73,12 +83,5 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
         this.climber.run(0);
         this.shooter.run(0);
         this.shooter.runTurret(0);
-    }
-
-    public double PowerCurve(double x) {
-        if (x > 1) return 1;
-        if (x < -1) return -1;
-
-        return Math.pow(x, 3);
     }
 }

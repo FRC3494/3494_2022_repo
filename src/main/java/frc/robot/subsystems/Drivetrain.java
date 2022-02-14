@@ -64,6 +64,10 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
         this.orchestra.pause();
     }
 
+    public boolean isDoneSinging() {
+        return !this.orchestra.isPlaying();
+    }
+
     public void onDispose() {
         this.run(0, 0);
     }
