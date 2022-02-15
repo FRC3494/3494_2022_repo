@@ -14,15 +14,11 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotConfig;
 import frc.robot.RobotMap;
 import frc.robot.utilities.DiSubsystem;
-import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
 
 public class Shooter extends DiSubsystem implements IInitializable, IDisposable, ITickable {
-    @Inject
-    public Pneumatics pneumatics;
-
     private CANSparkMax shooterMotor = new CANSparkMax(RobotMap.Shooter.SHOOTER_MOTOR_CHANNEL, MotorType.kBrushless);
     private SparkMaxPIDController shooterPidController;
     private RelativeEncoder shooterMotorEncoder;

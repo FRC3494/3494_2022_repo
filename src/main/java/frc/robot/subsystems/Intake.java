@@ -10,14 +10,10 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
 import frc.robot.utilities.DiSubsystem;
-import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 
 public class Intake extends DiSubsystem implements IInitializable, IDisposable {
-    @Inject
-    private Pneumatics pneumatics;
-    
     private TalonSRX frontIntakeMotor = new TalonSRX(RobotMap.Intake.FRONT_INTAKE_MOTOR_CHANNEL);
     private TalonSRX backIntakeMotor = new TalonSRX(RobotMap.Intake.BACK_INTAKE_MOTOR_CHANNEL);
     

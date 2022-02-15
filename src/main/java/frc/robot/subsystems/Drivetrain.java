@@ -21,12 +21,6 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
     private Orchestra orchestra = new Orchestra();
 
     public void onInitialize() {
-        this.orchestra.addInstrument(this.leftLeader);
-        this.orchestra.addInstrument(this.leftFollower);
-        
-        this.orchestra.addInstrument(this.rightLeader);
-        this.orchestra.addInstrument(this.rightFollower);
-
         this.leftLeader.setNeutralMode(NeutralMode.Brake);
         this.leftFollower.setNeutralMode(NeutralMode.Brake);
         this.rightLeader.setNeutralMode(NeutralMode.Brake);
@@ -37,6 +31,12 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
 
         this.leftFollower.follow(this.leftLeader);
         this.rightFollower.follow(this.rightLeader);
+        
+        this.orchestra.addInstrument(this.leftLeader);
+        this.orchestra.addInstrument(this.leftFollower);
+        
+        this.orchestra.addInstrument(this.rightLeader);
+        this.orchestra.addInstrument(this.rightFollower);
     }
 
     public void run(double leftPower, double rightPower) {
@@ -61,6 +61,8 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
     }
 
     public void pauseTheTheme() {
+        if (!this.orchestra.isPlaying()) return;
+
         this.orchestra.pause();
     }
 
