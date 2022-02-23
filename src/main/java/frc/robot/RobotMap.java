@@ -17,8 +17,8 @@ public class RobotMap {
     }
 
     public static class Intake {
-        public static final int FRONT_INTAKE_MOTOR_CHANNEL = 7;
-        public static final int BACK_INTAKE_MOTOR_CHANNEL = 8;
+        public static final int FRONT_INTAKE_MOTOR_CHANNEL = 8;
+        public static final int BACK_INTAKE_MOTOR_CHANNEL = 7;
 
         public static final int FRONT_INTAKE_DEPLOY_SOLENOID_CHANNEL = 0;
         public static final int BACK_INTAKE_DEPLOY_SOLENOID_CHANNEL = 2;
@@ -38,7 +38,7 @@ public class RobotMap {
     public static class Climber {
         public static final int CLIMB_MOTOR_CHANNEL = 14;
 
-        public static final int CLIMB_RELEASE_SOLENOID_CHANNEL = 4;
+        public static final int CLIMB_RELEASE_SOLENOID_CHANNEL = 6;
     }
 
     public static class Pneumatics {

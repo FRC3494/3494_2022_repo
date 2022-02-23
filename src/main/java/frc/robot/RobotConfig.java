@@ -2,8 +2,8 @@ package frc.robot;
 
 public final class RobotConfig {
     public static class Drivetrain {
-        public static double FORWARD_SENSITIVITY = 0.7;
-        public static double TURN_SENSITIVITY = 0.7;
+        public static double FORWARD_SENSITIVITY = 0.5; //0.3
+        public static double TURN_SENSITIVITY = 0.5; //0.3
 
         public static double PowerCurve(double x) {
             if (x > 1) return 1;
@@ -41,7 +41,7 @@ public final class RobotConfig {
     }
 
     public static class Intake {
-        public static double INTAKE_SPEED = 0.7;
+        public static double INTAKE_SPEED = 0.5;
 
         public static double FRONT_DEPLOY_ANGLE = 180;
         public static double BACK_DEPLOY_ANGLE = -180;
@@ -55,7 +55,7 @@ public final class RobotConfig {
     }
 
     public static class Magazine {
-        public static double IDLE_SPEED = 0.35;
+        public static double IDLE_SPEED = 0.45;
         public static double INTAKE_SPEED = 0.7;
         public static double OUTTAKE_SPEED = -0.7;
     }

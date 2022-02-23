@@ -58,11 +58,13 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
             return;
         }
 
-        this.drivetrain.run(RobotConfig.Drivetrain.PowerCurve(this.oi.GetLeftDriveSpeed()), RobotConfig.Drivetrain.PowerCurve(this.oi.GetRightDriveSpeed()));
+        //this.drivetrain.run(RobotConfig.Drivetrain.PowerCurve(this.oi.GetLeftDriveSpeed()), RobotConfig.Drivetrain.PowerCurve(this.oi.GetRightDriveSpeed()));
+
+        this.drivetrain.run((this.oi.GetLeftDriveSpeed()), (this.oi.GetRightDriveSpeed()));
 
         this.intake.run(RobotConfig.Intake.PowerCurve(this.oi.GetIntakeSpeed()));
 
-        double magazineSpeed = (this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OUTTAKE_SPEED : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : RobotConfig.Magazine.IDLE_SPEED);
+        double magazineSpeed = (this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OUTTAKE_SPEED : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : ((this.oi.GetMagazineIdle()) ? RobotConfig.Magazine.IDLE_SPEED : 0));
         
         if (this.oi.GetOverrideMagazineStateMachine()) this.magazine.runRaw(magazineSpeed);
         else this.magazine.run(magazineSpeed);

@@ -26,6 +26,10 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
         if (power >= 0) this.release(false);
         else this.release(true);
 
+        this.runRaw(power);
+    }
+
+    public void runRaw(double power) {
         this.climbMotor.set(power);
     }
 

@@ -13,6 +13,8 @@ public class OI implements ITickable {
     String targetSequence = "uuddlrlrbas";
     boolean pressingPOV = true;
 
+    boolean magazineIdle = false;
+
     public void onTick() {
         if (this.buttonSequence.length() > this.targetSequence.length()) this.buttonSequence = "";
 
@@ -20,36 +22,47 @@ public class OI implements ITickable {
             if (this.buttonSequence.charAt(i) != this.targetSequence.charAt(i)) this.buttonSequence = "";
         }
 
-        if ((this.secondaryXbox.getPOV() > -1 && this.secondaryXbox.getPOV() < 35) || this.secondaryXbox.getPOV() > 325 && !this.pressingPOV) this.buttonSequence += 'u';
-        if (this.secondaryXbox.getPOV() > 55 && this.secondaryXbox.getPOV() < 125 && !this.pressingPOV) this.buttonSequence += 'd';
-        if (this.secondaryXbox.getPOV() > 145 && this.secondaryXbox.getPOV() < 215 && !this.pressingPOV) this.buttonSequence += 'l';
-        if (this.secondaryXbox.getPOV() > 235 && this.secondaryXbox.getPOV() < 305 && !this.pressingPOV) this.buttonSequence += 'r';
+        if (!this.pressingPOV && (this.secondaryXbox.getPOV() > -1 && this.secondaryXbox.getPOV() < 35) || this.secondaryXbox.getPOV() > 325) this.buttonSequence += 'u';
+        if (!this.pressingPOV && this.secondaryXbox.getPOV() > 145 && this.secondaryXbox.getPOV() < 215) this.buttonSequence += 'd';
+        if (!this.pressingPOV && this.secondaryXbox.getPOV() > 235 && this.secondaryXbox.getPOV() < 305) this.buttonSequence += 'l';
+        if (!this.pressingPOV && this.secondaryXbox.getPOV() > 55 && this.secondaryXbox.getPOV() < 125) this.buttonSequence += 'r';
 
         this.pressingPOV = this.secondaryXbox.getPOV() != -1;
 
         if (this.secondaryXbox.getAButtonPressed()) this.buttonSequence += 'a';
         if (this.secondaryXbox.getBButtonPressed()) this.buttonSequence += 'b';
         if (this.secondaryXbox.getStartButtonPressed()) this.buttonSequence += 's';
+
+        if (this.secondaryXbox.getXButtonPressed()) magazineIdle = !magazineIdle;
+
+        //System.out.println(buttonSequence);
     }
 
     public double GetLeftDriveSpeed() {
-        return (this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) + (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
+        return -(this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) - (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
     }
 
     public double GetRightDriveSpeed() {
-        return (this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) - (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
+        return -(this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) + (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
     }
 
     public boolean GetNeedOuttake() {
-        return this.secondaryXbox.getAButton();
+        //return this.secondaryXbox.getAButton();
+        return this.primaryXbox.getAButton();
+    }
+
+    public boolean GetMagazineIdle() {
+        return magazineIdle;
     }
 
     public double GetClimberPower() {
-        return (this.primaryXbox.getYButton()) ? ((this.primaryXbox.getLeftTriggerAxis() - this.primaryXbox.getRightTriggerAxis()) * RobotConfig.Climber.CLIMB_SPEED) : 0;
+        //return (this.primaryXbox.getYButton()) ? ((this.primaryXbox.getLeftTriggerAxis() - this.primaryXbox.getRightTriggerAxis()) * RobotConfig.Climber.CLIMB_SPEED) : 0;
+        return 0;
     }
 
     public double GetIntakeSpeed() {
-        return this.secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.INTAKE_SPEED;
+        //return this.secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.INTAKE_SPEED;
+        return this.primaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.INTAKE_SPEED;
     }
 
     public boolean GetOverrideMagazineStateMachine() {

@@ -2,8 +2,11 @@ package frc.robot;
 
 import java.lang.reflect.InvocationTargetException;
 
+import frc.robot.utilities.DiOpMode;
 import frc.robot.utilities.DiRobot;
 import frc.robot.subsystems.Pneumatics;
+import frc.robot.opmodes.debug.Test;
+import frc.robot.opmodes.teleop.Teleop;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Electronics;
@@ -24,7 +27,19 @@ public class Robot extends DiRobot {
         this.Container.bind(Magazine.class).asSingle();
         this.Container.bind(Intake.class).asSingle();
         this.Container.bind(Climber.class).asSingle();
-        
-        this.Container.bind(OI.class).asSingle();
+
+        //this.Container.bind(OI.class).asSingle();
+    }
+
+    public DiOpMode CreateTeleop() {
+        return new Teleop();
+    }
+
+    public DiOpMode CreateAutonomous() {
+        return null;
+    }
+
+    public DiOpMode CreateTest() {
+        return new Test();
     }
 }

@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import frc.robot.utilities.DiCommand;
+import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IInjected;
 
 public class DiContainer {
@@ -42,7 +44,7 @@ public class DiContainer {
     */
     public void onInject() {
         for (Object objectInstance : this.objectPool.values()) {
-            if (objectInstance instanceof DiInterfaces.IInitializable) {
+            if (objectInstance instanceof DiInterfaces.IInitializable && !(objectInstance instanceof DiCommand) && !(objectInstance instanceof DiSubsystem)) {
                 ((DiInterfaces.IInitializable) objectInstance).onInitialize();
             }
         }
@@ -55,7 +57,7 @@ public class DiContainer {
     */
     public void onTick() {
         for (Object objectInstance : this.objectPool.values()) {
-            if (objectInstance instanceof DiInterfaces.ITickable) {
+            if (objectInstance instanceof DiInterfaces.ITickable && !(objectInstance instanceof DiCommand) && !(objectInstance instanceof DiSubsystem)) {
                 ((DiInterfaces.ITickable) objectInstance).onTick();
             }
         }
@@ -68,7 +70,7 @@ public class DiContainer {
     */
     public void onDispose() {
         for (Object objectInstance : this.objectPool.values()) {
-            if (objectInstance instanceof DiInterfaces.IDisposable) {
+            if (objectInstance instanceof DiInterfaces.IDisposable && !(objectInstance instanceof DiCommand) && !(objectInstance instanceof DiSubsystem)) {
                 ((DiInterfaces.IDisposable) objectInstance).onDispose();
             }
         }

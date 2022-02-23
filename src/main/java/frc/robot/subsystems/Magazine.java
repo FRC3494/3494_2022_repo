@@ -27,7 +27,7 @@ public class Magazine extends DiSubsystem implements IInitializable, IDisposable
         this.treeStemMotor.setNeutralMode(NeutralMode.Brake);
 
         this.leftTreeMotor.setInverted(true);
-        this.rightTreeMotor.setInverted(true);
+        //this.rightTreeMotor.setInverted(true);
         this.treeStemMotor.setInverted(true);
     }
 

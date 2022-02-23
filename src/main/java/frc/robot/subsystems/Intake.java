@@ -25,6 +25,7 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
         this.backIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
         this.backIntakeMotor.follow(this.frontIntakeMotor);
+        this.backIntakeMotor.setInverted(true);
     }
 
     public void run(double power) {

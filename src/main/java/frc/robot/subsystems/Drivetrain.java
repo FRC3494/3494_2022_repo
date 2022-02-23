@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.robot.RobotMap;
 import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
@@ -46,7 +47,7 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("DifferentialDrive");
+        builder.setSmartDashboardType(BuiltInWidgets.kDifferentialDrive.getWidgetName());
 
         builder.setActuator(true);
 
