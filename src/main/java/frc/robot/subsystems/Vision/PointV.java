@@ -1,16 +1,16 @@
 package frc.robot.subsystems.Vision;
 
-public class Point {
+public class PointV {
     public double x;
     public double y;
     public double z;
 
-    public Point(double x, double y){
+    public PointV(double x, double y){
         this.x = x;
         this.y = y;
     }
 
-    public Point (double x, double y, double z){
+    public PointV (double x, double y, double z){
         this.x = x;
         this.y = y;
         this.z = z;
