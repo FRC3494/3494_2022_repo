@@ -1,6 +1,8 @@
 package frc.robot;
 
-public final class RobotConfig extends AutoConfigurable {
+import frc.robot.utilities.AutoConfigurable;
+
+public final class RobotConfig {// extends AutoConfigurable {
     public static class Drivetrain {
         public static double FORWARD_SENSITIVITY = 0.5; //0.3
         public static double TURN_SENSITIVITY = 0.5; //0.3
@@ -17,16 +19,18 @@ public final class RobotConfig extends AutoConfigurable {
         public static double BASE_TARGET_RPM = 2000;
 
         public static double TURRET_SPEED = 0.7;
+
         public static class Aimbot{
-            public final static double CameraHeightMeters = 38.5; // From floor to camera PLEASE CHANGE
-            public final static double HubHeightMeters = 50;  //From floor to reflective tape PLEASE CHANGE
-            public final static double CameraPitchRadians = 0;
-            public final static String CameraName = "USB_Camera";
-            public final static double hubCenterConstant = 100;  
-            public final static int TurretMotorPort = 2;
+            public static double CameraHeightMeters = 38.5; // From floor to camera PLEASE CHANGE
+            public static double HubHeightMeters = 50;  //From floor to reflective tape PLEASE CHANGE
+            public static double CameraPitchRadians = 0;
+            public static String CameraName = "USB_Camera";
+            public static double hubCenterConstant = 100;  
+            public static int TurretMotorPort = 2;
             public static double maxHoodAngle = 24;
             public static double minHoodAngle = 5;
         }
+
         public static class PIDF {
             public static float P = 0.0005f;
             public static float I = 0;

@@ -1,0 +1,5 @@
+[ ] control scheme 
+[ ] autoconfigurable
+    [ ] auto chooser
+[ ] auto tasks
+    [ ] basic drive forward auto

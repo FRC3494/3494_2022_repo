@@ -37,13 +37,13 @@ public class Magazine extends DiSubsystem implements IInitializable, IDisposable
             return;
         }
 
-        this.treeStemMotor.set(ControlMode.PercentOutput, power);
+        //this.treeStemMotor.set(ControlMode.PercentOutput, power);
         this.leftTreeMotor.set(ControlMode.PercentOutput, (this.treeStemLinebreak.Broken() && this.leftTreeLinebreak.Broken()) ? 0 : power);
         this.rightTreeMotor.set(ControlMode.PercentOutput, (this.treeStemLinebreak.Broken() && this.rightTreeLinebreak.Broken()) ? ((this.leftTreeLinebreak.Broken()) ? -Math.abs(power) : 0) : power);
     }
 
     public void runRaw(double power) {
-        this.treeStemMotor.set(ControlMode.PercentOutput, power);
+        //this.treeStemMotor.set(ControlMode.PercentOutput, power);
         this.leftTreeMotor.set(ControlMode.PercentOutput, power);
         this.rightTreeMotor.set(ControlMode.PercentOutput, power);
     }
