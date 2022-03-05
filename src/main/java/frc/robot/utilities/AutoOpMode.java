@@ -19,7 +19,7 @@ public abstract class AutoOpMode extends DiOpMode {
 
     public abstract void sequence();
 
-    public class AutoSequencer implements ITickable, IDisposable {
+    public class AutoSequencer extends DiCommand implements ITickable, IDisposable {
         @Inject
         DiOpMode opMode;
 

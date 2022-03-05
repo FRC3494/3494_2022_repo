@@ -1,27 +1,28 @@
 package frc.robot.commands.autonomous;
 
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Intake;
 import frc.robot.utilities.AutoTask;
 import frc.robot.utilities.di.DiContainer.Inject;
 
-public class IntakeTask extends AutoTask {
-    @Inject
-    Intake intake;
+public class MagazineTask extends AutoTask {
     @Inject
     Magazine magazine;
 
     double leftPower;
     double rightPower;
+    double verticalPower;
+    boolean sendShooter;
 
-    public IntakeTask(double leftPower, double rightPower) {
+    public MagazineTask(double leftPower, double rightPower, double verticalPower, boolean sendShooter) {
         this.leftPower = leftPower;
         this.rightPower = rightPower;
+        this.verticalPower = verticalPower;
+        this.sendShooter = sendShooter;
     }
 
     @Override
     public void begin() {
-        this.intake.run(this.leftPower, this.rightPower);
+        this.magazine.run(this.leftPower, this.rightPower, this.verticalPower, this.sendShooter);
     }
 
     @Override

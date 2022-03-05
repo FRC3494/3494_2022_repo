@@ -21,11 +21,17 @@ public abstract class DiSubsystem extends SubsystemBase implements IInjected {
     private void internalInitialize() {
         if (this instanceof IInitializable) ((IInitializable) this).onInitialize();
         if (this instanceof ITickable) this.isTickable = true;
+
+        needsInitialization = false;
     }
 
     @Override
     public void periodic() {
+        //System.out.println("Subsystem periodic: " + this.getName());
+
         if (this.needsInitialization) return;
+
+        //System.out.println("Subsystem periodic with init: " + this.getName());
 
         if (this.isTickable) ((ITickable) this).onTick();
     }

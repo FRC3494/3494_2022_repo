@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import frc.robot.utilities.DiOpMode;
 import frc.robot.utilities.DiRobot;
 import frc.robot.subsystems.Pneumatics;
+import frc.robot.opmodes.autonomous.DriveAndShoot;
 import frc.robot.opmodes.debug.Test;
 import frc.robot.opmodes.teleop.Teleop;
 import frc.robot.subsystems.Climber;
@@ -38,7 +39,7 @@ public class Robot extends DiRobot {
     }
 
     public DiOpMode CreateAutonomous() {
-        return null;
+        return new DriveAndShoot();
     }
 
     public DiOpMode CreateTest() {

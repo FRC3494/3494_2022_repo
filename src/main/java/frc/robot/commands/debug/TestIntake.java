@@ -16,6 +16,6 @@ public class TestIntake extends DiTest implements IInitializable, ITickable, IDi
     }
 
     public void cleanup() {
-        intake.run(0);
+        intake.run(0, 0);
     }
 }

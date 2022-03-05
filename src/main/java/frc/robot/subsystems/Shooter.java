@@ -17,6 +17,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotConfig;
 import frc.robot.RobotMap;
@@ -32,6 +33,8 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     private CANSparkMax shooterMotor = new CANSparkMax(RobotMap.Shooter.SHOOTER_MOTOR_CHANNEL, MotorType.kBrushless);
     private SparkMaxPIDController shooterPidController;
     private RelativeEncoder shooterMotorEncoder;
+
+    double targetRPM = 0;
     
 
     PhotonCamera camera;
@@ -50,13 +53,17 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     
     private CANSparkMax turretMotor = new CANSparkMax(RobotMap.Shooter.TURRET_MOTOR_CHANNEL, MotorType.kBrushless);
 
-    private DoubleSolenoid hoodMainSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
+    private boolean hoodPosition = false;
+    private DoubleSolenoid hoodSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
+
+    private Solenoid ledRing = new Solenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.LIGHTS_CHANNEL);
 
     private boolean aimbotEnabled = false;
 
 
     public void onInitialize() {
-        this.shooterMotor.setIdleMode(IdleMode.kBrake);
+        //this.shooterMotor.setIdleMode(IdleMode.kBrake);
+        this.shooterMotor.setIdleMode(IdleMode.kCoast);
 
         this.shooterMotorEncoder = this.shooterMotor.getEncoder();
         this.shooterPidController = this.shooterMotor.getPIDController();
@@ -68,11 +75,21 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     }
 
     public void run(double rpm) {
-        this.shooterPidController.setReference(rpm, ControlType.kVelocity);
+        if (aimbotEnabled) return;
+
+        targetRPM = rpm;
     }
 
     public void runHood(boolean position) {
-        this.hoodMainSolenoid.set((position) ? Value.kForward : Value.kReverse);
+        this.hoodSolenoid.set((position) ? Value.kForward : Value.kReverse);
+    }
+
+    public void setHood(boolean position) {
+        this.hoodPosition = position;
+    }
+
+    public boolean getHood() {
+        return this.hoodPosition;
     }
 
     public void runTurret(double power) {
@@ -91,16 +108,30 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     public void enableAimBot() {
         this.aimbotEnabled = true;
+
+        ledRing.set(true);
     }
 
     public void disableAimBot() {
         this.aimbotEnabled = false;
+
+        ledRing.set(false);
+    }
+
+    public boolean aimbotEnabled() {
+        return this.aimbotEnabled;
     }
 
     public void onTick() {
         if (this.aimbotEnabled) {
             // aimbot code here
         }
+
+        if (this.targetRPM == 0) this.shooterMotor.set(0);//this.shooterPidController.setReference(this.targetRPM, ControlType.k);
+        else this.shooterPidController.setReference(this.targetRPM, ControlType.kVelocity);
+
+        if (this.targetRPM > 0) this.runHood(this.hoodPosition);
+        else this.runHood(false);
     }
 
     public PointV getCircleCenter(){
@@ -162,8 +193,12 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
         builder.addDoubleProperty("Shooter RPM", this::getRPM, (double value) -> { });
 
+        builder.addDoubleProperty("Target RPM", () -> {
+            return this.targetRPM;
+        }, (double value) -> { });
+
         builder.addBooleanProperty("Hood Up", () -> {
-            return this.hoodMainSolenoid.get() == Value.kForward;
+            return this.hoodSolenoid.get() == Value.kForward;
         }, (boolean value) -> { });
 
         builder.addBooleanProperty("Aimbot Enabled", () -> {

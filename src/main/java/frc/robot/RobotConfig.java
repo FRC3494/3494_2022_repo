@@ -1,6 +1,11 @@
 package frc.robot;
 
-import frc.robot.utilities.AutoConfigurable;
+import java.util.ArrayList;
+import java.util.List;
+
+import frc.robot.utilities.Pair;
+
+//import frc.robot.utilities.AutoConfigurable;
 
 public final class RobotConfig {// extends AutoConfigurable {
     public static class Drivetrain {
@@ -16,11 +21,17 @@ public final class RobotConfig {// extends AutoConfigurable {
     }
 
     public static class Shooter {
-        public static double BASE_TARGET_RPM = 2000;
+        public static List<Pair<String, Double>> RPMS = new ArrayList<>() { {
+            add(new Pair<String, Double>("Close Low", 1350.0));
+            add(new Pair<String, Double>("Middle High", 3000.0)); //3250
+            add(new Pair<String, Double>("Far High", 3250.0)); //3250
+            //add(new Pair<String, Double>("Full Power", 5000.0));
+            //new Pair<>("Auto Shot", -1);
+        } };
 
-        public static double TURRET_SPEED = 0.7;
+        public static double TURRET_SPEED = 0.6; //0.7
 
-        public static class Aimbot{
+        public static class Aimbot {
             public static double CameraHeightMeters = 38.5; // From floor to camera PLEASE CHANGE
             public static double HubHeightMeters = 50;  //From floor to reflective tape PLEASE CHANGE
             public static double CameraPitchRadians = 0;
@@ -31,11 +42,11 @@ public final class RobotConfig {// extends AutoConfigurable {
             public static double minHoodAngle = 5;
         }
 
-        public static class PIDF {
-            public static float P = 0.0005f;
-            public static float I = 0;
-            public static float D = 0;
-            public static float FF = 0;
+        public static class PIDF { //Tu= 0.242
+            public static float P = 0.00042f;//0.0006f;
+            public static float I = 0.000001f;//0.000001;//0.0005f;//0.121f;
+            public static float D = 0.00036f;//0.03025f;
+            public static float FF = 0.00021f;
         }
 
         public static double RPMPowerCurve(double x) {
@@ -54,7 +65,7 @@ public final class RobotConfig {// extends AutoConfigurable {
     }
 
     public static class Intake {
-        public static double INTAKE_SPEED = 0.5;
+        public static double INTAKE_SPEED = 0.65;
 
         public static double FRONT_DEPLOY_ANGLE = 180;
         public static double BACK_DEPLOY_ANGLE = -180;
@@ -68,9 +79,9 @@ public final class RobotConfig {// extends AutoConfigurable {
     }
 
     public static class Magazine {
-        public static double IDLE_SPEED = 0.45;
-        public static double INTAKE_SPEED = 0.7;
-        public static double OUTTAKE_SPEED = -0.7;
+        public static double IDLE_SPEED = 0.25;
+        public static double INTAKE_SPEED = 0.5;
+        public static double OUTTAKE_SPEED = -0.5;
     }
 
     public static class Climber {

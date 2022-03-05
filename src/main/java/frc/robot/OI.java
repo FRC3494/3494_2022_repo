@@ -11,12 +11,15 @@ public class OI implements ITickable {
     String buttonSequence = "";
 
     String targetSequence = "uuddlrlrbas";
-    boolean pressingPOV = true;
+    boolean pressingPOV = false;
 
     boolean magazineIdle = false;
 
+    boolean switchRPM = false;
+    boolean switchRPMPressed = false;
+
     public void onTick() {
-        if (this.buttonSequence.length() > this.targetSequence.length()) this.buttonSequence = "";
+        /*if (this.buttonSequence.length() > this.targetSequence.length()) this.buttonSequence = "";
 
         for (int i = 0; i < this.buttonSequence.length(); i++) {
             if (this.buttonSequence.charAt(i) != this.targetSequence.charAt(i)) this.buttonSequence = "";
@@ -27,57 +30,108 @@ public class OI implements ITickable {
         if (!this.pressingPOV && this.secondaryXbox.getPOV() > 235 && this.secondaryXbox.getPOV() < 305) this.buttonSequence += 'l';
         if (!this.pressingPOV && this.secondaryXbox.getPOV() > 55 && this.secondaryXbox.getPOV() < 125) this.buttonSequence += 'r';
 
-        this.pressingPOV = this.secondaryXbox.getPOV() != -1;
-
         if (this.secondaryXbox.getAButtonPressed()) this.buttonSequence += 'a';
         if (this.secondaryXbox.getBButtonPressed()) this.buttonSequence += 'b';
-        if (this.secondaryXbox.getStartButtonPressed()) this.buttonSequence += 's';
+        if (this.secondaryXbox.getStartButtonPressed()) this.buttonSequence += 's';*/
 
-        if (this.secondaryXbox.getXButtonPressed()) magazineIdle = !magazineIdle;
+        if (this.pressingPOV) {
+            if (!this.switchRPMPressed) this.switchRPM = true;
+            this.switchRPMPressed = true;
+        } else this.switchRPMPressed = false;
+
+        this.pressingPOV = this.secondaryXbox.getPOV() != -1;
+
+        //if (this.secondaryXbox.getXButtonPressed()) magazineIdle = !magazineIdle;
 
         //System.out.println(buttonSequence);
     }
 
-    public double GetLeftDriveSpeed() {
+    public double GetLeftDriveSpeed() { //
         return -(this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) - (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
     }
 
-    public double GetRightDriveSpeed() {
+    public double GetRightDriveSpeed() { //
         return -(this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) + (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
     }
 
-    public boolean GetNeedOuttake() {
-        //return this.secondaryXbox.getAButton();
-        return this.primaryXbox.getAButton();
+    public boolean GetNeedOuttake() { //
+        return this.secondaryXbox.getStartButton();
+        //return this.primaryXbox.getAButton();
     }
 
-    public boolean GetMagazineIdle() {
+    public boolean GetMagazineIdle() { //
         return magazineIdle;
     }
 
-    public double GetClimberPower() {
-        //return (this.primaryXbox.getYButton()) ? ((this.primaryXbox.getLeftTriggerAxis() - this.primaryXbox.getRightTriggerAxis()) * RobotConfig.Climber.CLIMB_SPEED) : 0;
-        return 0;
+    public double GetClimberPower() { //
+        return (this.primaryXbox.getYButton()) ? ((this.primaryXbox.getLeftTriggerAxis() - this.primaryXbox.getRightTriggerAxis()) * RobotConfig.Climber.CLIMB_SPEED) : 0;
+        //return 0;
     }
 
-    public double GetIntakeSpeed() {
-        //return this.secondaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.INTAKE_SPEED;
-        return this.primaryXbox.getLeftTriggerAxis() * RobotConfig.Intake.INTAKE_SPEED;
+    public double GetFrontIntakePower() { //
+        //return this.secondaryXbox.getRightTriggerAxis();
+        //return this.primaryXbox.getLeftTriggerAxis();
+        if (this.secondaryXbox.getYButton() && this.secondaryXbox.getRightBumper()) return 0;
+        return (this.secondaryXbox.getXButton()) ? 1 : 0;
+    }
+
+    public double GetBackIntakePower() { //
+        //return this.secondaryXbox.getRightTriggerAxis();
+        //return this.primaryXbox.getLeftTriggerAxis();
+        if (this.secondaryXbox.getBButton() && this.secondaryXbox.getRightBumper()) return 0;
+        return (this.secondaryXbox.getAButton()) ? 1 : 0;
+    }
+
+    public double GetLeftTreeMagazinePower() { //
+        //return (this.secondaryXbox.getAButton()) ? 1 : 0;
+        if (this.secondaryXbox.getYButton() && this.secondaryXbox.getRightBumper()) return -1;
+        return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
+    }
+
+    public double GetRightTreeMagazinePower() { //
+        if (this.secondaryXbox.getBButton() && this.secondaryXbox.getRightBumper()) return -1;
+        return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
+        //return (this.secondaryXbox.getAButton()) ? 1 : 0;
+    }
+
+    public double GetTreeStemMagazinePower() { //
+        //return (this.secondaryXbox.getYButton()) ? 1 : 0;
+        return (this.secondaryXbox.getRightTriggerAxis() != 0) ? 1 : 0;
     }
 
     public boolean GetOverrideMagazineStateMachine() {
-        return this.secondaryXbox.getYButton();
+        //return this.secondaryXbox.getYButton();
+        return true;
     }
 
-    public double GetShooterPower() {
-        return this.secondaryXbox.getRightTriggerAxis();
+    public double GetShooterPower() { //
+        return this.secondaryXbox.getLeftTriggerAxis();
     }
 
-    public double GetTurretPower() {
-        return this.secondaryXbox.getLeftX() * RobotConfig.Shooter.TURRET_SPEED;
+    public boolean ToggleAimBot() { //
+        return this.secondaryXbox.getBackButtonPressed();
     }
 
-    public boolean StartSinging() {
+    public boolean ToggleShooterHood() {//
+        return this.secondaryXbox.getLeftBumperPressed();
+    }
+
+    public double GetTurretPower() { //
+        return this.secondaryXbox.getLeftX();
+    }
+
+    public boolean GetSwitchRPM() {
+        if (switchRPM) {
+            switchRPM = false;
+            return true;
+        }
+
+        return false;
+
+        //return this.secondaryXbox.getPOV() != -1;
+    }
+
+    public boolean StartSinging() { //
         boolean equal = this.buttonSequence.equals(this.targetSequence);
 
         if (equal) this.buttonSequence = "";

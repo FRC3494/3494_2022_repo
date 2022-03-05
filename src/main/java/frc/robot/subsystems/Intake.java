@@ -24,24 +24,23 @@ public class Intake extends DiSubsystem implements IInitializable, IDisposable {
         this.frontIntakeMotor.setNeutralMode(NeutralMode.Brake);
         this.backIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
-        this.backIntakeMotor.follow(this.frontIntakeMotor);
         this.backIntakeMotor.setInverted(true);
     }
 
-    public void run(double power) {
-        if (power == 0) {
-            this.frontIntakeDeploySolenoid.set(Value.kReverse);
-            this.backIntakeDeploySolenoid.set(Value.kReverse);
-        } else {
-            this.frontIntakeDeploySolenoid.set(Value.kForward);
-            this.backIntakeDeploySolenoid.set(Value.kForward);
-        }
+    public void run(double frontPower, double backPower) {
+        this.frontIntakeDeploySolenoid.set((frontPower == 0) ? Value.kReverse : Value.kForward);
+        this.backIntakeDeploySolenoid.set((backPower == 0) ? Value.kReverse : Value.kForward);
 
-        this.frontIntakeMotor.set(ControlMode.PercentOutput, power);
+        this.frontIntakeMotor.set(ControlMode.PercentOutput, frontPower);
+        this.backIntakeMotor.set(ControlMode.PercentOutput, backPower);
+    }
+
+    public void setFront(boolean deployed) {
+        this.frontIntakeDeploySolenoid.set((deployed) ? Value.kReverse : Value.kForward);
     }
 
     public void onDispose() {
-        this.run(0);
+        this.run(0, 0);
     }
 
     @Override

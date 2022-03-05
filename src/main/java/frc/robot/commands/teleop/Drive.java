@@ -39,6 +39,8 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
     boolean singing = false;
     boolean startedSinging = false;
 
+    int selectedRPM = 0;
+
     public void onInitialize() {
         drivetrain.setDefaultCommand(this);
     }
@@ -62,28 +64,52 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
 
         this.drivetrain.run((this.oi.GetLeftDriveSpeed()), (this.oi.GetRightDriveSpeed()));
 
-        this.intake.run(RobotConfig.Intake.PowerCurve(this.oi.GetIntakeSpeed()));
+        double frontIntakeSpeed = (this.oi.GetClimberPower() == 0) ? RobotConfig.Intake.PowerCurve(this.oi.GetFrontIntakePower()) * RobotConfig.Intake.INTAKE_SPEED : 0.00001f;
+        double backIntakeSpeed = RobotConfig.Intake.PowerCurve(this.oi.GetBackIntakePower()) * RobotConfig.Intake.INTAKE_SPEED;
 
-        double magazineSpeed = (this.oi.GetNeedOuttake()) ? RobotConfig.Magazine.OUTTAKE_SPEED : ((this.oi.GetIntakeSpeed() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : ((this.oi.GetMagazineIdle()) ? RobotConfig.Magazine.IDLE_SPEED : 0));
-        
-        if (this.oi.GetOverrideMagazineStateMachine()) this.magazine.runRaw(magazineSpeed);
-        else this.magazine.run(magazineSpeed);
+        this.intake.run(frontIntakeSpeed, backIntakeSpeed);
+
+        //double magazineSpeed = ((this.oi.GetIntakePower() != 0 || this.oi.GetMagazinePower() != 0) ? RobotConfig.Magazine.INTAKE_SPEED : ((this.oi.GetMagazineIdle()) ? RobotConfig.Magazine.IDLE_SPEED : 0));
+        double leftMagazineSpeed = this.oi.GetLeftTreeMagazinePower() * RobotConfig.Magazine.INTAKE_SPEED;
+        double rightMagazineSpeed = this.oi.GetRightTreeMagazinePower() * RobotConfig.Magazine.INTAKE_SPEED;
+        double stemMagazineSpeed = this.oi.GetTreeStemMagazinePower() * RobotConfig.Magazine.INTAKE_SPEED;
+
+        if (this.oi.GetNeedOuttake()) {
+            leftMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED;
+            rightMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED;
+            stemMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED;
+        }
+
+        if (this.oi.GetOverrideMagazineStateMachine()) this.magazine.runRaw(leftMagazineSpeed, rightMagazineSpeed, stemMagazineSpeed);
+        else this.magazine.run(leftMagazineSpeed, rightMagazineSpeed, stemMagazineSpeed, this.oi.GetLeftTreeMagazinePower() > 0);
 
         this.climber.run(RobotConfig.Climber.PowerCurve(this.oi.GetClimberPower()));
 
-        this.shooter.run(RobotConfig.Shooter.RPMPowerCurve(this.oi.GetShooterPower()) * RobotConfig.Shooter.BASE_TARGET_RPM);
+        this.shooter.run(RobotConfig.Shooter.RPMPowerCurve(this.oi.GetShooterPower()) * RobotConfig.Shooter.RPMS.get(this.selectedRPM).Value);
+        this.shooter.runTurret(RobotConfig.Shooter.TurretPowerCurve(this.oi.GetTurretPower()) * RobotConfig.Shooter.TURRET_SPEED);
 
-        this.shooter.runTurret(RobotConfig.Shooter.TurretPowerCurve(this.oi.GetTurretPower()));
+        if (this.oi.ToggleAimBot()) {
+            if (this.shooter.aimbotEnabled()) this.shooter.disableAimBot();
+            else this.shooter.enableAimBot();
+        }
 
-        if (this.oi.StartSinging()) this.singing = true;
+        if (this.oi.GetSwitchRPM()) {
+            this.selectedRPM++;
+            if (this.selectedRPM >= RobotConfig.Shooter.RPMS.size()) this.selectedRPM = 0;
+        }
+
+        if (this.oi.ToggleShooterHood()) this.shooter.setHood(!this.shooter.getHood());
+
+        //if (this.oi.StartSinging()) this.singing = true;
     }
 
     public void onDispose() {
         this.drivetrain.run(0, 0);
-        this.intake.run(0);
-        this.magazine.runRaw(0);
+        this.intake.run(0, 0);
+        this.magazine.runRaw(0, 0, 0);
         this.climber.run(0);
         this.shooter.run(0);
         this.shooter.runTurret(0);
+        this.shooter.disableAimBot();
     }
 }

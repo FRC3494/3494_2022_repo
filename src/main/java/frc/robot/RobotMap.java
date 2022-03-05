@@ -14,6 +14,8 @@ public class RobotMap {
         public static final int TURRET_MOTOR_CHANNEL = 6;
         
         public static final int HOOD_SOLENOID_CHANNEL = 0;
+
+        public static final int LIGHTS_CHANNEL = 2;
     }
 
     public static class Intake {

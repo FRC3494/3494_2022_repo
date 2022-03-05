@@ -16,6 +16,6 @@ public class TestMagazine extends DiTest implements IInitializable, ITickable, I
     }
 
     public void cleanup() {
-        magazine.runRaw(0);
+        magazine.runRaw(0, 0, 0);
     }
 }

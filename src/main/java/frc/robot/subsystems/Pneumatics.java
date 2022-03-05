@@ -7,14 +7,17 @@ import frc.robot.RobotMap;
 import frc.robot.utilities.DiSubsystem;
 
 public class Pneumatics extends DiSubsystem {
-    private Compressor compressor = new Compressor(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM);
+    private Compressor baseCompressor = new Compressor(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM);
+
+    @SuppressWarnings("unused")
+    private Compressor shooterCompressor = new Compressor(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM);
 
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Pneumatics");
 
         builder.addBooleanProperty("Compressing", () -> {
-            return this.compressor.getPressureSwitchValue();
+            return this.baseCompressor.getPressureSwitchValue();
         }, (boolean value) -> { });
     }
 }
