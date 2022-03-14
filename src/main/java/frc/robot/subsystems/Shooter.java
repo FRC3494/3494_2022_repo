@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotConfig;
 import frc.robot.RobotMap;
+import frc.robot.sensors.Linebreaker;
 import frc.robot.subsystems.Vision.Coordinates;
 import frc.robot.subsystems.Vision.Line;
 import frc.robot.subsystems.Vision.PointV;
@@ -60,6 +61,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     private boolean aimbotEnabled = false;
 
+    private Linebreaker zeroLinebreak = new Linebreaker(RobotMap.Shooter.ZERO_LINEBREAK_CHANNEL);
 
     public void onInitialize() {
         //this.shooterMotor.setIdleMode(IdleMode.kBrake);
@@ -123,6 +125,8 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     }
 
     public void onTick() {
+        System.out.println(this.zeroLinebreak.Broken());
+
         if (this.aimbotEnabled) {
             // aimbot code here
         }

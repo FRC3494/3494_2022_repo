@@ -21,37 +21,52 @@ public class AutoConfigurable implements ITickable, IInitializable {
         DontGrabFrom.allFields = getAllVariablesAndInit(null, null, null);
     }
 
+    public String getShuffleboardName(Field classField) {
+        String name = classField.getName();
+        Class<?> parentClass = classField.getDeclaringClass();
+
+        while (parentClass != this.getClass()) {
+            name = parentClass.getSimpleName() + "/" + name;
+
+            parentClass = parentClass.getDeclaringClass();
+        }
+
+        return name;
+    }
+
     public void UpdateVariables() {
         for (Field classField : DontGrabFrom.allFields) {
             classField.setAccessible(true);
 
+            String fullName = getShuffleboardName(classField);
+
             if (classField.getType() == double.class) {
                 try {
-                    classField.set(this, DontGrabFrom.shuffleBoardElements.get(classField.getName()).getDouble((double) classField.get(this)));
+                    classField.set(this, DontGrabFrom.shuffleBoardElements.get(fullName).getDouble((double) classField.get(this)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (classField.getType() == int.class) {
                 try {
-                    classField.set(this, (int) DontGrabFrom.shuffleBoardElements.get(classField.getName()).getNumber((Number) classField.get(this)));
+                    classField.set(this, DontGrabFrom.shuffleBoardElements.get(fullName).getNumber((Number) classField.get(this)).intValue());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (classField.getType() == float.class) {
                 try {
-                    classField.set(this, (float) DontGrabFrom.shuffleBoardElements.get(classField.getName()).getNumber((Number) classField.get(this)));
+                    classField.set(this, DontGrabFrom.shuffleBoardElements.get(fullName).getNumber((Number) classField.get(this)).floatValue());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (classField.getType() == boolean.class) {
                 try {
-                    classField.set(this, DontGrabFrom.shuffleBoardElements.get(classField.getName()).getBoolean((boolean) classField.get(this)));
+                    classField.set(this, DontGrabFrom.shuffleBoardElements.get(fullName).getBoolean((boolean) classField.get(this)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (classField.getType() == String.class) {
                 try {
-                    classField.set(this, DontGrabFrom.shuffleBoardElements.get(classField.getName()).getString((String) classField.get(this)));
+                    classField.set(this, DontGrabFrom.shuffleBoardElements.get(fullName).getString((String) classField.get(this)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -66,7 +81,7 @@ public class AutoConfigurable implements ITickable, IInitializable {
 
         for (Field f : getFieldsFrom.getDeclaredFields()) {
             fieldsSoFar.add(f);
-            initShuffles(f, getFieldsFrom, nameTree);
+            initShuffles(f, nameTree);
         }
 
         for (Class<?> c : getFieldsFrom.getDeclaredClasses()) {
@@ -78,7 +93,7 @@ public class AutoConfigurable implements ITickable, IInitializable {
         return fieldsSoFar;
     }
 
-    public void initShuffles(Field fieldToInit, Class<?> classFieldIn, String nameTree) {
+    public void initShuffles(Field fieldToInit, String nameTree) {
         fieldToInit.setAccessible(true);
 
         String fullName = nameTree + fieldToInit.getName();
@@ -89,24 +104,21 @@ public class AutoConfigurable implements ITickable, IInitializable {
                         Shuffleboard.getTab("Configuration")
                                 .addPersistent(fullName, fieldToInit.get(this))
                                 .withWidget(BuiltInWidgets.kTextView)
-                                .withPosition(1, 1)
-                                .withSize(2, 1)
+                                .withSize(1, 1)
                                 .getEntry());
             } else if (fieldToInit.getType() == boolean.class) {
                 DontGrabFrom.shuffleBoardElements.put(fullName,
                         Shuffleboard.getTab("Configuration")
                                 .addPersistent(fullName, fieldToInit.get(this))
                                 .withWidget(BuiltInWidgets.kToggleButton)
-                                .withPosition(1, 1)
                                 .withSize(1, 1)
                                 .getEntry());
             } else if (fieldToInit.getType() == String.class) {
                 DontGrabFrom.shuffleBoardElements.put(fullName,
                         Shuffleboard.getTab("Configuration")
                                 .addPersistent(fullName, fieldToInit.get(this))
-                                .withWidget(BuiltInWidgets.kToggleButton)
-                                .withPosition(1, 1)
-                                .withSize(3, 1)
+                                .withWidget(BuiltInWidgets.kTextView)
+                                .withSize(2, 1)
                                 .getEntry());
             } else {
                 System.out.println("The variable:" + fullName + " is of type (" + fieldToInit.getType() + ") which the current auto config shuffle baord code cannot process, curent avalible types are int, double, float, and boolean.");

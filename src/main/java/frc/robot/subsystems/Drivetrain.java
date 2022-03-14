@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+//import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 
@@ -22,10 +22,10 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
     private Orchestra orchestra = new Orchestra();
 
     public void onInitialize() {
-        this.leftLeader.setNeutralMode(NeutralMode.Brake);
+        /*this.leftLeader.setNeutralMode(NeutralMode.Brake);
         this.leftFollower.setNeutralMode(NeutralMode.Brake);
         this.rightLeader.setNeutralMode(NeutralMode.Brake);
-        this.rightFollower.setNeutralMode(NeutralMode.Brake);
+        this.rightFollower.setNeutralMode(NeutralMode.Brake);*/
 
         this.rightLeader.setInverted(true);
         this.rightFollower.setInverted(true);

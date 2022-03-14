@@ -16,6 +16,8 @@ public class RobotMap {
         public static final int HOOD_SOLENOID_CHANNEL = 0;
 
         public static final int LIGHTS_CHANNEL = 2;
+        
+        public static final int ZERO_LINEBREAK_CHANNEL = 3;
     }
 
     public static class Intake {

@@ -1,33 +1,49 @@
 package frc.robot.utilities;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import frc.robot.subsystems.AutoNav;
 import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
+import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
 
 public abstract class AutoOpMode extends DiOpMode {
+    @Inject
     public AutoSequencer Sequencer;
 
-    public void install() {
-        this.Sequencer = new AutoSequencer();
-        this.Container.bindInstance(this.Sequencer);
+    public void install() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        this.Container.bind(AutoSequencer.class).asSingle();
+
+        System.out.println("hiiii");
+
+        while (Sequencer == null) Sequencer = (AutoSequencer) this.Container.tryResolve(AutoSequencer.class);
+
+        System.out.println("pogger");
 
         this.sequence();
     }
 
     public abstract void sequence();
 
-    public class AutoSequencer extends DiCommand implements ITickable, IDisposable {
+    public class AutoSequencer extends DiCommand implements IInitializable, ITickable, IDisposable {
         @Inject
         DiOpMode opMode;
+
+        @Inject
+        AutoNav autoNav;
 
         List<AutoTask> tasks = new ArrayList<>();
 
         private boolean hasInitTask = false;
         private boolean hasInitlate = false;
         private String currentTaskName = "Unknown";
+
+        public void onInitialize() {
+            autoNav.setDefaultCommand(this);
+        }
 
         public void lateInitialize() {
             for (int i = 0; i < this.tasks.size(); i++) {
@@ -43,6 +59,8 @@ public abstract class AutoOpMode extends DiOpMode {
 
         @Override
         public void onTick() {
+            System.out.println("auto ticky");
+
             if (!this.hasInitlate) {
                 this.lateInitialize();
                 this.hasInitlate = true;

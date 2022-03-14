@@ -12,18 +12,25 @@ import frc.robot.RobotMap;
 import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
+import frc.robot.utilities.di.DiInterfaces.ITickable;
 
-public class Climber extends DiSubsystem implements IInitializable, IDisposable {
+public class Climber extends DiSubsystem implements IInitializable, ITickable, IDisposable {
     private CANSparkMax climbMotor = new CANSparkMax(RobotMap.Climber.CLIMB_MOTOR_CHANNEL, MotorType.kBrushless);
 
     private DoubleSolenoid releaseSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Climber.CLIMB_RELEASE_SOLENOID_CHANNEL, RobotMap.Climber.CLIMB_RELEASE_SOLENOID_CHANNEL + 1);
 
+    long t = 0;
+
+    long prevT = 0;
+
     public void onInitialize() {
         this.climbMotor.setIdleMode(IdleMode.kBrake);
+
+        this.release(true);
     }
 
     public void run(double power) {
-        if (power >= 0) this.release(false);
+        if (power > 0) this.release(false);
         else this.release(true);
 
         this.runRaw(power);
@@ -35,6 +42,10 @@ public class Climber extends DiSubsystem implements IInitializable, IDisposable 
 
     public void release(boolean release) {
         this.releaseSolenoid.set((release) ? Value.kForward : Value.kReverse);
+    }
+
+    public void onTick() {
+
     }
 
     public void onDispose() {

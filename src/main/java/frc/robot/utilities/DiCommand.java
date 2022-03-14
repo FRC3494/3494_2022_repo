@@ -83,6 +83,7 @@ public abstract class DiCommand extends CommandBase implements IInjected {
 
     @Override
     public void end(boolean interrupted) {
+        this.isFinished = true;
         if (this.isDisposable) ((IDisposable) this).onDispose();
     }
   

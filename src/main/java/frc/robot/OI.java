@@ -64,13 +64,24 @@ public class OI implements ITickable {
     }
 
     public double GetClimberPower() { //
-        return (this.primaryXbox.getYButton()) ? ((this.primaryXbox.getLeftTriggerAxis() - this.primaryXbox.getRightTriggerAxis()) * RobotConfig.Climber.CLIMB_SPEED) : 0;
+        //return (this.primaryXbox.getYButton()) ? ((this.primaryXbox.getLeftTriggerAxis() - this.primaryXbox.getRightTriggerAxis())) : 0;
+        return this.primaryXbox.getLeftTriggerAxis() - this.primaryXbox.getRightTriggerAxis();
         //return 0;
+    }
+
+    public double GetClimberWithoutRachetPower() { //
+        //return (this.primaryXbox.getYButton()) ? (((this.primaryXbox.getLeftBumper() ? 1 : 0) - (this.primaryXbox.getRightBumper() ? 1 : 0))) : 0;
+        return (this.primaryXbox.getLeftBumper() ? 0.5 : 0) - (this.primaryXbox.getRightBumper() ? 1 : 0);
+        //return 0;
+    }
+
+    public boolean GetClimberAutoDeploy() {
+        return this.primaryXbox.getYButton();
     }
 
     public double GetFrontIntakePower() { //
         //return this.secondaryXbox.getRightTriggerAxis();
-        //return this.primaryXbox.getLeftTriggerAxis();
+        //return this.primaryXbox.getLeftTriggerAxis();p
         if (this.secondaryXbox.getYButton() && this.secondaryXbox.getRightBumper()) return 0;
         return (this.secondaryXbox.getXButton()) ? 1 : 0;
     }
@@ -99,9 +110,13 @@ public class OI implements ITickable {
         return (this.secondaryXbox.getRightTriggerAxis() != 0) ? 1 : 0;
     }
 
+    public boolean QueueBall() {
+        return this.secondaryXbox.getYButtonPressed();
+    }
+
     public boolean GetOverrideMagazineStateMachine() {
         //return this.secondaryXbox.getYButton();
-        return true;
+        return false;
     }
 
     public double GetShooterPower() { //

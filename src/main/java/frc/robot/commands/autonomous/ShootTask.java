@@ -9,14 +9,17 @@ public class ShootTask extends AutoTask {
     Shooter shooter;
 
     double rpm;
+    boolean hood;
 
-    public ShootTask(double rpm) {
+    public ShootTask(double rpm, boolean hood) {
         this.rpm = rpm;
+        this.hood = hood;
     }
 
     @Override
     public void begin() {
         this.shooter.run(this.rpm);
+        this.shooter.setHood(this.hood);
     }
 
     @Override

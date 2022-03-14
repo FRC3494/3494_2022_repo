@@ -5,12 +5,12 @@ import java.util.List;
 
 import frc.robot.utilities.Pair;
 
-//import frc.robot.utilities.AutoConfigurable;
+import frc.robot.utilities.AutoConfigurable;
 
-public final class RobotConfig {// extends AutoConfigurable {
+public final class RobotConfig extends AutoConfigurable {
     public static class Drivetrain {
-        public static double FORWARD_SENSITIVITY = 0.5; //0.3
-        public static double TURN_SENSITIVITY = 0.5; //0.3
+        public static double FORWARD_SENSITIVITY = 0.8; //0.5
+        public static double TURN_SENSITIVITY = 0.8; //0.5
 
         public static double PowerCurve(double x) {
             if (x > 1) return 1;
@@ -22,14 +22,15 @@ public final class RobotConfig {// extends AutoConfigurable {
 
     public static class Shooter {
         public static List<Pair<String, Double>> RPMS = new ArrayList<>() { {
-            add(new Pair<String, Double>("Close Low", 1350.0));
+            add(new Pair<String, Double>("Close Low", 1200.0));
+            add(new Pair<String, Double>("Close High", 2500.0));
             add(new Pair<String, Double>("Middle High", 3000.0)); //3250
             add(new Pair<String, Double>("Far High", 3250.0)); //3250
             //add(new Pair<String, Double>("Full Power", 5000.0));
             //new Pair<>("Auto Shot", -1);
         } };
 
-        public static double TURRET_SPEED = 0.6; //0.7
+        public static double TURRET_SPEED = 0.4; //0.7
 
         public static class Aimbot {
             public static double CameraHeightMeters = 38.5; // From floor to camera PLEASE CHANGE
@@ -65,7 +66,7 @@ public final class RobotConfig {// extends AutoConfigurable {
     }
 
     public static class Intake {
-        public static double INTAKE_SPEED = 0.65;
+        public static double INTAKE_SPEED = 0.8;
 
         public static double FRONT_DEPLOY_ANGLE = 180;
         public static double BACK_DEPLOY_ANGLE = -180;
@@ -79,13 +80,21 @@ public final class RobotConfig {// extends AutoConfigurable {
     }
 
     public static class Magazine {
-        public static double IDLE_SPEED = 0.25;
-        public static double INTAKE_SPEED = 0.5;
-        public static double OUTTAKE_SPEED = -0.5;
+        public static double IDLE_SPEED = 0.4;
+        public static double INTAKE_SPEED = 0.65;
+        public static double OUTTAKE_SPEED = -0.75;
+        public static double LAUNCH_SPEED = 0.8;
+
+        public static double SECONDS_TO_EJECT_HORIZONTAL = 2;
+        public static double SECONDS_TO_SEND_BALL = 2;
+
+        public static double SECONDS_RELOAD_RUN_UP = 0.15;
+        public static double SECONDS_RELOAD_RUN_DOWN = 0.2;
     }
 
     public static class Climber {
-        public static double CLIMB_SPEED = 0.5;
+        public static double BINARY_CLIMB_SPEED = 1.0;
+        public static double ANALOG_CLIMB_SPEED = 0.8;
 
         public static double PowerCurve(double x) {
             if (x > 1) return 1;

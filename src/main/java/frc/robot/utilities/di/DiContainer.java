@@ -8,9 +8,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 import frc.robot.utilities.DiCommand;
 import frc.robot.utilities.DiSubsystem;
@@ -34,7 +34,7 @@ public class DiContainer {
     DiContainer parentContainer = null;
 
     List<DiRule> rules = new ArrayList<>();
-    HashMap<UUID, Object> objectPool = new HashMap<>();
+    public WeakHashMap<UUID, Object> objectPool = new WeakHashMap<>();
 
     /**
     * Initializes all objects in the object pool
@@ -72,8 +72,18 @@ public class DiContainer {
         for (Object objectInstance : this.objectPool.values()) {
             if (objectInstance instanceof DiInterfaces.IDisposable && !(objectInstance instanceof DiCommand) && !(objectInstance instanceof DiSubsystem)) {
                 ((DiInterfaces.IDisposable) objectInstance).onDispose();
+                
             }
         }
+
+        /*for (UUID uuid : this.objectPool.keySet()) {
+            this.objectPool.replace(uuid, null);
+        }
+
+        this.objectPool.clear();*/
+        this.objectPool = new WeakHashMap<>();
+
+        System.gc();
     }
 
     /**
