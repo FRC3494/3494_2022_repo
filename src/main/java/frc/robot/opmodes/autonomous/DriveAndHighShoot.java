@@ -11,8 +11,6 @@ import frc.robot.utilities.AutoOpMode;
 public class DriveAndHighShoot extends AutoOpMode {
     @Override
     public void sequence() {
-        System.out.println("helo");
-        System.out.println(this.Sequencer);
         this.Sequencer.queue(new ShootTask(RobotConfig.Shooter.RPMS.get(1).Value, false));
         this.Sequencer.queue(new WaitTask(1500));
         this.Sequencer.queue(new ShootBallTask());

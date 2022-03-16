@@ -11,10 +11,10 @@ public class DiRule {
     protected RetrievalMode retrievalMode = RetrievalMode.None;
     protected Class<?> targetClass;
     protected Class<?> instanceClass;
-    protected UUID targetObject;
+    public UUID targetObject;
     protected List<Function<DiContext, Boolean>> conditions = new ArrayList<>();
 
-    protected DiRule(DiContainer containerIn, Class<?> targetClassIn) {
+    public DiRule(DiContainer containerIn, Class<?> targetClassIn) {
         this.container = containerIn;
         this.targetClass = targetClassIn;
     }
@@ -50,7 +50,7 @@ public class DiRule {
     * @param targetObjectIn The UUID of the object in the object pool
     * @see DiContainer
     */
-    protected void setupReturn(UUID targetObjectIn) {
+    public void setupReturn(UUID targetObjectIn) {
         this.targetObject = targetObjectIn;
         this.retrievalMode = RetrievalMode.Return;
     }

@@ -1,8 +1,8 @@
-package frc.robot.utilities;
+package frc.robot.utilities.wpilibdi;
 
 import java.util.HashMap;
 
-public class TestProctor {
+public class DiTestProctor {
     public enum TestStatus {
         Passed,
         Failed,

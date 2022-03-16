@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import frc.robot.utilities.DiSubsystem;
+import frc.robot.utilities.wpilibdi.DiSubsystem;
 
 public class Electronics extends DiSubsystem {
     private PowerDistribution powerDistributionBoard = new PowerDistribution();

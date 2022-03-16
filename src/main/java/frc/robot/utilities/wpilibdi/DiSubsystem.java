@@ -1,4 +1,4 @@
-package frc.robot.utilities;
+package frc.robot.utilities.wpilibdi;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;

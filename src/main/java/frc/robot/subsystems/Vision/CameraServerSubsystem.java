@@ -12,9 +12,9 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
-import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
+import frc.robot.utilities.wpilibdi.DiSubsystem;
 
 public class CameraServerSubsystem extends DiSubsystem implements IInitializable, IDisposable  {
     Thread cvThread;

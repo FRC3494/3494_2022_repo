@@ -8,11 +8,11 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class DiRuleBuilder {
-    private final DiContainer container;
-    private final List<DiRule> targetRules = new ArrayList<>();
+    protected final DiContainer container;
+    protected final List<DiRule> targetRules = new ArrayList<>();
 
-    private Boolean bindDone = false;
-    private Boolean resolutionSet = false;
+    protected Boolean bindDone = false;
+    protected Boolean resolutionSet = false;
 
     private Class<?> target = null;
 

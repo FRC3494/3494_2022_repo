@@ -1,4 +1,4 @@
-package frc.robot.utilities;
+package frc.robot.utilities.wpilibdi;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.utilities.TestProctor.TestStatus;
 import frc.robot.utilities.di.DiContainer.Inject;
+import frc.robot.utilities.wpilibdi.DiTestProctor.TestStatus;
 
 public abstract class DiTest extends DiCommand {
     @Inject
-    TestProctor testProctor;
+    DiTestProctor testProctor;
 
-    HashMap<Method, TestProctor.TestStatus> testMethodMap = new HashMap<>();
+    HashMap<Method, DiTestProctor.TestStatus> testMethodMap = new HashMap<>();
     List<Method> testMethods = new ArrayList<>();
     int currentTest = 0;
     Thread currentTestThread;
@@ -39,7 +39,7 @@ public abstract class DiTest extends DiCommand {
 
         for (Method method : this.getClass().getMethods()) {
             method.setAccessible(true);
-            if (!method.getName().startsWith("test_") || method.getReturnType() != TestProctor.TestStatus.class || method.getParameterTypes().length != 0) continue;
+            if (!method.getName().startsWith("test_") || method.getReturnType() != DiTestProctor.TestStatus.class || method.getParameterTypes().length != 0) continue;
             
             this.testMethods.add(method);
             this.testMethodMap.put(method, TestStatus.Testing);

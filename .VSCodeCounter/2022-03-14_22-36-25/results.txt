@@ -1,0 +1,126 @@
+Date : 2022-03-14 22:36:25
+Directory : c:\Users\FizzyApple12\Desktop\3494_2022_repo
+Total : 72 files,  3330 codes, 519 comments, 913 blanks, all 4762 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| Java       |         57 |      2,559 |        501 |        859 |      3,919 |
+| JSON       |          8 |        561 |          0 |          3 |        564 |
+| Groovy     |          2 |         81 |         18 |         23 |        122 |
+| Batch      |          1 |         68 |          0 |         22 |         90 |
+| Ini        |          1 |         31 |          0 |          1 |         32 |
+| Markdown   |          1 |         22 |          0 |          3 |         25 |
+| Properties |          1 |          5 |          0 |          1 |          6 |
+| YAML       |          1 |          3 |          0 |          1 |          4 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                              | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                 |         72 |      3,330 |        519 |        913 |      4,762 |
+| .wpilib                                                                                                           |          1 |          6 |          0 |          0 |          6 |
+| gradle                                                                                                            |          1 |          5 |          0 |          1 |          6 |
+| gradle\wrapper                                                                                                    |          1 |          5 |          0 |          1 |          6 |
+| src                                                                                                               |         57 |      2,559 |        501 |        859 |      3,919 |
+| src\main                                                                                                          |         57 |      2,559 |        501 |        859 |      3,919 |
+| src\main\java                                                                                                     |         57 |      2,559 |        501 |        859 |      3,919 |
+| src\main\java\frc                                                                                                 |         57 |      2,559 |        501 |        859 |      3,919 |
+| src\main\java\frc\robot                                                                                           |         57 |      2,559 |        501 |        859 |      3,919 |
+| src\main\java\frc\robot\commands                                                                                  |         13 |        463 |          4 |        155 |        622 |
+| src\main\java\frc\robot\commands\autonomous                                                                       |          7 |        256 |          0 |         79 |        335 |
+| src\main\java\frc\robot\commands\debug                                                                            |          5 |         82 |          0 |         30 |        112 |
+| src\main\java\frc\robot\commands\teleop                                                                           |          1 |        125 |          4 |         46 |        175 |
+| src\main\java\frc\robot\opmodes                                                                                   |          5 |         76 |          5 |         19 |        100 |
+| src\main\java\frc\robot\opmodes\autonomous                                                                        |          3 |         56 |          0 |         10 |         66 |
+| src\main\java\frc\robot\opmodes\debug                                                                             |          1 |         10 |          5 |          5 |         20 |
+| src\main\java\frc\robot\opmodes\teleop                                                                            |          1 |         10 |          0 |          4 |         14 |
+| src\main\java\frc\robot\sensors                                                                                   |          1 |         17 |          0 |          5 |         22 |
+| src\main\java\frc\robot\subsystems                                                                                |         14 |        650 |         31 |        203 |        884 |
+| src\main\java\frc\robot\subsystems\Vision                                                                         |          5 |        106 |         18 |         34 |        158 |
+| src\main\java\frc\robot\utilities                                                                                 |         19 |      1,095 |        425 |        387 |      1,907 |
+| src\main\java\frc\robot\utilities\di                                                                              |          6 |        393 |        354 |        143 |        890 |
+| src\main\java\frc\robot\utilities\wpilibdi                                                                        |          8 |        458 |         71 |        192 |        721 |
+| vendordeps                                                                                                        |          5 |        443 |          0 |          1 |        444 |
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                          | language   | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\.travis.yml                                                          | YAML       |          3 |          0 |          1 |          4 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\.wpilib\wpilib_preferences.json                                      | JSON       |          6 |          0 |          0 |          6 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\WPILib-License.md                                                    | Markdown   |         22 |          0 |          3 |         25 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\build.gradle                                                         | Groovy     |         55 |         18 |         21 |         94 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\gradle\wrapper\gradle-wrapper.properties                             | Properties |          5 |          0 |          1 |          6 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\gradlew.bat                                                          | Batch      |         68 |          0 |         22 |         90 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\networktables.ini                                                    | Ini        |         31 |          0 |          1 |         32 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\settings.gradle                                                      | Groovy     |         26 |          0 |          2 |         28 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\simgui-ds.json                                                       | JSON       |         92 |          0 |          1 |         93 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\simgui.json                                                          | JSON       |         20 |          0 |          1 |         21 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\Main.java                                    | Java       |          9 |          0 |          4 |         13 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\OI.java                                      | Java       |         90 |         31 |         36 |        157 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\Robot.java                                   | Java       |         41 |          3 |         10 |         54 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\RobotConfig.java                             | Java       |         80 |          2 |         25 |        107 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\RobotMap.java                                | Java       |         38 |          0 |         15 |         53 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\autonomous\CustomTask.java          | Java       |         41 |          0 |          9 |         50 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\autonomous\CustomTimedTask.java     | Java       |         46 |          0 |         13 |         59 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\autonomous\IntakeTask.java          | Java       |         32 |          0 |          9 |         41 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\autonomous\MovementTask.java        | Java       |         60 |          0 |         22 |         82 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\autonomous\ShootBallTask.java       | Java       |         24 |          0 |          8 |         32 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\autonomous\ShootTask.java           | Java       |         30 |          0 |         10 |         40 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\autonomous\WaitTask.java            | Java       |         23 |          0 |          8 |         31 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\debug\TestClimber.java              | Java       |         16 |          0 |          6 |         22 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\debug\TestDrivetrain.java           | Java       |         16 |          0 |          6 |         22 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\debug\TestIntake.java               | Java       |         16 |          0 |          6 |         22 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\debug\TestMagazine.java             | Java       |         16 |          0 |          6 |         22 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\debug\TestShooter.java              | Java       |         18 |          0 |          6 |         24 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\commands\teleop\Drive.java                   | Java       |        125 |          4 |         46 |        175 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\opmodes\autonomous\DriveAndHighShoot.java    | Java       |         28 |          0 |          3 |         31 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\opmodes\autonomous\DriveAndShoot.java        | Java       |         21 |          0 |          3 |         24 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\opmodes\autonomous\Sample.java               | Java       |          7 |          0 |          4 |         11 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\opmodes\debug\Test.java                      | Java       |         10 |          5 |          5 |         20 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\opmodes\teleop\Teleop.java                   | Java       |         10 |          0 |          4 |         14 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\sensors\Linebreaker.java                     | Java       |         17 |          0 |          5 |         22 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\AutoNav.java                      | Java       |         12 |          0 |          6 |         18 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Climber.java                      | Java       |         48 |          0 |         20 |         68 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Drivetrain.java                   | Java       |         52 |          5 |         21 |         78 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Electronics.java                  | Java       |         30 |          3 |          6 |         39 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Intake.java                       | Java       |         48 |          0 |         14 |         62 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Magazine.java                     | Java       |        161 |          1 |         45 |        207 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\NavX.java                         | Java       |         15 |          0 |          5 |         20 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Pneumatics.java                   | Java       |         18 |          0 |          6 |         24 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Shooter.java                      | Java       |        160 |          4 |         46 |        210 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Vision\CameraServerSubsystem.java | Java       |         53 |         18 |         17 |         88 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Vision\CameraSwitcher.java        | Java       |          4 |          0 |          4 |          8 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Vision\Coordinates.java           | Java       |         15 |          0 |          4 |         19 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Vision\Line.java                  | Java       |         19 |          0 |          5 |         24 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\subsystems\Vision\PointV.java                | Java       |         15 |          0 |          4 |         19 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\AutoConfigurable.java              | Java       |        118 |          0 |         20 |        138 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\AutoOpMode.java                    | Java       |         76 |          0 |         19 |         95 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\AutoTask.java                      | Java       |         30 |          0 |          7 |         37 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\Pair.java                          | Java       |          9 |          0 |          3 |         12 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\Triple.java                        | Java       |         11 |          0 |          3 |         14 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\di\DiContainer.java                | Java       |        164 |        186 |         60 |        410 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\di\DiContext.java                  | Java       |         19 |         12 |          3 |         34 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\di\DiExceptions.java               | Java       |          7 |          0 |          2 |          9 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\di\DiInterfaces.java               | Java       |         15 |         20 |          3 |         38 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\di\DiRule.java                     | Java       |         66 |         37 |         17 |        120 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\di\DiRuleBuilder.java              | Java       |        122 |         99 |         58 |        279 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\wpilibdi\DiCommand.java            | Java       |         66 |          7 |         21 |         94 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\wpilibdi\DiOpMode.java             | Java       |          6 |          0 |          4 |         10 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\wpilibdi\DiRobot.java              | Java       |         91 |          0 |         44 |        135 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\wpilibdi\DiSubsystem.java          | Java       |         24 |          2 |         12 |         38 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\wpilibdi\DiTest.java               | Java       |         74 |          0 |         23 |         97 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\wpilibdi\DiTestProctor.java        | Java       |         36 |          1 |         16 |         53 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\wpilibdi\WPILibDiContainer.java    | Java       |         61 |         61 |         29 |        151 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\src\main\java\frc\robot\utilities\wpilibdi\WPILibDiRuleBuilder.java  | Java       |        100 |          0 |         43 |        143 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\vendordeps\Phoenix.json                                              | JSON       |        257 |          0 |          0 |        257 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\vendordeps\REVLib.json                                               | JSON       |         73 |          0 |          0 |         73 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\vendordeps\WPILibNewCommands.json                                    | JSON       |         37 |          0 |          1 |         38 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\vendordeps\navx_frc.json                                             | JSON       |         35 |          0 |          0 |         35 |
+| c:\Users\FizzyApple12\Desktop\3494_2022_repo\vendordeps\photonlib.json                                            | JSON       |         41 |          0 |          0 |         41 |
+| Total                                                                                                             |            |      3,330 |        519 |        913 |      4,762 |
++-------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

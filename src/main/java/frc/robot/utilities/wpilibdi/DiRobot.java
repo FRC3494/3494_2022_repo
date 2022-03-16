@@ -1,15 +1,13 @@
-package frc.robot.utilities;
+package frc.robot.utilities.wpilibdi;
 
 import java.lang.reflect.InvocationTargetException;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.utilities.di.DiContainer;
 
 public abstract class DiRobot extends TimedRobot {
-    public DiContainer Container = new DiContainer();
+    public WPILibDiContainer Container = new WPILibDiContainer();
 
     DiOpMode currentOpMode = null;
 
@@ -32,8 +30,6 @@ public abstract class DiRobot extends TimedRobot {
 
             return;
         }
-
-        System.out.println(this.Container.objectPool);
     }
 
     @Override
@@ -48,17 +44,6 @@ public abstract class DiRobot extends TimedRobot {
     @Override
     public void disabledInit() {
         if (this.currentOpMode != null) {
-            System.out.println(this.currentOpMode.Container.objectPool);
-
-            for (Object obj : this.currentOpMode.Container.objectPool.values()) {
-                if (obj instanceof Command) {
-                    CommandScheduler.getInstance().cancel((Command) obj);
-                    System.out.println(obj);
-                }
-            }
-            
-            CommandScheduler.getInstance().run();
-            
             this.currentOpMode.Container.onDispose();
 
             this.currentOpMode = null;
@@ -68,8 +53,6 @@ public abstract class DiRobot extends TimedRobot {
     @Override
     public void autonomousInit() {
         if (this.currentOpMode != null) this.disabledInit();
-
-        System.out.println(this.Container.objectPool);
 
         DriverStation.Alliance alliance = DriverStation.getAlliance();
 
@@ -125,8 +108,6 @@ public abstract class DiRobot extends TimedRobot {
     public void teleopInit() {
         if (this.currentOpMode != null) this.disabledInit();
 
-        System.out.println(this.Container.objectPool);
-
         DriverStation.Alliance alliance = DriverStation.getAlliance();
 
         this.currentOpMode = CreateTeleop();
@@ -147,7 +128,5 @@ public abstract class DiRobot extends TimedRobot {
 
             return;
         }
-
-        System.out.println(this.currentOpMode.Container.objectPool);
     }
 }

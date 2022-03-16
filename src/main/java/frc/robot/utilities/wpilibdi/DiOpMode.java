@@ -1,11 +1,9 @@
-package frc.robot.utilities;
+package frc.robot.utilities.wpilibdi;
 
 import java.lang.reflect.InvocationTargetException;
 
-import frc.robot.utilities.di.DiContainer;
-
 public abstract class DiOpMode {
-    public DiContainer Container = new DiContainer();
+    public WPILibDiContainer Container = new WPILibDiContainer();
     
     public abstract void install() throws IllegalAccessException, InstantiationException, InvocationTargetException;
 }

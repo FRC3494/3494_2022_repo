@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.WeakHashMap;
-
-import frc.robot.utilities.DiCommand;
-import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IInjected;
 
 public class DiContainer {
@@ -33,7 +30,7 @@ public class DiContainer {
 
     DiContainer parentContainer = null;
 
-    List<DiRule> rules = new ArrayList<>();
+    public List<DiRule> rules = new ArrayList<>();
     public WeakHashMap<UUID, Object> objectPool = new WeakHashMap<>();
 
     /**
@@ -44,7 +41,7 @@ public class DiContainer {
     */
     public void onInject() {
         for (Object objectInstance : this.objectPool.values()) {
-            if (objectInstance instanceof DiInterfaces.IInitializable && !(objectInstance instanceof DiCommand) && !(objectInstance instanceof DiSubsystem)) {
+            if (objectInstance instanceof DiInterfaces.IInitializable) {
                 ((DiInterfaces.IInitializable) objectInstance).onInitialize();
             }
         }
@@ -57,7 +54,7 @@ public class DiContainer {
     */
     public void onTick() {
         for (Object objectInstance : this.objectPool.values()) {
-            if (objectInstance instanceof DiInterfaces.ITickable && !(objectInstance instanceof DiCommand) && !(objectInstance instanceof DiSubsystem)) {
+            if (objectInstance instanceof DiInterfaces.ITickable) {
                 ((DiInterfaces.ITickable) objectInstance).onTick();
             }
         }
@@ -70,17 +67,13 @@ public class DiContainer {
     */
     public void onDispose() {
         for (Object objectInstance : this.objectPool.values()) {
-            if (objectInstance instanceof DiInterfaces.IDisposable && !(objectInstance instanceof DiCommand) && !(objectInstance instanceof DiSubsystem)) {
+            if (objectInstance instanceof DiInterfaces.IDisposable) {
                 ((DiInterfaces.IDisposable) objectInstance).onDispose();
                 
             }
         }
 
-        /*for (UUID uuid : this.objectPool.keySet()) {
-            this.objectPool.replace(uuid, null);
-        }
-
-        this.objectPool.clear();*/
+        this.objectPool.clear();
         this.objectPool = new WeakHashMap<>();
 
         System.gc();

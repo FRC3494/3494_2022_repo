@@ -135,6 +135,14 @@ public class OI implements ITickable {
         return this.secondaryXbox.getLeftX();
     }
 
+    public boolean GetTurretGoToFront() { //
+        return this.secondaryXbox.getLeftY() > 0;
+    }
+
+    public boolean GetTurretGoToBack() { //
+        return this.secondaryXbox.getLeftY() > 0;
+    }
+
     public boolean GetSwitchRPM() {
         if (switchRPM) {
             switchRPM = false;

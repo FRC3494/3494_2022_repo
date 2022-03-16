@@ -5,19 +5,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
 
 public class AutoConfigurable implements ITickable, IInitializable {
-    static class DontGrabFrom {
+    public static class DontGrabFrom {
         static List<Field> allFields;
         static HashMap<String, NetworkTableEntry> shuffleBoardElements = new HashMap<String, NetworkTableEntry>();
+        public static boolean enableConfiguration = true;
     }
 
     public void InitializeShuffleBoard() {
+        //if (!DontGrabFrom.enableConfiguration) NetworkTableInstance.getDefault().getTable(Shuffleboard.kBaseTableName + "/Configuration").
+
+        /*for (ShuffleboardComponent co : Shuffleboard.getTab("Configuration").getComponents()) {
+            co.getEntry();
+        }*/
+
         DontGrabFrom.allFields = getAllVariablesAndInit(null, null, null);
     }
 
@@ -35,6 +46,48 @@ public class AutoConfigurable implements ITickable, IInitializable {
     }
 
     public void UpdateVariables() {
+        if (!DontGrabFrom.enableConfiguration) {
+            for (Field classField : DontGrabFrom.allFields) {
+                classField.setAccessible(true);
+    
+                String fullName = getShuffleboardName(classField);
+
+                if (classField.getType() == double.class) {
+                    try {
+                        DontGrabFrom.shuffleBoardElements.get(fullName).setDouble((double) classField.get(this));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (classField.getType() == int.class) {
+                    try {
+                        DontGrabFrom.shuffleBoardElements.get(fullName).setNumber((Number) classField.get(this));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (classField.getType() == float.class) {
+                    try {
+                        DontGrabFrom.shuffleBoardElements.get(fullName).setNumber((Number) classField.get(this));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (classField.getType() == boolean.class) {
+                    try {
+                        DontGrabFrom.shuffleBoardElements.get(fullName).setBoolean((boolean) classField.get(this));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (classField.getType() == String.class) {
+                    try {
+                        DontGrabFrom.shuffleBoardElements.get(fullName).setString((String) classField.get(this));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return;
+        }
+
         for (Field classField : DontGrabFrom.allFields) {
             classField.setAccessible(true);
 

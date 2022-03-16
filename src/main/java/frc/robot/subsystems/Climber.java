@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
-import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
+import frc.robot.utilities.wpilibdi.DiSubsystem;
 
 public class Climber extends DiSubsystem implements IInitializable, ITickable, IDisposable {
     private CANSparkMax climbMotor = new CANSparkMax(RobotMap.Climber.CLIMB_MOTOR_CHANNEL, MotorType.kBrushless);

@@ -8,9 +8,9 @@ import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.robot.RobotMap;
-import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
+import frc.robot.utilities.wpilibdi.DiSubsystem;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
     private WPI_TalonFX leftLeader = new WPI_TalonFX(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);

@@ -21,7 +21,7 @@ public class DiContext {
     * @param container The Container we're targeting
     * @see DiContainer
     */
-    protected DiContext(String id, Class<?> targetClass, Object objectInstance, String memberName, Class<?> memberClass, boolean optional, DiContainer container) {
+    public DiContext(String id, Class<?> targetClass, Object objectInstance, String memberName, Class<?> memberClass, boolean optional, DiContainer container) {
         this.id = id;
         this.targetClass = targetClass;
         this.objectInstance = objectInstance;

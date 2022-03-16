@@ -25,10 +25,10 @@ import frc.robot.sensors.Linebreaker;
 import frc.robot.subsystems.Vision.Coordinates;
 import frc.robot.subsystems.Vision.Line;
 import frc.robot.subsystems.Vision.PointV;
-import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
+import frc.robot.utilities.wpilibdi.DiSubsystem;
 
 public class Shooter extends DiSubsystem implements IInitializable, IDisposable, ITickable {
     private CANSparkMax shooterMotor = new CANSparkMax(RobotMap.Shooter.SHOOTER_MOTOR_CHANNEL, MotorType.kBrushless);
@@ -37,6 +37,23 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     double targetRPM = 0;
     
+    private CANSparkMax turretMotor = new CANSparkMax(RobotMap.Shooter.TURRET_MOTOR_CHANNEL, MotorType.kBrushless);
+    private SparkMaxPIDController turretPidController;
+    private RelativeEncoder turretMotorEncoder;
+
+    private Linebreaker zeroLinebreak = new Linebreaker(RobotMap.Shooter.ZERO_LINEBREAK_CHANNEL, true);
+
+    double targetPosition = 0;
+    double zeroPosition = 0;
+    boolean needsZero = true;
+    int zeroStage = 0;
+
+    private boolean hoodPosition = false;
+    private DoubleSolenoid hoodSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
+
+    private Solenoid ledRing = new Solenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.LIGHTS_CHANNEL);
+
+    private boolean aimbotEnabled = false;
 
     PhotonCamera camera;
     double rotationSpeed;
@@ -51,17 +68,6 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     private Line line2;
     private Line line1Perpendicular;
     private Line line2Perpendicular;
-    
-    private CANSparkMax turretMotor = new CANSparkMax(RobotMap.Shooter.TURRET_MOTOR_CHANNEL, MotorType.kBrushless);
-
-    private boolean hoodPosition = false;
-    private DoubleSolenoid hoodSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
-
-    private Solenoid ledRing = new Solenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.LIGHTS_CHANNEL);
-
-    private boolean aimbotEnabled = false;
-
-    private Linebreaker zeroLinebreak = new Linebreaker(RobotMap.Shooter.ZERO_LINEBREAK_CHANNEL);
 
     public void onInitialize() {
         //this.shooterMotor.setIdleMode(IdleMode.kBrake);
@@ -74,12 +80,22 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         this.shooterPidController.setI(RobotConfig.Shooter.PIDF.I);
         this.shooterPidController.setD(RobotConfig.Shooter.PIDF.D);
         this.shooterPidController.setFF(RobotConfig.Shooter.PIDF.FF);
+
+
+        this.turretMotor.setIdleMode(IdleMode.kCoast);
+        
+        this.turretMotorEncoder = this.turretMotor.getEncoder();
+        this.turretPidController = this.turretMotor.getPIDController();
     }
 
     public void run(double rpm) {
         if (aimbotEnabled) return;
 
         targetRPM = rpm;
+    }
+
+    public void rezero() {
+        this.needsZero = true;
     }
 
     public void runHood(boolean position) {
@@ -94,10 +110,12 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         return this.hoodPosition;
     }
 
-    public void runTurret(double power) {
+    public void runTurret(double rotations) {
         if (this.aimbotEnabled) return;
 
-        this.turretMotor.set(power);
+        this.targetPosition = rotations;
+
+        //this.turretMotor.set(power);
     }
 
     public void onDispose() {
@@ -125,8 +143,6 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     }
 
     public void onTick() {
-        System.out.println(this.zeroLinebreak.Broken());
-
         if (this.aimbotEnabled) {
             // aimbot code here
         }
@@ -136,6 +152,42 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
         if (this.targetRPM > 0) this.runHood(this.hoodPosition);
         else this.runHood(false);
+
+        System.out.println("zero: " + this.needsZero + " stage: " + this.zeroStage + " position: " + this.getTurretRotations());
+
+        if (this.needsZero) {
+            switch (this.zeroStage) {
+                case 0: 
+                    this.turretMotor.set(RobotConfig.Shooter.TURRET_SPEED / 2);
+                    
+                    if (this.zeroLinebreak.Broken()) {
+                        this.turretMotor.set(0);
+                        this.zeroStage++;
+                    }
+                    break;
+                case 1:
+                    this.turretMotor.set(-RobotConfig.Shooter.TURRET_SPEED / 6);
+                    
+                    if (this.zeroLinebreak.Broken()) {
+                        this.turretMotor.set(0);
+                        this.zeroStage++;
+                    }
+                    break;
+                case 2:
+                    this.turretMotor.set(-RobotConfig.Shooter.TURRET_SPEED / 6);
+                    
+                    if (!this.zeroLinebreak.Broken()) {
+                        this.turretMotor.set(0);
+                        this.zeroStage++;
+                    }
+                    break;
+                default:
+                    this.zeroPosition = this.turretMotorEncoder.getPosition();
+                    this.zeroStage = 0;
+                    this.needsZero = false;
+            }
+
+        } else this.turretPidController.setReference(this.turretRotationsToMotorRotations(this.targetPosition), ControlType.kPosition);
     }
 
     public PointV getCircleCenter(){
@@ -189,6 +241,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         }
         
     }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Shooter");
@@ -208,5 +261,17 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         builder.addBooleanProperty("Aimbot Enabled", () -> {
             return this.aimbotEnabled;
         }, (boolean value) -> { });
+    }
+
+    public double turretRotationsToMotorRotations(double rotations) {
+        return RobotConfig.Shooter.TURRET_VERSAPLANETARY_RATIO * RobotConfig.Shooter.TURRET_RATIO * rotations + this.zeroPosition;
+    }
+
+    public double turretMotorRotationsToRotations(double rotations) {
+        return  ((rotations - this.zeroPosition) / RobotConfig.Shooter.TURRET_RATIO) / RobotConfig.Shooter.TURRET_VERSAPLANETARY_RATIO;
+    }
+
+    public double getTurretRotations() {
+        return this.turretMotorRotationsToRotations(this.turretMotorEncoder.getPosition());
     }
 }

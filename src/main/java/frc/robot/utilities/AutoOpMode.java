@@ -4,46 +4,36 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import frc.robot.subsystems.AutoNav;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
+import frc.robot.utilities.wpilibdi.DiCommand;
+import frc.robot.utilities.wpilibdi.DiOpMode;
 
 public abstract class AutoOpMode extends DiOpMode {
     @Inject
     public AutoSequencer Sequencer;
 
     public void install() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        this.Container.bind(AutoSequencer.class).asSingle();
+        Shuffleboard.selectTab("Autonomous");
 
-        System.out.println("hiiii");
-
-        while (Sequencer == null) Sequencer = (AutoSequencer) this.Container.tryResolve(AutoSequencer.class);
-
-        System.out.println("pogger");
+        Sequencer = (AutoSequencer) this.Container.bindCommand(AutoSequencer.class).schedule().getRawCommand();
 
         this.sequence();
     }
 
     public abstract void sequence();
 
-    public class AutoSequencer extends DiCommand implements IInitializable, ITickable, IDisposable {
+    public class AutoSequencer extends DiCommand implements ITickable, IDisposable {
         @Inject
         DiOpMode opMode;
-
-        @Inject
-        AutoNav autoNav;
 
         List<AutoTask> tasks = new ArrayList<>();
 
         private boolean hasInitTask = false;
         private boolean hasInitlate = false;
         private String currentTaskName = "Unknown";
-
-        public void onInitialize() {
-            autoNav.setDefaultCommand(this);
-        }
 
         public void lateInitialize() {
             for (int i = 0; i < this.tasks.size(); i++) {
@@ -59,8 +49,6 @@ public abstract class AutoOpMode extends DiOpMode {
 
         @Override
         public void onTick() {
-            System.out.println("auto ticky");
-
             if (!this.hasInitlate) {
                 this.lateInitialize();
                 this.hasInitlate = true;
@@ -75,7 +63,7 @@ public abstract class AutoOpMode extends DiOpMode {
                 this.hasInitTask = true;
             }
     
-            System.out.println("Auto Status: Running " + this.currentTaskName + "\n ETA: " + this.tasks.get(0).getETA().formatETA());
+            System.out.println("Auto Status: Running " + this.currentTaskName + " ETA: " + this.tasks.get(0).getETA().formatETA());
     
             if (this.tasks.get(0).execute()) {
                 this.tasks.get(0).stop();

@@ -1,4 +1,4 @@
-package frc.robot.utilities;
+package frc.robot.utilities.wpilibdi;
 
 import java.lang.reflect.Field;
 
@@ -10,7 +10,7 @@ import frc.robot.utilities.di.DiInterfaces.IInjected;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
 
 public abstract class DiCommand extends CommandBase implements IInjected {
-    protected boolean isFinished = false;
+    public boolean isFinished = false;
 
     private boolean isInitializable = false;
     private boolean isTickable = false;

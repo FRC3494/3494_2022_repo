@@ -2,18 +2,13 @@ package frc.robot.opmodes.debug;
 
 import java.lang.reflect.InvocationTargetException;
 
-/*import frc.robot.commands.debug.TestClimber;
-import frc.robot.commands.debug.TestDrivetrain;
-import frc.robot.commands.debug.TestIntake;
-import frc.robot.commands.debug.TestMagazine;
-import frc.robot.commands.debug.TestShooter;*/
-import frc.robot.utilities.DiOpMode;
-import frc.robot.utilities.TestProctor;
+import frc.robot.utilities.wpilibdi.DiOpMode;
+import frc.robot.utilities.wpilibdi.DiTestProctor;
 
 public class Test extends DiOpMode {
     @Override
     public void install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        this.Container.bind(TestProctor.class).asSingle();
+        this.Container.bind(DiTestProctor.class).asSingle();
 
         /*this.Container.bind(TestDrivetrain.class).asSingle();
         this.Container.bind(TestIntake.class).asSingle();

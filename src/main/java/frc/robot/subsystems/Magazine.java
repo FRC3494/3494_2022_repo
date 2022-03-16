@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotConfig;
 import frc.robot.RobotMap;
 import frc.robot.sensors.Linebreaker;
-import frc.robot.utilities.DiSubsystem;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.di.DiInterfaces.ITickable;
+import frc.robot.utilities.wpilibdi.DiSubsystem;
 
 public class Magazine extends DiSubsystem implements IInitializable, ITickable, IDisposable {
     private TalonSRX leftTreeMotor = new TalonSRX(RobotMap.Magazine.LEFT_TREE_MOTOR_CHANNEL);;
