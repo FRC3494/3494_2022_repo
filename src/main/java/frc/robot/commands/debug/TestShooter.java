@@ -16,8 +16,6 @@ public class TestShooter extends DiTest implements IInitializable, ITickable, ID
     }
 
     public void cleanup() {
-        shooter.run(0);
-        shooter.runHood(false);
-        shooter.runTurret(0);
+        shooter.stop();
     }
 }

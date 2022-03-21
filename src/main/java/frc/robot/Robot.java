@@ -14,6 +14,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision.ComputerVision;
 import frc.robot.utilities.AutoConfigurable;
 //import frc.robot.subsystems.Vision.CameraServerSubsystem;
 import frc.robot.utilities.wpilibdi.DiOpMode;
@@ -30,13 +31,14 @@ public class Robot extends DiRobot {
         this.Container.bindSubsystem(Pneumatics.class);
         this.Container.bindSubsystem(NavX.class);
         this.Container.bindSubsystem(AutoNav.class);
+        this.Container.bindSubsystem(ComputerVision.class);
         //this.Container.bind(CameraServerSubsystem.class).asSingle();
 
         this.Container.bindSubsystem(Drivetrain.class);
         this.Container.bindSubsystem(Shooter.class);
         this.Container.bindSubsystem(Magazine.class);
-        this.Container.bindSubsystem(Intake.class);
         this.Container.bindSubsystem(Climber.class);
+        this.Container.bindSubsystem(Intake.class);
 
         //this.Container.bind(OI.class).asSingle();
     }

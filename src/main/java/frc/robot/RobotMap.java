@@ -37,12 +37,15 @@ public class RobotMap {
 
         public static final int TREE_STEM_MOTOR_CHANNEL = 11;
         public static final int TREE_STEM_LINEBREAK_CHANNEL = 2;
+
+        public static final int MAGAZINE_LED_PORT = 4;
     }
 
     public static class Climber {
         public static final int CLIMB_MOTOR_CHANNEL = 14;
 
-        public static final int CLIMB_RELEASE_SOLENOID_CHANNEL = 6;
+        public static final int CLIMB_RELEASE_RATCHET_SOLENOID_CHANNEL = 6;
+        public static final int CLIMB_RELEASE_ARM_SOLENOID_CHANNEL = 4;
     }
 
     public static class Pneumatics {

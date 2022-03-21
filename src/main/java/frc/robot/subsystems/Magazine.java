@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotConfig;
 import frc.robot.RobotMap;
@@ -24,6 +26,9 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
     private TalonSRX treeStemMotor = new TalonSRX(RobotMap.Magazine.TREE_STEM_MOTOR_CHANNEL);
     private Linebreaker treeStemLinebreak = new Linebreaker(RobotMap.Magazine.TREE_STEM_LINEBREAK_CHANNEL, true);
 
+    private AddressableLED ballStatusLeds = new AddressableLED(RobotMap.Magazine.MAGAZINE_LED_PORT);
+    private AddressableLEDBuffer ballStatusLedsBuffer = new AddressableLEDBuffer(RobotMap.Magazine.MAGAZINE_LED_PORT);
+
     boolean autoOperate = true;
 
     public void onInitialize() {
@@ -34,20 +39,34 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
         this.leftTreeMotor.setInverted(true);
         this.rightTreeMotor.setInverted(false);
         this.treeStemMotor.setInverted(false);
+
+        this.ballStatusLeds.setLength(RobotConfig.Magazine.NUMBER_OF_LEDS);
+        this.ballStatusLeds.start();
+    }
+
+    public boolean leftFull() {
+        return this.leftTreeLinebreak.Broken();
+    }
+
+    public boolean rightFull() {
+        return this.rightTreeLinebreak.Broken();
+    }
+
+    public boolean stemFull() {
+        return this.treeStemLinebreak.Broken();
+    }
+
+    public boolean isEjecting() {
+        return ejectingBall;
     }
 
     public void setAutoOperate(boolean autoOperate) {
         this.autoOperate = autoOperate;
     }
 
-    public void sendBall() {
-        int maxBallRequests = 0;
-        if (this.treeStemLinebreak.Broken()) maxBallRequests++;
-        if (this.leftTreeLinebreak.Broken() || this.rightTreeLinebreak.Broken()) maxBallRequests++;
-
-        this.sendBalls++;
-
-        if (this.sendBalls > maxBallRequests) this.sendBalls = maxBallRequests;
+    public void sendBall(boolean runThrough) {
+        this.sendBall = true;
+        this.runThrough = runThrough;
     }
 
     public void useFastSpeed(boolean use) {
@@ -94,11 +113,11 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
     int reloadStage = 0;
 
     private void reloadVertical() {
-        double horizontalSpeed = runFast ? RobotConfig.Magazine.INTAKE_SPEED : RobotConfig.Magazine.IDLE_SPEED;
+        double horizontalSpeed = runFast ? RobotConfig.Magazine.INTAKE_SPEED : ((leftTreeLinebreak.Broken() || rightTreeLinebreak.Broken()) ? RobotConfig.Magazine.IDLE_SPEED : 0);
 
         switch (this.reloadStage) {
             case 0:
-                this.runRaw(horizontalSpeed, horizontalSpeed, RobotConfig.Magazine.IDLE_SPEED);
+                this.runRaw(horizontalSpeed, horizontalSpeed, horizontalSpeed);
 
                 if (this.treeStemLinebreak.Broken()) {
                     this.reloadVertialTimer.start();
@@ -124,12 +143,15 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
         }
     }
 
-    int sendBalls = 0;
+    boolean sendBall = false;
+    boolean runThrough = false;
     boolean startedSendTimer = false;
     Timer sendBallTimer = new Timer();
 
     private void sendBallMagazine() {
-        this.runRaw(0, 0, RobotConfig.Magazine.LAUNCH_SPEED);
+        double horizontalSpeed = runThrough ? RobotConfig.Magazine.LAUNCH_SPEED : 0;
+
+        this.runRaw(horizontalSpeed, horizontalSpeed, RobotConfig.Magazine.LAUNCH_SPEED);
 
         if (!this.treeStemLinebreak.Broken() && !this.startedSendTimer) {
             this.sendBallTimer.start();
@@ -138,18 +160,38 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
         
         if (this.sendBallTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_TO_SEND_BALL)) {
             this.runRaw(0, 0, 0);
-            this.sendBalls--;
-            if (this.sendBalls < 0) this.sendBalls = 0;
+            this.sendBall = false;
             this.reloadingVertical = true;
             this.sendBallTimer.stop();
             this.sendBallTimer.reset();
             this.startedSendTimer = false;
+            this.runThrough = false;
         }
+    }
+    public boolean getSendingBall() {
+        return this.sendBall;
     }
 
     boolean runFast = false;
 
     public void onTick() {
+        int numberBalls = 0;
+        if (leftTreeLinebreak.Broken()) numberBalls++;
+        if (rightTreeLinebreak.Broken()) numberBalls++;
+        if (treeStemLinebreak.Broken()) numberBalls++;
+
+        switch (numberBalls) {
+            case 0: this.ballStatusLedsBuffer = RobotConfig.Magazine.zeroPattern(this.ballStatusLedsBuffer);
+                break;
+            case 1: this.ballStatusLedsBuffer = RobotConfig.Magazine.onePattern(this.ballStatusLedsBuffer);
+                break;
+            case 2: this.ballStatusLedsBuffer = RobotConfig.Magazine.twoPattern(this.ballStatusLedsBuffer);
+                break;
+            default: this.ballStatusLedsBuffer = RobotConfig.Magazine.overfullPattern(this.ballStatusLedsBuffer);
+                break;
+        }
+        this.ballStatusLeds.setData(ballStatusLedsBuffer);
+
         if (!this.autoOperate) return;
 
         //System.out.println(this.autoOperate + "\t\t" + this.ejectingBall + "\t\t" + this.reloadingVertical + "\t\t" + this.reloadStage + "\t\t" + this.sendBalls + "\t\t" + this.runFast);
@@ -159,9 +201,9 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
             this.ejectBall();
             return;
         }
-        if (this.treeStemLinebreak.Broken() && this.leftTreeLinebreak.Broken() && this.rightTreeLinebreak.Broken()) this.ejectingBall = true;
+        if (numberBalls == 3) this.ejectingBall = true;
 
-        if (this.sendBalls > 0 && !this.reloadingVertical) {
+        if (this.sendBall && !this.reloadingVertical) {
             this.sendBallMagazine();
             return;
         }
@@ -170,9 +212,12 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
             this.reloadVertical();
             return;
         }
-        if (!this.treeStemLinebreak.Broken()) this.reloadingVertical = true;
+        if (!this.treeStemLinebreak.Broken()) {
+            this.reloadingVertical = true;
+            return;   
+        }
 
-        double horizontalSpeed = runFast ? RobotConfig.Magazine.INTAKE_SPEED : RobotConfig.Magazine.IDLE_SPEED;
+        double horizontalSpeed = runFast ? RobotConfig.Magazine.INTAKE_SPEED : 0;
         if (this.leftTreeLinebreak.Broken()) {
             this.ejectLeft = false;
             horizontalSpeed = 0;
@@ -186,6 +231,7 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
 
     public void onDispose() {
         this.runRaw(0, 0, 0);
+        this.ballStatusLeds.stop();
     }
 
     @Override

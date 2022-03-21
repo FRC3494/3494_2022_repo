@@ -15,10 +15,12 @@ public class OI implements ITickable {
 
     boolean magazineIdle = false;
 
-    boolean switchRPM = false;
-    boolean switchRPMPressed = false;
+    boolean queueBall = false;
+    boolean queueBallPressed = false;
 
     public void onTick() {
+        //System.out.println(primaryXbox.isConnected());
+        //System.out.println(secondaryXbox.isConnected());
         /*if (this.buttonSequence.length() > this.targetSequence.length()) this.buttonSequence = "";
 
         for (int i = 0; i < this.buttonSequence.length(); i++) {
@@ -34,10 +36,10 @@ public class OI implements ITickable {
         if (this.secondaryXbox.getBButtonPressed()) this.buttonSequence += 'b';
         if (this.secondaryXbox.getStartButtonPressed()) this.buttonSequence += 's';*/
 
-        if (this.pressingPOV) {
-            if (!this.switchRPMPressed) this.switchRPM = true;
-            this.switchRPMPressed = true;
-        } else this.switchRPMPressed = false;
+        if (this.secondaryXbox.getLeftTriggerAxis() > 0.25) {
+            if (!this.queueBallPressed) this.queueBall = true;
+            this.queueBallPressed = true;
+        } else this.queueBallPressed = false;
 
         this.pressingPOV = this.secondaryXbox.getPOV() != -1;
 
@@ -82,36 +84,45 @@ public class OI implements ITickable {
     public double GetFrontIntakePower() { //
         //return this.secondaryXbox.getRightTriggerAxis();
         //return this.primaryXbox.getLeftTriggerAxis();p
-        if (this.secondaryXbox.getYButton() && this.secondaryXbox.getRightBumper()) return 0;
-        return (this.secondaryXbox.getXButton()) ? 1 : 0;
+        //if (this.secondaryXbox.getYButton() && this.secondaryXbox.getRightBumper()) return 0;
+        return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
     }
 
     public double GetBackIntakePower() { //
         //return this.secondaryXbox.getRightTriggerAxis();
         //return this.primaryXbox.getLeftTriggerAxis();
-        if (this.secondaryXbox.getBButton() && this.secondaryXbox.getRightBumper()) return 0;
-        return (this.secondaryXbox.getAButton()) ? 1 : 0;
+        //if (this.secondaryXbox.getBButton() && this.secondaryXbox.getRightBumper()) return 0;
+        return (this.secondaryXbox.getLeftBumper()) ? 1 : 0;
     }
 
     public double GetLeftTreeMagazinePower() { //
         //return (this.secondaryXbox.getAButton()) ? 1 : 0;
-        if (this.secondaryXbox.getYButton() && this.secondaryXbox.getRightBumper()) return -1;
-        return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
+        //if (this.secondaryXbox.getYButton() && this.secondaryXbox.getRightBumper()) return -1;
+        //return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
+        return 0;
     }
 
     public double GetRightTreeMagazinePower() { //
-        if (this.secondaryXbox.getBButton() && this.secondaryXbox.getRightBumper()) return -1;
-        return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
+        //if (this.secondaryXbox.getBButton() && this.secondaryXbox.getRightBumper()) return -1;
+        //return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
         //return (this.secondaryXbox.getAButton()) ? 1 : 0;
+        return 0;
     }
 
     public double GetTreeStemMagazinePower() { //
         //return (this.secondaryXbox.getYButton()) ? 1 : 0;
-        return (this.secondaryXbox.getRightTriggerAxis() != 0) ? 1 : 0;
+        //return (this.secondaryXbox.getRightTriggerAxis() != 0) ? 1 : 0;
+        return 0;
     }
 
     public boolean QueueBall() {
-        return this.secondaryXbox.getYButtonPressed();
+        //return this.secondaryXbox.getYButtonPressed();
+        if (queueBall) {
+            queueBall = false;
+            return true;
+        }
+
+        return false;
     }
 
     public boolean GetOverrideMagazineStateMachine() {
@@ -136,20 +147,25 @@ public class OI implements ITickable {
     }
 
     public boolean GetTurretGoToFront() { //
-        return this.secondaryXbox.getLeftY() > 0;
+        return this.secondaryXbox.getLeftY() < -0.85;
     }
 
     public boolean GetTurretGoToBack() { //
-        return this.secondaryXbox.getLeftY() > 0;
+        return this.secondaryXbox.getLeftY() > 0.85;
     }
 
-    public boolean GetSwitchRPM() {
-        if (switchRPM) {
+    public int SetShooterSetting() {
+        if (this.secondaryXbox.getYButton()) return 3;
+        if (this.secondaryXbox.getXButton()) return 2;
+        if (this.secondaryXbox.getAButton()) return 1;
+        if (this.secondaryXbox.getBButton()) return 0;
+        return -1;
+        /*if (switchRPM) {
             switchRPM = false;
             return true;
         }
 
-        return false;
+        return false;*/
 
         //return this.secondaryXbox.getPOV() != -1;
     }

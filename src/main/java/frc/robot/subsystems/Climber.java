@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
-import frc.robot.utilities.di.DiInterfaces.ITickable;
 import frc.robot.utilities.wpilibdi.DiSubsystem;
 
-public class Climber extends DiSubsystem implements IInitializable, ITickable, IDisposable {
+public class Climber extends DiSubsystem implements IInitializable, IDisposable {
     private CANSparkMax climbMotor = new CANSparkMax(RobotMap.Climber.CLIMB_MOTOR_CHANNEL, MotorType.kBrushless);
 
-    private DoubleSolenoid releaseSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Climber.CLIMB_RELEASE_SOLENOID_CHANNEL, RobotMap.Climber.CLIMB_RELEASE_SOLENOID_CHANNEL + 1);
+    private DoubleSolenoid ratchetReleaseSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Climber.CLIMB_RELEASE_RATCHET_SOLENOID_CHANNEL, RobotMap.Climber.CLIMB_RELEASE_RATCHET_SOLENOID_CHANNEL + 1);
+    private DoubleSolenoid armReleaseSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.BASE_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Climber.CLIMB_RELEASE_ARM_SOLENOID_CHANNEL, RobotMap.Climber.CLIMB_RELEASE_ARM_SOLENOID_CHANNEL + 1);
 
     long t = 0;
 
@@ -26,12 +26,16 @@ public class Climber extends DiSubsystem implements IInitializable, ITickable, I
     public void onInitialize() {
         this.climbMotor.setIdleMode(IdleMode.kBrake);
 
-        this.release(true);
+        this.armReleaseSolenoid.set(Value.kForward);
+
+        this.releaseRatchet(true);
     }
 
     public void run(double power) {
-        if (power > 0) this.release(false);
-        else this.release(true);
+        if (this.armReleaseSolenoid.get() == Value.kForward) return;
+
+        if (power > 0) this.releaseRatchet(false);
+        else this.releaseRatchet(true);
 
         this.runRaw(power);
     }
@@ -40,12 +44,20 @@ public class Climber extends DiSubsystem implements IInitializable, ITickable, I
         this.climbMotor.set(power);
     }
 
-    public void release(boolean release) {
-        this.releaseSolenoid.set((release) ? Value.kForward : Value.kReverse);
+    public void releaseRatchet(boolean release) {
+        this.ratchetReleaseSolenoid.set((release) ? Value.kForward : Value.kReverse);
     }
 
-    public void onTick() {
+    public void releaseArm() {
+        this.armReleaseSolenoid.set(Value.kReverse);
+    }
 
+    public void retractArm() {
+        this.armReleaseSolenoid.set(Value.kForward);
+    }
+
+    public boolean isRatchetOut() {
+        return this.ratchetReleaseSolenoid.get() == Value.kForward;
     }
 
     public void onDispose() {
@@ -61,7 +73,11 @@ public class Climber extends DiSubsystem implements IInitializable, ITickable, I
         builder.addDoubleProperty("Climber Speed", this.climbMotor::get, (double value) -> { });
 
         builder.addBooleanProperty("Rachet Engage", () -> {
-            return this.releaseSolenoid.get() == Value.kReverse;
+            return this.ratchetReleaseSolenoid.get() == Value.kReverse;
+        }, (boolean value) -> { });
+
+        builder.addBooleanProperty("Arm Hold", () -> {
+            return this.armReleaseSolenoid.get() == Value.kReverse;
         }, (boolean value) -> { });
     }
 }

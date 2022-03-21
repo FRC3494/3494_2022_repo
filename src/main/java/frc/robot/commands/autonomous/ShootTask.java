@@ -2,24 +2,22 @@ package frc.robot.commands.autonomous;
 
 import frc.robot.subsystems.Shooter;
 import frc.robot.utilities.AutoTask;
+import frc.robot.utilities.ShooterSetting;
 import frc.robot.utilities.di.DiContainer.Inject;
 
 public class ShootTask extends AutoTask {
     @Inject
     Shooter shooter;
 
-    double rpm;
-    boolean hood;
+    ShooterSetting setting;
 
-    public ShootTask(double rpm, boolean hood) {
-        this.rpm = rpm;
-        this.hood = hood;
+    public ShootTask(ShooterSetting setting) {
+        this.setting = setting;
     }
 
     @Override
     public void begin() {
-        this.shooter.run(this.rpm);
-        this.shooter.setHood(this.hood);
+        this.shooter.run(this.setting);
     }
 
     @Override
