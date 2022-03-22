@@ -9,13 +9,13 @@ import frc.robot.commands.autonomous.WaitTask;
 import frc.robot.utilities.AutoOpMode;
 import frc.robot.utilities.ShooterSetting;
 
-public class DriveAndShoot extends AutoOpMode {
+public class ShootCloseThenDrive extends AutoOpMode {
     @Override
     public void sequence() {
         this.Sequencer.queue(new ShootTask(RobotConfig.Shooter.RPMS.get(0)));
-        this.Sequencer.queue(new WaitTask(3000));
+        this.Sequencer.queue(new WaitTask(1000));
         this.Sequencer.queue(new ShootBallTask());
-        this.Sequencer.queue(new WaitTask(5000));
+        this.Sequencer.queue(new WaitTask(100));
         this.Sequencer.queue(new ShootTask(ShooterSetting.Off));
         this.Sequencer.queue(new IntakeTask(0, RobotConfig.Magazine.INTAKE_SPEED));
         this.Sequencer.queue(new MovementTask(4200, -1, 0, 0.3));

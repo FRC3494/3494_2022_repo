@@ -78,15 +78,20 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
             return;
         }
 
-        this.drivetrain.run(RobotConfig.Drivetrain.PowerCurve(this.oi.GetLeftDriveSpeed()), RobotConfig.Drivetrain.PowerCurve(this.oi.GetRightDriveSpeed()));
+        this.drivetrain.run(this.oi.GetLeftDriveSpeed(), this.oi.GetRightDriveSpeed());
 
         if (this.oi.StartSinging()) this.singing = true;
 
 
+        int newSetting = this.oi.SetShooterSetting();
 
         //Shooter
-        if (!this.climbing) this.shooter.run(RobotConfig.Shooter.RPMS.get(this.selectedSetting));
-        else this.shooter.stop();
+        if (!this.climbing) {
+            if (newSetting != -1) {
+                this.selectedSetting = newSetting;
+                this.shooter.run(RobotConfig.Shooter.RPMS.get(this.selectedSetting));
+            } else this.shooter.stop();
+        } else this.shooter.stop();
 
         this.shooter.runTurretRelative(RobotConfig.Shooter.TurretPowerCurve(this.oi.GetTurretPower()) * RobotConfig.Shooter.TURRET_SPEED);
         if (this.oi.GetTurretGoToFront()) this.shooter.runTurret(RobotConfig.Shooter.TURRET_FRONT_POSITION);
@@ -96,10 +101,6 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
             if (this.shooter.aimbotEnabled()) this.shooter.disableAimBot();
             else this.shooter.enableAimBot();
         }
-
-        int newSetting = this.oi.SetShooterSetting();
-
-        if (newSetting != -1) this.selectedSetting = newSetting;
 
 
 
@@ -165,7 +166,7 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
     
             this.magazine.run(leftMagazineSpeed, rightMagazineSpeed, stemMagazineSpeed);
         } else {
-            if (this.oi.QueueBall()) waitForShooterReady = true;
+            if (this.oi.QueueBall() && newSetting != -1) waitForShooterReady = true;
 
             if (waitForShooterReady && this.shooter.atRPM()) {
                 this.magazine.sendBall(RobotConfig.Shooter.RPMS.get(this.selectedSetting).feedThrough);

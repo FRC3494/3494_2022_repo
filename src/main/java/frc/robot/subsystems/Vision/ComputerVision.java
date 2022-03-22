@@ -2,6 +2,8 @@ package frc.robot.subsystems.Vision;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.RotatedRect;
 import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.first.cscore.CvSink;
@@ -19,7 +21,8 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
     CvSink targetingCameraSink;
 
     public static class TargetingCameraProperties {
-
+        public static double Pitch = 0;
+        public static double Yaw = 0;
     }
 
     @Override
@@ -34,6 +37,10 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
             Mat inMat = new Mat();
             Mat hsvMat = new Mat();
             Mat filteredMat = new Mat();
+            //List<MatOfPoint> targetPoints = new ArrayList<>();
+            //Mat heirarchicalMat = new Mat();
+            MatOfPoint2f targetPoints;
+            RotatedRect targetRect;
 
             while (!Thread.interrupted()) {
                 long frameTime = this.targetingCameraSink.grabFrame(inMat);
@@ -43,7 +50,12 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
 
                 Core.inRange(hsvMat, RobotConfig.ComputerVision.MIN_HSV_RANGE, RobotConfig.ComputerVision.MAX_HSV_RANGE, filteredMat);
                 
-                
+                //Imgproc.findContours(filteredMat, targetPoints, heirarchicalMat, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);
+                targetPoints = new MatOfPoint2f(filteredMat);
+                targetRect = Imgproc.minAreaRect(targetPoints);
+
+                TargetingCameraProperties.Yaw = Math.toRadians(targetRect.center.x * RobotConfig.ComputerVision.HORIZONTAL_FOV - (RobotConfig.ComputerVision.HORIZONTAL_FOV / 2));
+                TargetingCameraProperties.Pitch = Math.toRadians(targetRect.center.y * RobotConfig.ComputerVision.VERTICAL_FOV - (RobotConfig.ComputerVision.VERTICAL_FOV / 2));
             }
         });
         this.cvThread.setDaemon(true);

@@ -57,13 +57,13 @@ public abstract class DiRobot extends TimedRobot {
         DriverStation.Alliance alliance = DriverStation.getAlliance();
 
         this.currentOpMode = CreateAutonomous();
-        
-        this.currentOpMode.Container.setParent(this.Container);
-        
-        this.currentOpMode.Container.bindInstance(this.currentOpMode);
-        this.currentOpMode.Container.bindInstance(alliance);
 
         if (this.currentOpMode != null) {
+            this.currentOpMode.Container.setParent(this.Container);
+            
+            this.currentOpMode.Container.bindInstance(this.currentOpMode);
+            this.currentOpMode.Container.bindInstance(alliance);
+
             try {
                 this.currentOpMode.install();
 
@@ -86,21 +86,23 @@ public abstract class DiRobot extends TimedRobot {
 
         this.currentOpMode = CreateTest();
 
-        this.currentOpMode.Container.setParent(this.Container);
+        if (this.currentOpMode != null) {
+            this.currentOpMode.Container.setParent(this.Container);
 
-        this.currentOpMode.Container.bindInstance(this.currentOpMode);
-        this.currentOpMode.Container.bindInstance(alliance);
-        
-        try {
-            this.currentOpMode.install();
+            this.currentOpMode.Container.bindInstance(this.currentOpMode);
+            this.currentOpMode.Container.bindInstance(alliance);
+            
+            try {
+                this.currentOpMode.install();
 
-            this.currentOpMode.Container.onInject();
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            System.out.println("Failed to start the teleop OpMode.");
+                this.currentOpMode.Container.onInject();
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                System.out.println("Failed to start the teleop OpMode.");
 
-            e.printStackTrace();
+                e.printStackTrace();
 
-            return;
+                return;
+            }
         }
     }
     
@@ -112,21 +114,23 @@ public abstract class DiRobot extends TimedRobot {
 
         this.currentOpMode = CreateTeleop();
 
-        this.currentOpMode.Container.setParent(this.Container);
-
-        this.currentOpMode.Container.bindInstance(this.currentOpMode);
-        this.currentOpMode.Container.bindInstance(alliance);
-        
-        try {
-            this.currentOpMode.install();
-
-            this.currentOpMode.Container.onInject();
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            System.out.println("Failed to start the teleop OpMode.");
-
-            e.printStackTrace();
-
-            return;
+        if (this.currentOpMode != null) {
+            this.currentOpMode.Container.setParent(this.Container);
+            
+            this.currentOpMode.Container.bindInstance(this.currentOpMode);
+            this.currentOpMode.Container.bindInstance(alliance);
+            
+            try {
+                this.currentOpMode.install();
+            
+                this.currentOpMode.Container.onInject();
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                System.out.println("Failed to start the teleop OpMode.");
+            
+                e.printStackTrace();
+            
+                return;
+            }
         }
     }
 }

@@ -36,6 +36,13 @@ public abstract class AutoOpMode extends DiOpMode {
         private String currentTaskName = "Unknown";
 
         public void lateInitialize() {
+            Shuffleboard.getTab("Autonomous").addString("Status", () -> {
+                return this.currentTaskName;
+            });
+            Shuffleboard.getTab("Autonomous").addString("ETA", () -> {
+                return this.tasks.get(0).getETA().formatETA();
+            });
+
             for (int i = 0; i < this.tasks.size(); i++) {
                 try {
                     this.tasks.set(i, (AutoTask) this.opMode.Container.inject(this.tasks.get(i)));
@@ -55,7 +62,7 @@ public abstract class AutoOpMode extends DiOpMode {
             }
 
             if (this.tasks.size() < 1) {
-                System.out.println("Auto Status: Waiting for more tasks...");
+                //System.out.println("Auto Status: Waiting for more tasks...");
                 return;
             } else if (!this.hasInitTask) {
                 this.tasks.get(0).begin();
@@ -63,7 +70,7 @@ public abstract class AutoOpMode extends DiOpMode {
                 this.hasInitTask = true;
             }
     
-            System.out.println("Auto Status: Running " + this.currentTaskName + " ETA: " + this.tasks.get(0).getETA().formatETA());
+            //System.out.println("Auto Status: Running " + this.currentTaskName + " ETA: " + this.tasks.get(0).getETA().formatETA());
     
             if (this.tasks.get(0).execute()) {
                 this.tasks.get(0).stop();

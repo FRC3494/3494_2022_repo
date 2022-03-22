@@ -160,13 +160,13 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     public void enableAimBot() {
         this.aimbotEnabled = true;
 
-        // ledRing.set(true);
+        ledRing.set(true);
     }
 
     public void disableAimBot() {
         this.aimbotEnabled = false;
 
-        // ledRing.set(false);
+        ledRing.set(false);
     }
 
     public boolean aimbotEnabled() {
@@ -174,7 +174,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     }
 
     public void onTick() {
-        ledRing.set(this.turretMotorEncoder.getVelocity() != 0);
+        //ledRing.set(this.turretMotorEncoder.getVelocity() != 0);
 
         if (this.aimbotEnabled) {
             // aimbot code here

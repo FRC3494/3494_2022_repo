@@ -49,11 +49,11 @@ public class OI implements ITickable {
     }
 
     public double GetLeftDriveSpeed() { //
-        return -(this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) - (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
+        return -(RobotConfig.Drivetrain.PowerCurve(this.primaryXbox.getLeftY()) * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) - (RobotConfig.Drivetrain.PowerCurve(this.primaryXbox.getRightX()) * RobotConfig.Drivetrain.TURN_SENSITIVITY);
     }
 
     public double GetRightDriveSpeed() { //
-        return -(this.primaryXbox.getLeftY() * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) + (this.primaryXbox.getRightX() * RobotConfig.Drivetrain.TURN_SENSITIVITY);
+        return -(RobotConfig.Drivetrain.PowerCurve(this.primaryXbox.getLeftY()) * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) + (RobotConfig.Drivetrain.PowerCurve(this.primaryXbox.getRightX()) * RobotConfig.Drivetrain.TURN_SENSITIVITY);
     }
 
     public boolean GetNeedOuttake() { //

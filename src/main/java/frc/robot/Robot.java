@@ -2,8 +2,12 @@ package frc.robot;
 
 import java.lang.reflect.InvocationTargetException;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.Pneumatics;
-import frc.robot.opmodes.autonomous.DriveAndHighShoot;
+import frc.robot.opmodes.autonomous.ShootCloseThenDriveThenShootClose;
+import frc.robot.opmodes.autonomous.ShootCloseThenDriveThenShootFar;
+import frc.robot.opmodes.autonomous.ShootCloseThenDrive;
 import frc.robot.opmodes.debug.Test;
 import frc.robot.opmodes.teleop.Teleop;
 import frc.robot.subsystems.AutoNav;
@@ -14,24 +18,31 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision.ComputerVision;
 import frc.robot.utilities.AutoConfigurable;
-//import frc.robot.subsystems.Vision.CameraServerSubsystem;
 import frc.robot.utilities.wpilibdi.DiOpMode;
 import frc.robot.utilities.wpilibdi.DiRobot;
 
 public class Robot extends DiRobot {
+    SendableChooser<Class<?>> autoChooser;
+
     @Override
     public void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
         AutoConfigurable.DontGrabFrom.enableConfiguration = false; // disable for comp
         this.Container.bind(RobotConfig.class).asSingle();
         this.Container.bind(OI.class).asSingle();
 
+        this.autoChooser = new SendableChooser<>();
+        this.autoChooser.setDefaultOption("No Auto", null);
+        this.autoChooser.addOption("ShootCloseThenDrive", ShootCloseThenDrive.class);
+        this.autoChooser.addOption("ShootCloseThenDriveThenShootClose", ShootCloseThenDriveThenShootClose.class);
+        this.autoChooser.addOption("ShootCloseThenDriveThenShootFar", ShootCloseThenDriveThenShootFar.class);
+        Shuffleboard.getTab("Autonomous").add(this.autoChooser);
+
         this.Container.bindSubsystem(Electronics.class);
         this.Container.bindSubsystem(Pneumatics.class);
         this.Container.bindSubsystem(NavX.class);
         this.Container.bindSubsystem(AutoNav.class);
-        this.Container.bindSubsystem(ComputerVision.class);
+        //this.Container.bindSubsystem(ComputerVision.class);
         //this.Container.bind(CameraServerSubsystem.class).asSingle();
 
         this.Container.bindSubsystem(Drivetrain.class);
@@ -44,14 +55,39 @@ public class Robot extends DiRobot {
     }
 
     public DiOpMode CreateTeleop() {
-        return new Teleop();
+        try {
+            return (DiOpMode) this.Container.instantiate(Teleop.class);
+        } catch (Exception e) {
+            System.out.println("Couldn't create teleop! the uh oh is listed belo:");
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public DiOpMode CreateAutonomous() {
-        return new DriveAndHighShoot();
+        Class<?> chosenAuto = this.autoChooser.getSelected();
+
+        if (chosenAuto == null) return new ShootCloseThenDrive();
+
+        try {
+            return (DiOpMode) this.Container.instantiate(chosenAuto);
+        } catch (Exception e) {
+            System.out.println("Couldn't create auto! the uh oh is listed belo:");
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public DiOpMode CreateTest() {
-        return new Test();
+        try {
+            return (DiOpMode) this.Container.instantiate(Test.class);
+        } catch (Exception e) {
+            System.out.println("Couldn't create teleop! the uh oh is listed belo:");
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

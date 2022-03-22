@@ -125,11 +125,16 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
                 }
                 break;
             case 1: 
+                this.runRaw(RobotConfig.Magazine.IDLE_SPEED, RobotConfig.Magazine.IDLE_SPEED, RobotConfig.Magazine.IDLE_SPEED);
+
+                if (this.reloadVertialTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_RELOAD_RUN_IN)) this.reloadStage++;
+                break;
+            case 2: 
                 this.runRaw(0, 0, RobotConfig.Magazine.IDLE_SPEED);
 
                 if (this.reloadVertialTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_RELOAD_RUN_UP)) this.reloadStage++;
                 break;
-            case 2: 
+            case 3: 
                 this.runRaw(0, 0, -RobotConfig.Magazine.IDLE_SPEED);
 
                 if (this.reloadVertialTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_RELOAD_RUN_DOWN)) this.reloadStage++;
@@ -151,7 +156,8 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
     private void sendBallMagazine() {
         double horizontalSpeed = runThrough ? RobotConfig.Magazine.LAUNCH_SPEED : 0;
 
-        this.runRaw(horizontalSpeed, horizontalSpeed, RobotConfig.Magazine.LAUNCH_SPEED);
+        if (!this.startedSendTimer) this.runRaw(0, 0, RobotConfig.Magazine.LAUNCH_SPEED);
+        else this.runRaw(horizontalSpeed, horizontalSpeed, RobotConfig.Magazine.LAUNCH_SPEED);
 
         if (!this.treeStemLinebreak.Broken() && !this.startedSendTimer) {
             this.sendBallTimer.start();

@@ -25,9 +25,9 @@ public final class RobotConfig extends AutoConfigurable {
     public static class Shooter {
         public static List<ShooterSetting> RPMS = new ArrayList<>() { {
             add(new ShooterSetting("Close Low", 1100.0, true, true));
-            add(new ShooterSetting("Close High", 2400.0, false, false));
-            add(new ShooterSetting("Middle High", 2600.0, true, false));
-            add(new ShooterSetting("Far High", 2800.0, true, false)); //3250
+            add(new ShooterSetting("Close High", 2400.0, false, true)); //r:false
+            add(new ShooterSetting("Middle High", 2600.0, true, true)); //r:false
+            add(new ShooterSetting("Far High", 2800.0, true, true)); //3250 //r:false
             //add(new ShooterSetting("Full Power", 5000.0));
             //new Pair<>("Auto Shot", -1);
         } };
@@ -83,7 +83,7 @@ public final class RobotConfig extends AutoConfigurable {
             if (x > 1) return 1;
             if (x < -1) return -1;
 
-            return Math.pow(x, 5);
+            return x; //Math.pow(x, 3);
         }
     }
 
@@ -107,7 +107,8 @@ public final class RobotConfig extends AutoConfigurable {
         public static double SECONDS_TO_EJECT_HORIZONTAL = 2;
         public static double SECONDS_TO_SEND_BALL = 1;
 
-        public static double SECONDS_RELOAD_RUN_UP = 0.15;
+        public static double SECONDS_RELOAD_RUN_IN = 0.05;
+        public static double SECONDS_RELOAD_RUN_UP = 0.065;
         public static double SECONDS_RELOAD_RUN_DOWN = 0.20;
 
         public static int NUMBER_OF_LEDS = 128;
@@ -167,5 +168,7 @@ public final class RobotConfig extends AutoConfigurable {
         public static String TARGETING_CAMERA_URL = "mjpeg://wpilib1.local:1181";
         public static Scalar MIN_HSV_RANGE = new Scalar(0, 0, 0);
         public static Scalar MAX_HSV_RANGE = new Scalar(255, 255, 255);
+        public static double HORIZONTAL_FOV = 135;
+        public static double VERTICAL_FOV = 135;
     }
 }
