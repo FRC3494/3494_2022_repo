@@ -30,7 +30,7 @@ public abstract class AutoTask {
             double totalTime = this.endTime - this.startTime;
             double percent = -((this.endTime - this.currentTime) - totalTime) / totalTime;
 
-            return (this.currentTime - this.startTime) + "/" + totalTime + " (" + percent + "%)";
+            return (this.currentTime - this.startTime) + "/" + totalTime + " (" + percent * 100 + "%)";
         }
     }
 }

@@ -25,9 +25,9 @@ public final class RobotConfig extends AutoConfigurable {
     public static class Shooter {
         public static List<ShooterSetting> RPMS = new ArrayList<>() { {
             add(new ShooterSetting("Close Low", 1100.0, true, true));
-            add(new ShooterSetting("Close High", 2400.0, false, true)); //r:false
-            add(new ShooterSetting("Middle High", 2600.0, true, true)); //r:false
-            add(new ShooterSetting("Far High", 2800.0, true, true)); //3250 //r:false
+            add(new ShooterSetting("Close High", 2400.0, false, false));
+            add(new ShooterSetting("Middle High", 2600.0, true, false));
+            add(new ShooterSetting("Far High", 2800.0, true, false)); //3250
             //add(new ShooterSetting("Full Power", 5000.0));
             //new Pair<>("Auto Shot", -1);
         } };
@@ -107,11 +107,11 @@ public final class RobotConfig extends AutoConfigurable {
         public static double SECONDS_TO_EJECT_HORIZONTAL = 2;
         public static double SECONDS_TO_SEND_BALL = 1;
 
-        public static double SECONDS_RELOAD_RUN_IN = 0.05;
-        public static double SECONDS_RELOAD_RUN_UP = 0.065;
+        public static double SECONDS_RELOAD_RUN_IN = 0.1;
+        public static double SECONDS_RELOAD_RUN_UP = 0.03;
         public static double SECONDS_RELOAD_RUN_DOWN = 0.20;
 
-        public static int NUMBER_OF_LEDS = 128;
+        public static int NUMBER_OF_LEDS = 55;
 
         public static AddressableLEDBuffer zeroPattern(AddressableLEDBuffer in) {
             for (int i = 0; i < in.getLength(); i++) {

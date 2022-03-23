@@ -59,6 +59,7 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
         autoClimbTimer.reset();
         climbRampTimer.start();
 
+        this.shooter.enableTurret(true);
         this.shooter.runTurret(RobotConfig.Shooter.TURRET_FRONT_POSITION);
     }
 
@@ -182,5 +183,6 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
         this.magazine.runRaw(0, 0, 0);
         this.climber.run(0);
         this.shooter.stop();
+        this.shooter.enableTurret(false);
     }
 }

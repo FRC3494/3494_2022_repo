@@ -27,7 +27,7 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
     private Linebreaker treeStemLinebreak = new Linebreaker(RobotMap.Magazine.TREE_STEM_LINEBREAK_CHANNEL, true);
 
     private AddressableLED ballStatusLeds = new AddressableLED(RobotMap.Magazine.MAGAZINE_LED_PORT);
-    private AddressableLEDBuffer ballStatusLedsBuffer = new AddressableLEDBuffer(RobotMap.Magazine.MAGAZINE_LED_PORT);
+    private AddressableLEDBuffer ballStatusLedsBuffer = new AddressableLEDBuffer(RobotConfig.Magazine.NUMBER_OF_LEDS);
 
     boolean autoOperate = true;
 

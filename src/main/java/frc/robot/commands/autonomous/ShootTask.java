@@ -22,7 +22,7 @@ public class ShootTask extends AutoTask {
 
     @Override
     public boolean execute() {
-        return true;
+        return this.shooter.atRPM();
     }
 
     @Override

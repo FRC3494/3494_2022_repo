@@ -44,6 +44,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     private Linebreaker zeroLinebreak = new Linebreaker(RobotMap.Shooter.ZERO_LINEBREAK_CHANNEL, true);
 
+    boolean enableTurret = false;
     double targetPosition = 0;
     double zeroPosition = 0;
     boolean needsZero = true; // CHANGE TO TRUE YOU WALLNUT
@@ -103,6 +104,10 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
         this.currentSetting = setting;
         this.turretPidController.setIAccum(0);
+    }
+
+    public void enableTurret(boolean enable) {
+        this.enableTurret = enable;
     }
 
     public ShooterSetting getSetting() {
@@ -186,7 +191,12 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         if (this.currentSetting.rpm > 0) this.runHood(this.currentSetting.hood);
         else this.runHood(false);
 
-        //System.out.println(this.getTurretRotations() + " | " + this.targetPosition);
+        //System.out.println(this.needsZero + " | " + this.zeroStage + " | " + this.enableTurret);
+
+        if (!this.enableTurret) { 
+            this.turretMotor.set(0);
+            return;
+        }
 
         if (this.needsZero) {
             switch (this.zeroStage) {

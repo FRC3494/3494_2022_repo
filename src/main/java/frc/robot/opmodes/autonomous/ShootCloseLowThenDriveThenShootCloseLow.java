@@ -9,20 +9,22 @@ import frc.robot.commands.autonomous.WaitTask;
 import frc.robot.utilities.AutoOpMode;
 import frc.robot.utilities.ShooterSetting;
 
-public class ShootCloseThenDriveThenShootClose extends AutoOpMode {
+public class ShootCloseLowThenDriveThenShootCloseLow extends AutoOpMode {
     @Override
     public void sequence() {
         this.Sequencer.queue(new ShootTask(RobotConfig.Shooter.RPMS.get(0)));
         this.Sequencer.queue(new WaitTask(1000));
         this.Sequencer.queue(new ShootBallTask());
         this.Sequencer.queue(new IntakeTask(0, RobotConfig.Magazine.INTAKE_SPEED));
-        this.Sequencer.queue(new MovementTask(3000, -1, 0, 0.5));
+        this.Sequencer.queue(new WaitTask(1000));
+        this.Sequencer.queue(new MovementTask(4250, -1, 0, 0.25));
         this.Sequencer.queue(new IntakeTask(0, 0));
-        this.Sequencer.queue(new MovementTask(3000, 1, 0, 0.5));
+        this.Sequencer.queue(new MovementTask(4250, 1, 0, 0.25));
         this.Sequencer.queue(new ShootBallTask());
         this.Sequencer.queue(new WaitTask(100));
         this.Sequencer.queue(new IntakeTask(0, RobotConfig.Magazine.INTAKE_SPEED));
-        this.Sequencer.queue(new MovementTask(3000, -1, 0, 0.5));
+        this.Sequencer.queue(new WaitTask(1000));
+        this.Sequencer.queue(new MovementTask(2000, -1, 0, 0.5));
         this.Sequencer.queue(new IntakeTask(0, 0));
         this.Sequencer.queue(new ShootTask(ShooterSetting.Off));
     }

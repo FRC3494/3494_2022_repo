@@ -9,7 +9,7 @@ import frc.robot.commands.autonomous.WaitTask;
 import frc.robot.utilities.AutoOpMode;
 import frc.robot.utilities.ShooterSetting;
 
-public class ShootCloseThenDrive extends AutoOpMode {
+public class ShootCloseLowThenDrive extends AutoOpMode {
     @Override
     public void sequence() {
         this.Sequencer.queue(new ShootTask(RobotConfig.Shooter.RPMS.get(0)));

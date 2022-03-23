@@ -5,9 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.Pneumatics;
-import frc.robot.opmodes.autonomous.ShootCloseThenDriveThenShootClose;
-import frc.robot.opmodes.autonomous.ShootCloseThenDriveThenShootFar;
-import frc.robot.opmodes.autonomous.ShootCloseThenDrive;
+import frc.robot.opmodes.autonomous.ShootCloseHighThenDriveThenShootCloseHigh;
+import frc.robot.opmodes.autonomous.ShootCloseHighThenDriveThenShootFarHigh;
+import frc.robot.opmodes.autonomous.ShootCloseLowThenDrive;
+import frc.robot.opmodes.autonomous.ShootCloseLowThenDriveThenShootCloseLow;
 import frc.robot.opmodes.debug.Test;
 import frc.robot.opmodes.teleop.Teleop;
 import frc.robot.subsystems.AutoNav;
@@ -33,10 +34,11 @@ public class Robot extends DiRobot {
 
         this.autoChooser = new SendableChooser<>();
         this.autoChooser.setDefaultOption("No Auto", null);
-        this.autoChooser.addOption("ShootCloseThenDrive", ShootCloseThenDrive.class);
-        this.autoChooser.addOption("ShootCloseThenDriveThenShootClose", ShootCloseThenDriveThenShootClose.class);
-        this.autoChooser.addOption("ShootCloseThenDriveThenShootFar", ShootCloseThenDriveThenShootFar.class);
-        Shuffleboard.getTab("Autonomous").add(this.autoChooser);
+        this.autoChooser.addOption("ShootCloseThenDrive", ShootCloseLowThenDrive.class);
+        this.autoChooser.addOption("ShootCloseLowThenDriveThenShootCloseLow", ShootCloseLowThenDriveThenShootCloseLow.class);
+        this.autoChooser.addOption("ShootCloseHighThenDriveThenShootCloseHigh", ShootCloseHighThenDriveThenShootCloseHigh.class);
+        this.autoChooser.addOption("ShootCloseHighThenDriveThenShootFarHigh", ShootCloseHighThenDriveThenShootFarHigh.class);
+        Shuffleboard.getTab("Autonomous").add(this.autoChooser).withSize(3, 1);
 
         this.Container.bindSubsystem(Electronics.class);
         this.Container.bindSubsystem(Pneumatics.class);
@@ -68,7 +70,7 @@ public class Robot extends DiRobot {
     public DiOpMode CreateAutonomous() {
         Class<?> chosenAuto = this.autoChooser.getSelected();
 
-        if (chosenAuto == null) return new ShootCloseThenDrive();
+        if (chosenAuto == null) return new ShootCloseLowThenDrive();
 
         try {
             return (DiOpMode) this.Container.instantiate(chosenAuto);

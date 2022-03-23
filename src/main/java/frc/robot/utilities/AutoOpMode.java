@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
@@ -25,7 +27,7 @@ public abstract class AutoOpMode extends DiOpMode {
 
     public abstract void sequence();
 
-    public class AutoSequencer extends DiCommand implements ITickable, IDisposable {
+    public static class AutoSequencer extends DiCommand implements ITickable, IDisposable {
         @Inject
         DiOpMode opMode;
 
@@ -35,13 +37,22 @@ public abstract class AutoOpMode extends DiOpMode {
         private boolean hasInitlate = false;
         private String currentTaskName = "Unknown";
 
+        private static NetworkTableEntry statusEntry = null;
+        private static NetworkTableEntry etaEntry = null;
+
         public void lateInitialize() {
-            Shuffleboard.getTab("Autonomous").addString("Status", () -> {
-                return this.currentTaskName;
-            });
-            Shuffleboard.getTab("Autonomous").addString("ETA", () -> {
-                return this.tasks.get(0).getETA().formatETA();
-            });
+            if (AutoSequencer.statusEntry == null) AutoSequencer.statusEntry = 
+                Shuffleboard.getTab("Autonomous")
+                .add("Status", "pog")
+                .withWidget(BuiltInWidgets.kTextView)
+                .withSize(3, 1)
+                .getEntry();
+            if (AutoSequencer.etaEntry == null) AutoSequencer.etaEntry = 
+                Shuffleboard.getTab("Autonomous")
+                .add("ETA", "wow")
+                .withWidget(BuiltInWidgets.kTextView)
+                .withSize(3, 1)
+                .getEntry();
 
             for (int i = 0; i < this.tasks.size(); i++) {
                 try {
@@ -56,19 +67,25 @@ public abstract class AutoOpMode extends DiOpMode {
 
         @Override
         public void onTick() {
+
             if (!this.hasInitlate) {
                 this.lateInitialize();
                 this.hasInitlate = true;
             }
 
             if (this.tasks.size() < 1) {
-                //System.out.println("Auto Status: Waiting for more tasks...");
+                if (AutoSequencer.statusEntry != null) AutoSequencer.statusEntry.setString("No more tasks to do :)");
+                if (AutoSequencer.statusEntry != null) AutoSequencer.etaEntry.setString("Never gonna give you up, never gonna let you down, never gonna run around, or desert you. Never gonna make you cry, never gonna say goodbye, never gonna tell a lie, or hurt you.");
+                
                 return;
             } else if (!this.hasInitTask) {
                 this.tasks.get(0).begin();
                 this.currentTaskName = this.tasks.get(0).getClass().getName();
                 this.hasInitTask = true;
             }
+
+            if (AutoSequencer.statusEntry != null) AutoSequencer.statusEntry.setString(this.currentTaskName);
+            if (AutoSequencer.statusEntry != null) AutoSequencer.etaEntry.setString(this.tasks.get(0).getETA().formatETA());
     
             //System.out.println("Auto Status: Running " + this.currentTaskName + " ETA: " + this.tasks.get(0).getETA().formatETA());
     
