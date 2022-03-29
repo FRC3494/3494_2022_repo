@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.opencv.core.Scalar;
@@ -29,6 +30,26 @@ public final class RobotConfig extends AutoConfigurable {
     }
 
     public static class Shooter {
+        public static class VisionSettings{
+            public final static double HubHeightMeters = 2.64;  //From floor to reflective tape PLEASE CHANGE
+            public final static double GoalHeightMeters = 1.67;
+            public final static double CameraPitchRadians = 0;
+            public static double maxHoodAngle = (90-21) * Math.PI/180;
+            public static double minHoodAngle = (90-3.40) * Math.PI/180;
+            public static double ShooterHieghtMeters = 1;
+            public static double ballRadiusMeters = 0.1;
+            /*5676 rpm
+            diameter 4in, 
+            radius, 0.0508 meters
+            circumfrence = 2*pi*0.0508 = 0.1016pi
+            meters per minuete = 5676*0.1016*pi
+            meters per second = 5676*0.1016*pi/60 = 30.19*/
+            public static double maxVel = 30;
+            public static double minVel  = 0;
+
+            public static double g = 9.81;
+            public static HashMap<Double, Double> frictionLookUpMap = new HashMap<Double, Double>();
+        }
         public static List<ShooterSetting> RPMS = new ArrayList<>() { {
             add(new ShooterSetting("Close Low", 1100.0, true, true));
             add(new ShooterSetting("Close High", 2400.0, false, false));
