@@ -16,6 +16,6 @@ public class TestDrivetrain extends DiTest implements IInitializable, ITickable,
     }
 
     public void cleanup() {
-        drivetrain.run(0, 0);
+        drivetrain.tankDrive(0, 0);
     }
 }

@@ -79,7 +79,7 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
             return;
         }
 
-        this.drivetrain.run(this.oi.GetLeftDriveSpeed(), this.oi.GetRightDriveSpeed());
+        this.drivetrain.arcadeDrive(RobotConfig.Drivetrain.PowerCurve(this.oi.GetForwardSpeed()) * RobotConfig.Drivetrain.FORWARD_SENSITIVITY, RobotConfig.Drivetrain.PowerCurve(this.oi.GetTurnSpeed()) * RobotConfig.Drivetrain.TURN_SENSITIVITY);
 
         if (this.oi.StartSinging()) this.singing = true;
 
@@ -159,11 +159,11 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
             double rightMagazineSpeed = this.oi.GetRightTreeMagazinePower() * RobotConfig.Magazine.INTAKE_SPEED;
             double stemMagazineSpeed = this.oi.GetTreeStemMagazinePower() * RobotConfig.Magazine.INTAKE_SPEED;
     
-            if (this.oi.GetNeedOuttake()) {
+            //if (this.oi.GetNeedOuttake()) {
                 leftMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED;
                 rightMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED;
-                stemMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED;
-            }
+                stemMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED / 4;
+            //}
     
             this.magazine.run(leftMagazineSpeed, rightMagazineSpeed, stemMagazineSpeed);
         } else {

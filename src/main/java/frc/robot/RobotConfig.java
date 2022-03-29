@@ -11,8 +11,14 @@ import frc.robot.utilities.ShooterSetting;
 
 public final class RobotConfig extends AutoConfigurable {
     public static class Drivetrain {
-        public static double FORWARD_SENSITIVITY = 0.8; //0.5
-        public static double TURN_SENSITIVITY = 0.8; //0.5
+        public static double FORWARD_SENSITIVITY = 0.65; //0.5
+        public static double TURN_SENSITIVITY = 0.75; //0.5
+
+        public static double SLEW_RATE = 1.25;
+
+        public static double PITCH_THRESHOLD_DEGREES = 5;
+        public static double PITCH_ALARM_THRESHOLD = 10;
+        public static double CORRECTION_FACTOR = (0.35 - 0) / (60 - PITCH_THRESHOLD_DEGREES);
 
         public static double PowerCurve(double x) {
             if (x > 1) return 1;
@@ -108,14 +114,14 @@ public final class RobotConfig extends AutoConfigurable {
         public static double SECONDS_TO_SEND_BALL = 1;
 
         public static double SECONDS_RELOAD_RUN_IN = 0.1;
-        public static double SECONDS_RELOAD_RUN_UP = 0.03;
+        public static double SECONDS_RELOAD_RUN_UP = 0.02;
         public static double SECONDS_RELOAD_RUN_DOWN = 0.20;
 
         public static int NUMBER_OF_LEDS = 55;
 
         public static AddressableLEDBuffer zeroPattern(AddressableLEDBuffer in) {
             for (int i = 0; i < in.getLength(); i++) {
-                in.setRGB(i, 0, 151, 157);
+                in.setRGB(i, 0x00, 0xe5, 0x6d);
             }
 
             return in;
@@ -123,7 +129,7 @@ public final class RobotConfig extends AutoConfigurable {
 
         public static AddressableLEDBuffer onePattern(AddressableLEDBuffer in) {
             for (int i = 0; i < in.getLength(); i++) {
-                in.setRGB(i, 255, 255, 0);
+                in.setRGB(i, 0xff, 0xff, 0x00);
             }
 
             return in;
@@ -133,7 +139,7 @@ public final class RobotConfig extends AutoConfigurable {
             for (int i = 0; i < in.getLength(); i++) {
                 //int hue = (i + ((int) System.currentTimeMillis() / 10) % in.getLength()) / in.getLength() * 180;
                 //in.setHSV(i, hue, 255, 255);
-                in.setRGB(i, 0, 255, 0);
+                in.setRGB(i, 0x00, 0xff, 0x00);
 
             }
 

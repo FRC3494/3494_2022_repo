@@ -8,6 +8,8 @@ public class OI implements ITickable {
 
     XboxController secondaryXbox = new XboxController(1);
 
+    XboxController emergencyXbox = new XboxController(2);
+
     String buttonSequence = "";
 
     String targetSequence = "uuddlrlrbas";
@@ -48,16 +50,16 @@ public class OI implements ITickable {
         //System.out.println(buttonSequence);
     }
 
-    public double GetLeftDriveSpeed() { //
-        return -(RobotConfig.Drivetrain.PowerCurve(this.primaryXbox.getLeftY()) * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) - (RobotConfig.Drivetrain.PowerCurve(this.primaryXbox.getRightX()) * RobotConfig.Drivetrain.TURN_SENSITIVITY);
+    public double GetForwardSpeed() { //
+        return this.primaryXbox.getLeftY();
     }
 
-    public double GetRightDriveSpeed() { //
-        return -(RobotConfig.Drivetrain.PowerCurve(this.primaryXbox.getLeftY()) * RobotConfig.Drivetrain.FORWARD_SENSITIVITY) + (RobotConfig.Drivetrain.PowerCurve(this.primaryXbox.getRightX()) * RobotConfig.Drivetrain.TURN_SENSITIVITY);
+    public double GetTurnSpeed() { //
+        return this.primaryXbox.getRightX();
     }
 
     public boolean GetNeedOuttake() { //
-        return this.secondaryXbox.getStartButton();
+        return this.secondaryXbox.getStartButton() || this.emergencyXbox.getStartButton();
         //return this.primaryXbox.getAButton();
     }
 
@@ -96,23 +98,21 @@ public class OI implements ITickable {
     }
 
     public double GetLeftTreeMagazinePower() { //
-        //return (this.secondaryXbox.getAButton()) ? 1 : 0;
-        //if (this.secondaryXbox.getYButton() && this.secondaryXbox.getRightBumper()) return -1;
-        //return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
-        return 0;
+        //if (!this.emergencyXbox.isConnected()) return 0;
+        //return (this.emergencyXbox.getXButton()) ? 1 : 0;
+        return (this.primaryXbox.getLeftBumper() && this.primaryXbox.getRightBumper()) ? 1 : 0;
     }
 
     public double GetRightTreeMagazinePower() { //
-        //if (this.secondaryXbox.getBButton() && this.secondaryXbox.getRightBumper()) return -1;
-        //return (this.secondaryXbox.getRightBumper()) ? 1 : 0;
-        //return (this.secondaryXbox.getAButton()) ? 1 : 0;
-        return 0;
+        //if (!this.emergencyXbox.isConnected()) return 0;
+        //return (this.emergencyXbox.getBButton()) ? 1 : 0;
+        return (this.primaryXbox.getLeftBumper() && this.primaryXbox.getRightBumper()) ? 1 : 0;
     }
 
     public double GetTreeStemMagazinePower() { //
-        //return (this.secondaryXbox.getYButton()) ? 1 : 0;
-        //return (this.secondaryXbox.getRightTriggerAxis() != 0) ? 1 : 0;
-        return 0;
+        //if (!this.emergencyXbox.isConnected()) return 0;
+        //return (this.emergencyXbox.getYButton()) ? 1 : 0;
+        return (this.primaryXbox.getLeftBumper() && this.primaryXbox.getRightBumper()) ? 1 : 0;
     }
 
     public boolean QueueBall() {
@@ -126,8 +126,10 @@ public class OI implements ITickable {
     }
 
     public boolean GetOverrideMagazineStateMachine() {
-        //return this.secondaryXbox.getYButton();
-        return false;
+        //if (!this.emergencyXbox.isConnected()) return false;
+        return this.primaryXbox.getLeftBumper() && this.primaryXbox.getRightBumper();
+        //return this.emergencyXbox.getLeftBumper();
+        //return false;
     }
 
     public double GetShooterPower() { //

@@ -64,14 +64,14 @@ public class MovementTask extends AutoTask {
             computedSpeed = (this.speed * (1 - ((float)(this.now - this.rampDownTime)/(float)(this.stopTime - this.rampDownTime))));
         }
         
-        this.drivetrain.run(this.left * computedSpeed, this.right * computedSpeed);
+        this.drivetrain.tankDrive(this.left * computedSpeed, this.right * computedSpeed);
 
         return false;
     }
 
     @Override
     public void stop() {
-        this.drivetrain.run(0, 0);
+        this.drivetrain.tankDrive(0, 0);
     }
 
     @Override
