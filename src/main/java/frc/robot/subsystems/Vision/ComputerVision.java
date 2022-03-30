@@ -34,6 +34,7 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
 
     @Override
     public void onInitialize() {
+        
         InitializeHashMap();
         this.targetingCamera = new HttpCamera("Targeting Camera", RobotConfig.Shooter.VisionSettings.TARGETING_CAMERA_URL);
         this.targetingCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
@@ -55,7 +56,7 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
             while (!Thread.interrupted()) {
                 long frameTime = this.targetingCameraSink.grabFrame(inMat);
                 if (frameTime == 0) continue;
-
+                
                 Imgproc.cvtColor(inMat, hsvMat, Imgproc.COLOR_BGR2HSV);
 
                 Core.inRange(hsvMat, RobotConfig.Shooter.VisionSettings.MIN_HSV_RANGE, RobotConfig.Shooter.VisionSettings.MAX_HSV_RANGE, filteredMat);
@@ -68,6 +69,7 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
                 TargetingCameraProperties.Pitch = Math.toRadians(targetRect.center.y * RobotConfig.Shooter.VisionSettings.VERTICAL_FOV - (RobotConfig.Shooter.VisionSettings.VERTICAL_FOV / 2));
             
                 CameraServerCvJNI.putSourceFrame(this.cvSourceHandle, filteredMat.nativeObj);
+                //System.out.println("Running");
             }
         });
         this.cvThread.setDaemon(true);

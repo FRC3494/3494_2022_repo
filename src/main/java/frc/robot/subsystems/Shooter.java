@@ -192,9 +192,9 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
             ComputerVision.TargetingCameraProperties.Pitch);
             //the 0.6778625 is half of the diameter of the outer side of the upper hub in meters
             //this gives us distance to center of the hub 
-            System.out.println("Given that the target is at " + ComputerVision.TargetingCameraProperties.Pitch + " in pitch and "
+            /*System.out.println("Given that the target is at " + ComputerVision.TargetingCameraProperties.Pitch + " in pitch and "
             + ComputerVision.TargetingCameraProperties.Yaw+ " in yaw, we are "
-            +(distanceFromHub+ 0.6778625)+" meters away from the hub"); 
+            +(distanceFromHub+ 0.6778625)+" meters away from the hub"); */
 
             //Shouldn't add till tested
             /*

@@ -55,11 +55,11 @@ public final class RobotConfig extends AutoConfigurable {
                 put(3.604006, 2600.0);
             }}; // distance, velocity 
 
-            public static String TARGETING_CAMERA_URL = "mjpeg://wpilib1.local:1181";
+            public static String TARGETING_CAMERA_URL = "wpilibpi-shooter.local:1181/stream.mjpg";
             public static Scalar MIN_HSV_RANGE = new Scalar(0, 0, 0);
             public static Scalar MAX_HSV_RANGE = new Scalar(255, 255, 255);
-            public static double HORIZONTAL_FOV = 135;
-            public static double VERTICAL_FOV = 135;
+            public static double HORIZONTAL_FOV = 1.39626;
+            public static double VERTICAL_FOV = 0.698132;
         }
         public static List<ShooterSetting> RPMS = new ArrayList<>() { {
             add(new ShooterSetting("Close Low", 1100.0, true, true));
