@@ -10,9 +10,8 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonTrackedTarget;
+
+
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -61,7 +60,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     private boolean aimbotEnabled = false;
 
-    PhotonCamera camera;
+
     double rotationSpeed;
     double range;
     private double closestDistance = -2;
@@ -185,15 +184,26 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         //ledRing.set(this.turretMotorEncoder.getVelocity() != 0);
 
         if (this.aimbotEnabled) {
+            ledRing.set(true);
             distanceFromHub = ComputerVision.calculateDistanceToTargetMeters
             (RobotConfig.Shooter.VisionSettings.CAMERA_HEIGHT_METERS, 
             RobotConfig.Shooter.VisionSettings.HubHeightMeters, 
             RobotConfig.Shooter.VisionSettings.CameraPitchRadians, 
             ComputerVision.TargetingCameraProperties.Pitch);
-            System.out.println(distanceFromHub);
+            //the 0.6778625 is half of the diameter of the outer side of the upper hub in meters
+            //this gives us distance to center of the hub 
+            System.out.println("Given that the target is at " + ComputerVision.TargetingCameraProperties.Pitch + " in pitch and "
+            + ComputerVision.TargetingCameraProperties.Yaw+ " in yaw, we are "
+            +(distanceFromHub+ 0.6778625)+" meters away from the hub"); 
+
+            //Shouldn't add till tested
+            /*
             this.aimBotVelocity = ComputerVision.findShooterPower(new PointV(0, distanceFromHub));
             this.currentSetting.rpm = this.aimBotVelocity*60/(4*Math.PI);
-            //ComputerVision.findShooterPower(new PointV(0, distanceFromHub));
+            this.targetPosition = ComputerVision.TargetingCameraProperties.Yaw;
+
+            */
+            
             
             
         }

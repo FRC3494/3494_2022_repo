@@ -55,11 +55,11 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
     }
 
     public void tankDrive(double leftPower, double rightPower) {
-        //this.leftLeader.set(ControlMode.PercentOutput, leftPower);
-        //this.rightLeader.set(ControlMode.PercentOutput, rightPower);
+
         //this.speedsAfterTipCorrection = this.correctForPitch(leftPower, rightPower);
         //this.leftLeader.set(ControlMode.PercentOutput, this.speedsAfterTipCorrection[0]);
         //this.rightLeader.set(ControlMode.PercentOutput, this.speedsAfterTipCorrection[1]);
+
         this.leftLeader.set(ControlMode.PercentOutput, leftPower);
         this.rightLeader.set(ControlMode.PercentOutput, rightPower);
     }
@@ -67,6 +67,7 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
     public void arcadeDrive(double forwardPower, double turnPower) {
         //this.leftLeader.set(ControlMode.PercentOutput, -(forwardPower - turnPower));
         //this.rightLeader.set(ControlMode.PercentOutput, -(forwardPower + turnPower));
+        
         this.tankDrive(-(forwardPower + turnPower), -(forwardPower - turnPower));
     }
 
