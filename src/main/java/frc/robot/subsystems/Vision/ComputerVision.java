@@ -6,13 +6,15 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.RotatedRect;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import edu.wpi.first.cscore.CameraServerCvJNI;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import frc.robot.RobotConfig;
-import frc.robot.RobotConfig.Shooter.VisionSettings;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.wpilibdi.DiSubsystem;
@@ -23,7 +25,7 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
     HttpCamera targetingCamera;
     CvSink targetingCameraSink;
 
-    
+    int cvSourceHandle;
 
     public static class TargetingCameraProperties {
         public static double Pitch = 0;
@@ -33,11 +35,13 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
     @Override
     public void onInitialize() {
         InitializeHashMap();
-        this.targetingCamera = new HttpCamera("Targeting Camera", RobotConfig.ComputerVision.TARGETING_CAMERA_URL);
+        this.targetingCamera = new HttpCamera("Targeting Camera", RobotConfig.Shooter.VisionSettings.TARGETING_CAMERA_URL);
         this.targetingCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
         this.targetingCameraSink = new CvSink("Targeting Camera CV");
         this.targetingCameraSink.setSource(this.targetingCamera);
+
+        this.cvSourceHandle = CameraServerCvJNI.createCvSource("CV Stream", VideoMode.PixelFormat.kBGR.getValue(), 160, 120, 30);
         
         this.cvThread = new Thread(() -> {
             Mat inMat = new Mat();
@@ -54,14 +58,16 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
 
                 Imgproc.cvtColor(inMat, hsvMat, Imgproc.COLOR_BGR2HSV);
 
-                Core.inRange(hsvMat, RobotConfig.ComputerVision.MIN_HSV_RANGE, RobotConfig.ComputerVision.MAX_HSV_RANGE, filteredMat);
+                Core.inRange(hsvMat, RobotConfig.Shooter.VisionSettings.MIN_HSV_RANGE, RobotConfig.Shooter.VisionSettings.MAX_HSV_RANGE, filteredMat);
                 
                 //Imgproc.findContours(filteredMat, targetPoints, heirarchicalMat, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);
                 targetPoints = new MatOfPoint2f(filteredMat);
                 targetRect = Imgproc.minAreaRect(targetPoints);
 
-                TargetingCameraProperties.Yaw = Math.toRadians(targetRect.center.x * RobotConfig.ComputerVision.HORIZONTAL_FOV - (RobotConfig.ComputerVision.HORIZONTAL_FOV / 2));
-                TargetingCameraProperties.Pitch = Math.toRadians(targetRect.center.y * RobotConfig.ComputerVision.VERTICAL_FOV - (RobotConfig.ComputerVision.VERTICAL_FOV / 2));
+                TargetingCameraProperties.Yaw = Math.toRadians(targetRect.center.x * RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV - (RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV / 2));
+                TargetingCameraProperties.Pitch = Math.toRadians(targetRect.center.y * RobotConfig.Shooter.VisionSettings.VERTICAL_FOV - (RobotConfig.Shooter.VisionSettings.VERTICAL_FOV / 2));
+            
+                CameraServerCvJNI.putSourceFrame(this.cvSourceHandle, filteredMat.nativeObj);
             }
         });
         this.cvThread.setDaemon(true);
@@ -134,6 +140,14 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
         //Using thoose use linear interpolation to estimate what our RPM (set.getValue()) should be
         return (closeVelMore.getValue() + closeVelLess.getValue())/2;
     }
+    public static double calculateDistanceToTargetMeters(
+            double cameraHeightMeters,
+            double targetHeightMeters,
+            double cameraPitchRadians,
+            double targetPitchRadians) {
+        return (targetHeightMeters - cameraHeightMeters)
+                / Math.tan(cameraPitchRadians + targetPitchRadians);
+        }
 
     @Override
     public void onDispose() {

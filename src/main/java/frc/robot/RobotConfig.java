@@ -31,11 +31,12 @@ public final class RobotConfig extends AutoConfigurable {
 
     public static class Shooter {
         public static class VisionSettings{
-            public final static double HubHeightMeters = 2.64;  //From floor to reflective tape PLEASE CHANGE
+            public final static double HubHeightMeters = 2.6416;  //From floor to reflective tape PLEASE CHANGE
             public final static double GoalHeightMeters = 1.67;
             public final static double CameraPitchRadians = 0;
-            public static double maxHoodAngle = (90-21) * Math.PI/180;
-            public static double minHoodAngle = (90-3.40) * Math.PI/180;
+            public final static double CAMERA_HEIGHT_METERS = 2.6416; //CHANGE 8ft 8 ini
+            public static double maxHoodAngle = Math.PI/2 - 0.421457568467;
+            public static double minHoodAngle =Math.PI/2- 0.293989368339;
             public static double ShooterHieghtMeters = 1;
             public static double ballRadiusMeters = 0.1;
             /*5676 rpm
@@ -48,7 +49,17 @@ public final class RobotConfig extends AutoConfigurable {
             public static double minVel  = 0;
 
             public static double g = 9.81;
-            public static HashMap<Double, Double> frictionLookUpMap = new HashMap<Double, Double>();
+            public static HashMap<Double, Double> frictionLookUpMap = new HashMap<Double, Double>() {{
+                put(0.860806, 2400.0);
+                put(2.994406, 2600.0);
+                put(3.604006, 2600.0);
+            }}; // distance, velocity 
+
+            public static String TARGETING_CAMERA_URL = "mjpeg://wpilib1.local:1181";
+            public static Scalar MIN_HSV_RANGE = new Scalar(0, 0, 0);
+            public static Scalar MAX_HSV_RANGE = new Scalar(255, 255, 255);
+            public static double HORIZONTAL_FOV = 135;
+            public static double VERTICAL_FOV = 135;
         }
         public static List<ShooterSetting> RPMS = new ArrayList<>() { {
             add(new ShooterSetting("Close Low", 1100.0, true, true));
@@ -191,11 +202,5 @@ public final class RobotConfig extends AutoConfigurable {
         }
     }
 
-    public static class ComputerVision {
-        public static String TARGETING_CAMERA_URL = "mjpeg://wpilib1.local:1181";
-        public static Scalar MIN_HSV_RANGE = new Scalar(0, 0, 0);
-        public static Scalar MAX_HSV_RANGE = new Scalar(255, 255, 255);
-        public static double HORIZONTAL_FOV = 135;
-        public static double VERTICAL_FOV = 135;
-    }
+
 }

@@ -33,9 +33,9 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
 
     public void onInitialize() {
         this.leftLeader.setNeutralMode(NeutralMode.Brake);
-        this.leftFollower.setNeutralMode(NeutralMode.Brake);
+        this.leftFollower.setNeutralMode(NeutralMode.Coast);
         this.rightLeader.setNeutralMode(NeutralMode.Brake);
-        this.rightFollower.setNeutralMode(NeutralMode.Brake);
+        this.rightFollower.setNeutralMode(NeutralMode.Coast);
         // this.leftLeader.setNeutralMode(NeutralMode.Coast);
         // this.leftFollower.setNeutralMode(NeutralMode.Coast);
         // this.rightLeader.setNeutralMode(NeutralMode.Coast);
