@@ -4,15 +4,16 @@ import java.util.Map;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Size;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import edu.wpi.first.cscore.CameraServerCvJNI;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.cscore.VideoMode;
+import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import frc.robot.RobotConfig;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
@@ -25,7 +26,9 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
     HttpCamera targetingCamera;
     CvSink targetingCameraSink;
 
-    int cvSourceHandle;
+    //int cvSourceHandle;
+    CvSource source;
+    MjpegServer server;
 
     public static class TargetingCameraProperties {
         public static double Pitch = 0;
@@ -34,42 +37,42 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
 
     @Override
     public void onInitialize() {
-        
-        InitializeHashMap();
         this.targetingCamera = new HttpCamera("Targeting Camera", RobotConfig.Shooter.VisionSettings.TARGETING_CAMERA_URL);
         this.targetingCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
-
+        
         this.targetingCameraSink = new CvSink("Targeting Camera CV");
         this.targetingCameraSink.setSource(this.targetingCamera);
 
-        this.cvSourceHandle = CameraServerCvJNI.createCvSource("CV Stream", VideoMode.PixelFormat.kBGR.getValue(), 160, 120, 30);
+        this.source = CameraServer.putVideo("CV Stream", 160, 120);
         
         this.cvThread = new Thread(() -> {
             Mat inMat = new Mat();
             Mat hsvMat = new Mat();
             Mat filteredMat = new Mat();
-            //List<MatOfPoint> targetPoints = new ArrayList<>();
-            //Mat heirarchicalMat = new Mat();
-            MatOfPoint2f targetPoints;
-            RotatedRect targetRect;
+            Rect targetRect;
+            Point rectCenter;
 
             while (!Thread.interrupted()) {
                 long frameTime = this.targetingCameraSink.grabFrame(inMat);
-                if (frameTime == 0) continue;
+                if (frameTime == 0) {
+                    this.source.notifyError(this.targetingCameraSink.getError());
+                    continue;
+                }
                 
                 Imgproc.cvtColor(inMat, hsvMat, Imgproc.COLOR_BGR2HSV);
 
                 Core.inRange(hsvMat, RobotConfig.Shooter.VisionSettings.MIN_HSV_RANGE, RobotConfig.Shooter.VisionSettings.MAX_HSV_RANGE, filteredMat);
                 
-                //Imgproc.findContours(filteredMat, targetPoints, heirarchicalMat, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);
-                targetPoints = new MatOfPoint2f(filteredMat);
-                targetRect = Imgproc.minAreaRect(targetPoints);
+                targetRect = Imgproc.boundingRect(filteredMat);
+                rectCenter = new Point((targetRect.x + targetRect.width / 2), (targetRect.y + targetRect.height / 2));
 
-                TargetingCameraProperties.Yaw = Math.toRadians(targetRect.center.x * RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV - (RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV / 2));
-                TargetingCameraProperties.Pitch = Math.toRadians(targetRect.center.y * RobotConfig.Shooter.VisionSettings.VERTICAL_FOV - (RobotConfig.Shooter.VisionSettings.VERTICAL_FOV / 2));
-            
-                CameraServerCvJNI.putSourceFrame(this.cvSourceHandle, filteredMat.nativeObj);
-                //System.out.println("Running");
+                TargetingCameraProperties.Yaw = Math.toRadians((rectCenter.x / filteredMat.width()) * RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV - (RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV / 2));
+                TargetingCameraProperties.Pitch = Math.toRadians((rectCenter.y / filteredMat.height()) * RobotConfig.Shooter.VisionSettings.VERTICAL_FOV - (RobotConfig.Shooter.VisionSettings.VERTICAL_FOV / 2));
+                
+                Imgproc.drawMarker(filteredMat, rectCenter, new Scalar(0, 255, 255));
+                Imgproc.rectangle(filteredMat, targetRect, new Scalar(0, 255, 255));
+
+                this.source.putFrame(filteredMat);
             }
         });
         this.cvThread.setDaemon(true);

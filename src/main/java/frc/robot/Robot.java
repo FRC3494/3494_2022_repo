@@ -19,6 +19,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision.ComputerVision;
 import frc.robot.utilities.AutoConfigurable;
 import frc.robot.utilities.wpilibdi.DiOpMode;
 import frc.robot.utilities.wpilibdi.DiRobot;
@@ -28,7 +29,7 @@ public class Robot extends DiRobot {
 
     @Override
     public void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        AutoConfigurable.DontGrabFrom.enableConfiguration = false; // disable for comp
+        AutoConfigurable.DontGrabFrom.enableConfiguration = true; // disable for comp
         this.Container.bind(RobotConfig.class).asSingle();
         this.Container.bind(OI.class).asSingle();
 
@@ -44,7 +45,7 @@ public class Robot extends DiRobot {
         this.Container.bindSubsystem(Pneumatics.class);
         this.Container.bindSubsystem(NavX.class);
         this.Container.bindSubsystem(AutoNav.class);
-        //this.Container.bindSubsystem(ComputerVision.class);
+        this.Container.bindSubsystem(ComputerVision.class);
         //this.Container.bind(CameraServerSubsystem.class).asSingle();
 
         this.Container.bindSubsystem(Drivetrain.class);

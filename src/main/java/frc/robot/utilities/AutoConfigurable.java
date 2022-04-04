@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.opencv.core.Scalar;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -78,7 +80,16 @@ public class AutoConfigurable implements ITickable, IInitializable {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else if (classField.getType().isAssignableFrom(Scalar.class)){
+                    try{
+                        DontGrabFrom.shuffleBoardElements.get(fullName + "[0]").setNumber((Number) ((Scalar) classField.get(this)).val[0]);
+                        DontGrabFrom.shuffleBoardElements.get(fullName + "[1]").setNumber((Number) ((Scalar) classField.get(this)).val[1]);
+                        DontGrabFrom.shuffleBoardElements.get(fullName + "[2]").setNumber((Number) ((Scalar) classField.get(this)).val[2]);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
+                
             }
 
             return;
@@ -117,6 +128,14 @@ public class AutoConfigurable implements ITickable, IInitializable {
                 try {
                     classField.set(this, DontGrabFrom.shuffleBoardElements.get(fullName).getString((String) classField.get(this)));
                 } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (classField.getType().isAssignableFrom(Scalar.class)){
+                try{
+                    ((Scalar) classField.get(this)).val[0] = (double) DontGrabFrom.shuffleBoardElements.get(fullName + "[0]").getNumber((Number) ((Scalar) classField.get(this)).val[0]);
+                    ((Scalar) classField.get(this)).val[1] = (double) DontGrabFrom.shuffleBoardElements.get(fullName + "[1]").getNumber((Number) ((Scalar) classField.get(this)).val[1]);
+                    ((Scalar) classField.get(this)).val[2] = (double) DontGrabFrom.shuffleBoardElements.get(fullName + "[2]").getNumber((Number) ((Scalar) classField.get(this)).val[2]);
+                } catch (Exception e){
                     e.printStackTrace();
                 }
             }
@@ -169,7 +188,27 @@ public class AutoConfigurable implements ITickable, IInitializable {
                                 .withWidget(BuiltInWidgets.kTextView)
                                 .withSize(2, 1)
                                 .getEntry());
-            } else {
+            } else if (fieldToInit.getType().isAssignableFrom(Scalar.class)) {
+                DontGrabFrom.shuffleBoardElements.put(fullName + "[0]",
+                        Shuffleboard.getTab("Configuration")
+                                .addPersistent(fullName + "[0]", ((Scalar) fieldToInit.get(this)).val[0])
+                                .withWidget(BuiltInWidgets.kTextView)
+                                .withSize(2, 1)
+                                .getEntry());
+                DontGrabFrom.shuffleBoardElements.put(fullName + "[1]",
+                        Shuffleboard.getTab("Configuration")
+                                .addPersistent(fullName + "[1]", ((Scalar) fieldToInit.get(this)).val[1])
+                                .withWidget(BuiltInWidgets.kTextView)
+                                .withSize(2, 1)
+                                .getEntry());
+                DontGrabFrom.shuffleBoardElements.put(fullName + "[2]",
+                        Shuffleboard.getTab("Configuration")
+                                .addPersistent(fullName + "[2]", ((Scalar) fieldToInit.get(this)).val[2])
+                                .withWidget(BuiltInWidgets.kTextView)
+                                .withSize(2, 1)
+                                .getEntry());
+            }
+            else {
                 System.out.println("The variable:" + fullName + " is of type (" + fieldToInit.getType() + ") which the current auto config shuffle baord code cannot process, curent avalible types are int, double, float, and boolean.");
             }
         } catch (Exception e) {

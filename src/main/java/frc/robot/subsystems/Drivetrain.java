@@ -12,9 +12,10 @@ import frc.robot.RobotMap;
 import frc.robot.utilities.di.DiContainer.Inject;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
+import frc.robot.utilities.di.DiInterfaces.ITickable;
 import frc.robot.utilities.wpilibdi.DiSubsystem;
 
-public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable {
+public class Drivetrain extends DiSubsystem implements IInitializable, IDisposable, ITickable {
     private WPI_TalonFX leftLeader = new WPI_TalonFX(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);
     private WPI_TalonFX leftFollower = new WPI_TalonFX(RobotMap.Drivetrain.LEFT_FOLLOWER_CHANNEL);
 
@@ -33,9 +34,9 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
 
     public void onInitialize() {
         this.leftLeader.setNeutralMode(NeutralMode.Brake);
-        this.leftFollower.setNeutralMode(NeutralMode.Coast);
+        this.leftFollower.setNeutralMode(NeutralMode.Brake);
         this.rightLeader.setNeutralMode(NeutralMode.Brake);
-        this.rightFollower.setNeutralMode(NeutralMode.Coast);
+        this.rightFollower.setNeutralMode(NeutralMode.Brake);
         // this.leftLeader.setNeutralMode(NeutralMode.Coast);
         // this.leftFollower.setNeutralMode(NeutralMode.Coast);
         // this.rightLeader.setNeutralMode(NeutralMode.Coast);
@@ -55,13 +56,13 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
     }
 
     public void tankDrive(double leftPower, double rightPower) {
+        
+        this.speedsAfterTipCorrection = this.correctForPitch(leftPower, rightPower);
+        this.leftLeader.set(ControlMode.PercentOutput, this.speedsAfterTipCorrection[0]);
+        this.rightLeader.set(ControlMode.PercentOutput, this.speedsAfterTipCorrection[1]);
 
-        //this.speedsAfterTipCorrection = this.correctForPitch(leftPower, rightPower);
-        //this.leftLeader.set(ControlMode.PercentOutput, this.speedsAfterTipCorrection[0]);
-        //this.rightLeader.set(ControlMode.PercentOutput, this.speedsAfterTipCorrection[1]);
-
-        this.leftLeader.set(ControlMode.PercentOutput, leftPower);
-        this.rightLeader.set(ControlMode.PercentOutput, rightPower);
+        //this.leftLeader.set(ControlMode.PercentOutput, leftPower);
+        //this.rightLeader.set(ControlMode.PercentOutput, rightPower);
     }
 
     public void arcadeDrive(double forwardPower, double turnPower) {
@@ -77,7 +78,7 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
         if (Math.abs(navX.getPitch()) < 45 && Math.abs(navX.getPitch()) > RobotConfig.Drivetrain.PITCH_THRESHOLD_DEGREES) {
             //correctionFactor keeps the tilt correction within a certain threshold so it doesn't correct too much
 
-            double correctionOffset = RobotConfig.Drivetrain.CORRECTION_FACTOR * (navX.getPitch() - RobotConfig.Drivetrain.PITCH_THRESHOLD_DEGREES);
+            double correctionOffset = RobotConfig.Drivetrain.CORRECTION_FACTOR * (((navX.getPitch() < 0) ? -Math.pow(-navX.getPitch(), 1.1) : Math.pow(navX.getPitch(), 1.1)) - RobotConfig.Drivetrain.PITCH_THRESHOLD_DEGREES);
             //double correctionOffset = this.pitchDegrees / 10;
             if (Math.abs(navX.getPitch()) < RobotConfig.Drivetrain.PITCH_ALARM_THRESHOLD) {
                 correctedInputs[0] += correctionOffset;
@@ -136,5 +137,11 @@ public class Drivetrain extends DiSubsystem implements IInitializable, IDisposab
 
     public void onDispose() {
         this.tankDrive(0, 0);
+    }
+
+    @Override
+    public void onTick() {
+        //System.out.println(navX.getPitch());
+        
     }
 }

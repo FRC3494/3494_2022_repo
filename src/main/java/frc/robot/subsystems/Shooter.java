@@ -23,8 +23,6 @@ import frc.robot.RobotMap;
 import frc.robot.sensors.Linebreaker;
 import frc.robot.subsystems.Vision.ComputerVision;
 import frc.robot.subsystems.Vision.Coordinates;
-import frc.robot.subsystems.Vision.Line;
-import frc.robot.subsystems.Vision.PointV;
 import frc.robot.utilities.ShooterSetting;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
@@ -63,16 +61,8 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     double rotationSpeed;
     double range;
-    private double closestDistance = -2;
     List<Coordinates> coords = new ArrayList<Coordinates>();
 
-    private PointV point1;
-    private PointV point2;
-    private PointV point3;
-    private Line line1;
-    private Line line2;
-    private Line line1Perpendicular;
-    private Line line2Perpendicular;
 
     public void onInitialize() {
         //this.shooterMotor.setIdleMode(IdleMode.kBrake);
