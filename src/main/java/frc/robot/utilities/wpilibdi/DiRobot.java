@@ -19,6 +19,8 @@ public abstract class DiRobot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        DriverStation.silenceJoystickConnectionWarning(true);
+
         try {
             this.Install();
             

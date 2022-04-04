@@ -9,7 +9,6 @@ import frc.robot.OI;
 import frc.robot.RobotConfig;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.AutoNav;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -25,9 +24,6 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
 
     @Inject
     Drivetrain drivetrain;
-
-    @Inject
-    AutoNav autoNav;
 
     @Inject
     Intake intake;
@@ -56,8 +52,10 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
     boolean waitForShooterReady = false;
 
     public void onInitialize() {
-        autoClimbTimer.reset();
-        climbRampTimer.start();
+        this.autoClimbTimer.reset();
+        this.climbRampTimer.start();
+        
+        this.drivetrain.stopAutoNav();
 
         this.shooter.enableTurret(true);
         this.shooter.runTurret(RobotConfig.Shooter.TURRET_FRONT_POSITION);

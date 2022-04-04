@@ -21,7 +21,7 @@ public class NavX extends DiSubsystem implements IInitializable {
     }
 
     public double getPitch() {
-        System.out.println(-this.ahrs.getRoll() + this.pitchOffset);
+        //System.out.println(-this.ahrs.getRoll() + this.pitchOffset);
         return -this.ahrs.getRoll() + this.pitchOffset;
     }
 
