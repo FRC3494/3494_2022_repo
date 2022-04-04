@@ -13,7 +13,6 @@ public class ShootCloseLowThenDrive extends AutoOpMode {
     @Override
     public void sequence() {
         this.Sequencer.queue(new ShootTask(RobotConfig.Shooter.RPMS.get(0)));
-        this.Sequencer.queue(new WaitTask(1000));
         this.Sequencer.queue(new ShootBallTask());
         this.Sequencer.queue(new WaitTask(100));
         this.Sequencer.queue(new ShootTask(ShooterSetting.Off));

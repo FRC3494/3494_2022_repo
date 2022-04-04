@@ -14,6 +14,14 @@ public final class RobotConfig extends AutoConfigurable {
         public static double FORWARD_SENSITIVITY = 0.65; //0.5
         public static double TURN_SENSITIVITY = 0.75; //0.5
 
+        public static double GEAR_RATIO = 0.1; //(12 / 60) * (16 / 32); // wheel rev / motor rev
+        public static double WHEEL_DIAMETER = 6 / 39.37; // m (converted from in) //FIND THIS
+        public static double TRACK_WIDTH = 24.62 / 39.37; // m (converted from in)
+        public static double RAMSETE_B = 1.0;
+        public static double RAMSETE_ZETA = 0.5;
+        public static double RAMSETE_LINEAR_VELOCITY = 5.09016 / 3; // max speed / 3
+        public static double RAMSETE_ANGULAR_VELOCITY = 90;
+
         public static double SLEW_RATE = 1.25;
 
         public static double PITCH_THRESHOLD_DEGREES = 5;
@@ -25,6 +33,13 @@ public final class RobotConfig extends AutoConfigurable {
             if (x < -1) return -1;
 
             return Math.pow(x, 3);
+        }
+
+        public static class PIDF {
+            public static float P = 0.1f;
+            public static float I = 0.0f;
+            public static float D = 1.0f;
+            public static float FF = 0.0f;
         }
     }
 
