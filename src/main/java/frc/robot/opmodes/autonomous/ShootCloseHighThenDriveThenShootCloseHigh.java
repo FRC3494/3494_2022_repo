@@ -1,6 +1,7 @@
 package frc.robot.opmodes.autonomous;
 
 import frc.robot.RobotConfig;
+import frc.robot.commands.autonomous.AsyncShootTask;
 import frc.robot.commands.autonomous.IntakeTask;
 import frc.robot.commands.autonomous.MovementTask;
 import frc.robot.commands.autonomous.ShootBallTask;
@@ -12,8 +13,7 @@ import frc.robot.utilities.ShooterSetting;
 public class ShootCloseHighThenDriveThenShootCloseHigh extends AutoOpMode {
     @Override
     public void sequence() {
-        this.Sequencer.queue(new ShootTask(RobotConfig.Shooter.RPMS.get(1)));
-        this.Sequencer.queue(new WaitTask(1000));
+        this.Sequencer.queue(new AsyncShootTask(RobotConfig.Shooter.RPMS.get(1)));
         this.Sequencer.queue(new ShootBallTask());
         this.Sequencer.queue(new IntakeTask(0, RobotConfig.Magazine.INTAKE_SPEED));
         this.Sequencer.queue(new WaitTask(500));
