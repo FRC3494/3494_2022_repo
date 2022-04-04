@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.opencv.core.Scalar;
@@ -11,8 +12,8 @@ import frc.robot.utilities.ShooterSetting;
 
 public final class RobotConfig extends AutoConfigurable {
     public static class Drivetrain {
-        public static double FORWARD_SENSITIVITY = 0.65; //0.5
-        public static double TURN_SENSITIVITY = 0.75; //0.5
+        public static double FORWARD_SENSITIVITY = 1; //0.65
+        public static double TURN_SENSITIVITY = 1; //0.75
 
         public static double GEAR_RATIO = 0.1; //(12 / 60) * (16 / 32); // wheel rev / motor rev
         public static double WHEEL_DIAMETER = 6 / 39.37; // m (converted from in) //FIND THIS
@@ -24,9 +25,9 @@ public final class RobotConfig extends AutoConfigurable {
 
         public static double SLEW_RATE = 1.25;
 
-        public static double PITCH_THRESHOLD_DEGREES = 5;
-        public static double PITCH_ALARM_THRESHOLD = 10;
-        public static double CORRECTION_FACTOR = (0.35 - 0) / (60 - PITCH_THRESHOLD_DEGREES);
+        public static double PITCH_THRESHOLD_DEGREES = 0;
+        public static double PITCH_ALARM_THRESHOLD = 30;
+        public static double CORRECTION_FACTOR = (1.40 - 0) / (45 - PITCH_THRESHOLD_DEGREES);
 
         public static double PowerCurve(double x) {
             if (x > 1) return 1;
@@ -44,6 +45,37 @@ public final class RobotConfig extends AutoConfigurable {
     }
 
     public static class Shooter {
+        public static class VisionSettings{
+            public static double HubHeightMeters = 2.6416;  //From floor to reflective tape PLEASE CHANGE
+            public static double GoalHeightMeters = 1.67;
+            public static double CameraPitchRadians = 0;
+            public static double CAMERA_HEIGHT_METERS = 2.6416; //CHANGE 8ft 8 ini
+            public static double maxHoodAngle = Math.PI/2 - 0.421457568467;
+            public static double minHoodAngle =Math.PI/2- 0.293989368339;
+            public static double ShooterHieghtMeters = 1;
+            public static double ballRadiusMeters = 0.1;
+            /*5676 rpm
+            diameter 4in, 
+            radius, 0.0508 meters
+            circumfrence = 2*pi*0.0508 = 0.1016pi
+            meters per minuete = 5676*0.1016*pi
+            meters per second = 5676*0.1016*pi/60 = 30.19*/
+            public static double maxVel = 30;
+            public static double minVel  = 0;
+
+            public static double g = 9.81;
+            public static HashMap<Double, Double> frictionLookUpMap = new HashMap<Double, Double>() {{
+                put(0.860806, 2400.0);
+                put(2.994406, 2600.0);
+                put(3.604006, 2600.0);
+            }}; // distance, velocity 
+
+            public static String TARGETING_CAMERA_URL = "http://wpilibpi-shooter.local:1181/stream.mjpg";
+            public static Scalar MIN_HSV_RANGE = new Scalar(44, 50, 50);
+            public static Scalar MAX_HSV_RANGE = new Scalar(117, 255, 255);
+            public static double HORIZONTAL_FOV = 1.39626;
+            public static double VERTICAL_FOV = 0.698132;
+        }
         public static List<ShooterSetting> RPMS = new ArrayList<>() { {
             add(new ShooterSetting("Close Low", 1100.0, true, true));
             add(new ShooterSetting("Close High", 2400.0, false, false));
@@ -185,11 +217,5 @@ public final class RobotConfig extends AutoConfigurable {
         }
     }
 
-    public static class ComputerVision {
-        public static String TARGETING_CAMERA_URL = "mjpeg://wpilib1.local:1181";
-        public static Scalar MIN_HSV_RANGE = new Scalar(0, 0, 0);
-        public static Scalar MAX_HSV_RANGE = new Scalar(255, 255, 255);
-        public static double HORIZONTAL_FOV = 135;
-        public static double VERTICAL_FOV = 135;
-    }
+
 }

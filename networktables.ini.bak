@@ -15,6 +15,7 @@ double "/Shuffleboard/Configuration/Magazine/IDLE_SPEED"=1
 double "/Shuffleboard/Configuration/Magazine/INTAKE_SPEED"=1
 double "/Shuffleboard/Configuration/Magazine/OUTTAKE_SPEED"=1
 double "/Shuffleboard/Configuration/Shooter/Aimbot/CameraHeightMeters"=1
+string "/Shuffleboard/Configuration/Shooter/Aimbot/CameraName"="USB_Camera"
 double "/Shuffleboard/Configuration/Shooter/Aimbot/CameraPitchRadians"=1
 double "/Shuffleboard/Configuration/Shooter/Aimbot/HubHeightMeters"=1
 double "/Shuffleboard/Configuration/Shooter/Aimbot/TurretMotorPort"=1

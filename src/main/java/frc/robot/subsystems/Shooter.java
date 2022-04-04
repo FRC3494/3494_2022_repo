@@ -10,9 +10,8 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonTrackedTarget;
+
+
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -22,9 +21,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotConfig;
 import frc.robot.RobotMap;
 import frc.robot.sensors.Linebreaker;
+import frc.robot.subsystems.Vision.ComputerVision;
 import frc.robot.subsystems.Vision.Coordinates;
-import frc.robot.subsystems.Vision.Line;
-import frc.robot.subsystems.Vision.PointV;
 import frc.robot.utilities.ShooterSetting;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
@@ -36,6 +34,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     private SparkMaxPIDController shooterPidController;
     private RelativeEncoder shooterMotorEncoder;
 
+    private double distanceFromHub;
     ShooterSetting currentSetting = ShooterSetting.Off;
     
     private CANSparkMax turretMotor = new CANSparkMax(RobotMap.Shooter.TURRET_MOTOR_CHANNEL, MotorType.kBrushless);
@@ -52,25 +51,18 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     boolean runRelative = false;
     double relativePower = 0;
 
+    private double aimBotVelocity;
     private DoubleSolenoid hoodSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
 
     private Solenoid ledRing = new Solenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.LIGHTS_CHANNEL);
 
     private boolean aimbotEnabled = false;
 
-    PhotonCamera camera;
+
     double rotationSpeed;
     double range;
-    private double closestDistance = -2;
     List<Coordinates> coords = new ArrayList<Coordinates>();
 
-    private PointV point1;
-    private PointV point2;
-    private PointV point3;
-    private Line line1;
-    private Line line2;
-    private Line line1Perpendicular;
-    private Line line2Perpendicular;
 
     public void onInitialize() {
         //this.shooterMotor.setIdleMode(IdleMode.kBrake);
@@ -182,7 +174,28 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         //ledRing.set(this.turretMotorEncoder.getVelocity() != 0);
 
         if (this.aimbotEnabled) {
-            // aimbot code here
+            ledRing.set(true);
+            distanceFromHub = ComputerVision.calculateDistanceToTargetMeters
+            (RobotConfig.Shooter.VisionSettings.CAMERA_HEIGHT_METERS, 
+            RobotConfig.Shooter.VisionSettings.HubHeightMeters, 
+            RobotConfig.Shooter.VisionSettings.CameraPitchRadians, 
+            ComputerVision.TargetingCameraProperties.Pitch);
+            //the 0.6778625 is half of the diameter of the outer side of the upper hub in meters
+            //this gives us distance to center of the hub 
+            /*System.out.println("Given that the target is at " + ComputerVision.TargetingCameraProperties.Pitch + " in pitch and "
+            + ComputerVision.TargetingCameraProperties.Yaw+ " in yaw, we are "
+            +(distanceFromHub+ 0.6778625)+" meters away from the hub"); */
+
+            //Shouldn't add till tested
+            /*
+            this.aimBotVelocity = ComputerVision.findShooterPower(new PointV(0, distanceFromHub));
+            this.currentSetting.rpm = this.aimBotVelocity*60/(4*Math.PI);
+            this.targetPosition = ComputerVision.TargetingCameraProperties.Yaw;
+
+            */
+            
+            
+            
         }
 
         if (this.currentSetting.rpm == 0) this.shooterMotor.set(0);//this.shooterPidController.setReference(this.targetRPM, ControlType.k);
@@ -238,58 +251,6 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
             this.targetPosition = getTurretRotations();
         }
-    }
-
-    public PointV getCircleCenter(){
-        var result = camera.getLatestResult();
-        if(result.hasTargets()){  
-            List<PhotonTrackedTarget> targets = result.getTargets();
-            
-            if(targets.size() >= 3){
-                for(PhotonTrackedTarget target : targets){
-                    range = PhotonUtils.calculateDistanceToTargetMeters(
-                                    RobotConfig.Shooter.Aimbot.CameraHeightMeters,//CAMERA_HEIGHT_METERS,
-                                    RobotConfig.Shooter.Aimbot.HubHeightMeters,
-                                    RobotConfig.Shooter.Aimbot.CameraPitchRadians,
-                                    target.getPitch());
-                    coords.add(new Coordinates(target.getYaw(), range));
-                } 
-                point1 = coords.get(0).point; // Which three point we take may need to be changed
-                point2 = coords.get(-1).point;
-                point3 = coords.get((int)(coords.size())).point;
-                line1 = new Line(point1, point2);
-                line2 = new Line(point2, point3);
-                line1Perpendicular = new Line(line1.m, line1.midpoint);
-                line2Perpendicular = new Line(line2.m, line2.midpoint);
-                return Line.solve(line1Perpendicular, line2Perpendicular);
-
-            }
-            else{
-                System.out.println("Error in Vision pipeline; does not have enough of the required target points to get an accurate reading. What is currently being returned is the distance from the Camera to the nearest tape + Constant");
-                closestDistance = PhotonUtils.calculateDistanceToTargetMeters(RobotConfig.Shooter.Aimbot.CameraHeightMeters, RobotConfig.Shooter.Aimbot.HubHeightMeters, RobotConfig.Shooter.Aimbot.CameraPitchRadians,targets.get(0).getPitch());
-                for(PhotonTrackedTarget target : targets){
-                    range = PhotonUtils.calculateDistanceToTargetMeters(
-                                    RobotConfig.Shooter.Aimbot.CameraHeightMeters,//CAMERA_HEIGHT_METERS,
-                                    RobotConfig.Shooter.Aimbot.HubHeightMeters,
-                                    RobotConfig.Shooter.Aimbot.CameraPitchRadians,
-                                    target.getPitch());
-                    if(range < closestDistance){
-                        coords.clear();
-                        closestDistance = range;
-                        coords.add(new Coordinates(target.getYaw(), range));
-                    }
-                }
-                return new PointV(coords.get(0).x+RobotConfig.Shooter.Aimbot.hubCenterConstant, coords.get(0).y);
-            }
-            //PhotonUtils.calculateDistanceToTargetMeters(cameraHeightMeters, targetHeightMeters, cameraPitchRadians, targetPitchRadians)
-            
-            
-        }
-        else{
-            System.out.println("Error in Vision Pipeline: cannot find any targets.");
-            return new PointV(0, 0);
-        }
-        
     }
 
     @Override

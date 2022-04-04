@@ -151,7 +151,7 @@ public class Drivetrain extends DiSubsystem implements IInitializable, ITickable
         if (Math.abs(navX.getPitch()) < 45 && Math.abs(navX.getPitch()) > RobotConfig.Drivetrain.PITCH_THRESHOLD_DEGREES) {
             //correctionFactor keeps the tilt correction within a certain threshold so it doesn't correct too much
 
-            double correctionOffset = RobotConfig.Drivetrain.CORRECTION_FACTOR * (navX.getPitch() - RobotConfig.Drivetrain.PITCH_THRESHOLD_DEGREES);
+            double correctionOffset = RobotConfig.Drivetrain.CORRECTION_FACTOR * (((navX.getPitch() < 0) ? -Math.pow(-navX.getPitch(), 1.1) : Math.pow(navX.getPitch(), 1.1)) - RobotConfig.Drivetrain.PITCH_THRESHOLD_DEGREES);
             //double correctionOffset = this.pitchDegrees / 10;
             if (Math.abs(navX.getPitch()) < RobotConfig.Drivetrain.PITCH_ALARM_THRESHOLD) {
                 correctedInputs[0] += correctionOffset;
