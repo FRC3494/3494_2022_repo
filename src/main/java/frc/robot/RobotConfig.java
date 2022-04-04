@@ -71,8 +71,8 @@ public final class RobotConfig extends AutoConfigurable {
             }}; // distance, velocity 
 
             public static String TARGETING_CAMERA_URL = "http://wpilibpi-shooter.local:1181/stream.mjpg";
-            public static Scalar MIN_HSV_RANGE = new Scalar(44, 50, 50);
-            public static Scalar MAX_HSV_RANGE = new Scalar(117, 255, 255);
+            public static Scalar MIN_HSV_RANGE = new Scalar(50, 20, 200);
+            public static Scalar MAX_HSV_RANGE = new Scalar(85, 150, 255);
             public static double HORIZONTAL_FOV = 1.39626;
             public static double VERTICAL_FOV = 0.698132;
         }

@@ -12,17 +12,20 @@ public class ShootBallTask extends AutoTask {
     @Inject
     Shooter shooter;
 
+    long endTime;
+
     public ShootBallTask() {
     }
 
     @Override
     public void begin() {
+        this.endTime = System.currentTimeMillis() + 3000;
         this.magazine.sendBall(shooter.getSetting().feedThrough);
     }
-
+ 
     @Override
     public boolean execute() {
-        return !this.magazine.getSendingBall();
+        return !this.magazine.getSendingBall() || (this.endTime < System.currentTimeMillis());
     }
 
     @Override
