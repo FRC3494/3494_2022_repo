@@ -47,7 +47,6 @@ public class Robot extends DiRobot {
         this.Container.bindSubsystem(Electronics.class);
         this.Container.bindSubsystem(Pneumatics.class);
         this.Container.bindSubsystem(NavX.class);
-        this.Container.bindSubsystem(AutoNav.class);
         this.Container.bindSubsystem(ComputerVision.class);
 
         this.Container.bindSubsystem(Drivetrain.class);
