@@ -16,6 +16,7 @@ import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import frc.robot.RobotConfig;
+import frc.robot.RobotConfig.Shooter.VisionSettings;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
 import frc.robot.utilities.wpilibdi.DiSubsystem;
@@ -33,6 +34,9 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
     public static class TargetingCameraProperties {
         public static double Pitch = 0;
         public static double Yaw = 0;
+
+        public static double x = 0;
+        public static double y = 0;
     }
 
     @Override
@@ -66,9 +70,16 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
                 targetRect = Imgproc.boundingRect(filteredMat);
                 rectCenter = new Point((targetRect.x + targetRect.width / 2), (targetRect.y + targetRect.height / 2));
 
-                TargetingCameraProperties.Yaw = Math.toRadians((rectCenter.x / filteredMat.width()) * RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV - (RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV / 2));
-                TargetingCameraProperties.Pitch = Math.toRadians((rectCenter.y / filteredMat.height()) * RobotConfig.Shooter.VisionSettings.VERTICAL_FOV - (RobotConfig.Shooter.VisionSettings.VERTICAL_FOV / 2));
-                
+                TargetingCameraProperties.Yaw = (rectCenter.x / filteredMat.width()) * RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV - (RobotConfig.Shooter.VisionSettings.HORIZONTAL_FOV / 2);
+                double bottomToTop =1-(rectCenter.y / 120); // center of bounding box from 0 (bottom) to 1 (top)
+                double bottomFOVPitch = RobotConfig.Shooter.VisionSettings.CameraPitchRadians-(RobotConfig.Shooter.VisionSettings.VERTICAL_FOV/2); //pitch of the bottom of the camera image
+                //System.out.println(rectCenter.y +"||"+ RobotConfig.Shooter.VisionSettings.CameraPitchRadians  +"||"+ RobotConfig.Shooter.VisionSettings.VERTICAL_FOV);
+                TargetingCameraProperties.Pitch =bottomToTop*RobotConfig.Shooter.VisionSettings.VERTICAL_FOV + bottomFOVPitch;
+            
+                TargetingCameraProperties.x = rectCenter.x;
+                TargetingCameraProperties.y = rectCenter.y;
+                Imgproc.cvtColor(filteredMat, filteredMat, Imgproc.COLOR_GRAY2BGR);
+
                 Imgproc.drawMarker(filteredMat, rectCenter, new Scalar(0, 255, 255));
                 Imgproc.rectangle(filteredMat, targetRect, new Scalar(0, 255, 255));
 
@@ -106,7 +117,7 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
             System.out.println("When the shooter is at 21 degrees, At a distance of "+distance + " and a velocity of "+velAtLowAngle + " we hit the hub");
         }
         
-        power = getRPMLookUp(velAtHighAngle);
+        power = velAtHighAngle;
         return power;
     }
     public static double getheight(double distance, double angle, double v0){
@@ -146,12 +157,9 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
         return (closeVelMore.getValue() + closeVelLess.getValue())/2;
     }
     public static double calculateDistanceToTargetMeters(
-            double cameraHeightMeters,
-            double targetHeightMeters,
-            double cameraPitchRadians,
+            double targetMetersAboveCamera,
             double targetPitchRadians) {
-        return (targetHeightMeters - cameraHeightMeters)
-                / Math.tan(cameraPitchRadians + targetPitchRadians);
+        return targetMetersAboveCamera/ Math.tan(targetPitchRadians);
         }
 
     @Override

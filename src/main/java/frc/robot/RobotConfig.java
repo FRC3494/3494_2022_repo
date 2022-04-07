@@ -46,12 +46,12 @@ public final class RobotConfig extends AutoConfigurable {
 
     public static class Shooter {
         public static class VisionSettings{
-            public static double HubHeightMeters = 2.6416;  //From floor to reflective tape PLEASE CHANGE
+            public static double HubHeightMeters = 2.6162;  //From floor to reflective tape PLEASE CHANGE
             public static double GoalHeightMeters = 1.67;
-            public static double CameraPitchRadians = 0;
-            public static double CAMERA_HEIGHT_METERS = 2.6416; //CHANGE 8ft 8 ini
-            public static double maxHoodAngle = Math.PI/2 - 0.421457568467;
-            public static double minHoodAngle =Math.PI/2- 0.293989368339;
+            public static double CameraPitchRadians = 50.0/180.0 *Math.PI;
+            public static double CAMERA_HEIGHT_METERS = 0.8318; //CHANGE 8ft 8 ini
+            public static double maxHoodAngle = Math.PI/2 - 0.421457568467; //33.7
+            public static double minHoodAngle =Math.PI/2- 0.293989368339; // 23.5
             public static double ShooterHieghtMeters = 1;
             public static double ballRadiusMeters = 0.1;
             /*5676 rpm
@@ -71,8 +71,8 @@ public final class RobotConfig extends AutoConfigurable {
             }}; // distance, velocity 
 
             public static String TARGETING_CAMERA_URL = "http://wpilibpi-shooter.local:1181/stream.mjpg";
-            public static Scalar MIN_HSV_RANGE = new Scalar(50, 20, 200);
-            public static Scalar MAX_HSV_RANGE = new Scalar(85, 150, 255);
+            public static Scalar MIN_HSV_RANGE = new Scalar(40, 100, 100);
+            public static Scalar MAX_HSV_RANGE = new Scalar(85, 255, 255);
             public static double HORIZONTAL_FOV = 1.39626;
             public static double VERTICAL_FOV = 0.698132;
         }
@@ -87,7 +87,7 @@ public final class RobotConfig extends AutoConfigurable {
 
         public static double SHOOTER_RPM_TOLERANCE = 20;
 
-        public static double TURRET_SPEED = 0.5; //0.7
+        public static double TURRET_SPEED = 0.2; //0.7
 
         public static double TURRET_FRONT_POSITION = -0.1;
         public static double TURRET_BACK_POSITION = -0.6;

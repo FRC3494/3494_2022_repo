@@ -13,6 +13,7 @@ public class OdometryMovement extends AutoTask {
 
     public OdometryMovement(Pose2d position) {
         this.position = position;
+        
     }
 
     @Override

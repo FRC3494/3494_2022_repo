@@ -10,19 +10,22 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
-
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.RobotConfig;
 import frc.robot.RobotMap;
 import frc.robot.sensors.Linebreaker;
 import frc.robot.subsystems.Vision.ComputerVision;
 import frc.robot.subsystems.Vision.Coordinates;
+import frc.robot.subsystems.Vision.PointV;
+import frc.robot.subsystems.Vision.ComputerVision.TargetingCameraProperties;
 import frc.robot.utilities.ShooterSetting;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
@@ -43,6 +46,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     private Linebreaker zeroLinebreak = new Linebreaker(RobotMap.Shooter.ZERO_LINEBREAK_CHANNEL, true);
 
+    private NetworkTableEntry pitchEntrys = null;
     boolean enableTurret = false;
     double targetPosition = 0;
     double zeroPosition = 0;
@@ -55,7 +59,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     private DoubleSolenoid hoodSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
 
     private Solenoid ledRing = new Solenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.LIGHTS_CHANNEL);
-
+    
     private boolean aimbotEnabled = false;
 
 
@@ -65,6 +69,12 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
 
     public void onInitialize() {
+        if (pitchEntrys == null) pitchEntrys = 
+        Shuffleboard.getTab("SmartDashboard")
+        .add("Status", 0.0)
+        .withWidget(BuiltInWidgets.kTextView)
+        .withSize(3, 1)
+        .getEntry();
         //this.shooterMotor.setIdleMode(IdleMode.kBrake);
         this.shooterMotor.setIdleMode(IdleMode.kCoast);
 
@@ -172,27 +182,28 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     public void onTick() {
         //ledRing.set(this.turretMotorEncoder.getVelocity() != 0);
-
+        
         if (this.aimbotEnabled) {
+            
             ledRing.set(true);
+            this.targetPosition += ComputerVision.TargetingCameraProperties.Yaw;
             distanceFromHub = ComputerVision.calculateDistanceToTargetMeters
-            (RobotConfig.Shooter.VisionSettings.CAMERA_HEIGHT_METERS, 
-            RobotConfig.Shooter.VisionSettings.HubHeightMeters, 
-            RobotConfig.Shooter.VisionSettings.CameraPitchRadians, 
+            (RobotConfig.Shooter.VisionSettings.HubHeightMeters-RobotConfig.Shooter.VisionSettings.CAMERA_HEIGHT_METERS,          
             ComputerVision.TargetingCameraProperties.Pitch);
             //the 0.6778625 is half of the diameter of the outer side of the upper hub in meters
             //this gives us distance to center of the hub 
-            System.out.println("Given that the target is at " + ComputerVision.TargetingCameraProperties.Pitch + " in pitch and "
-            + ComputerVision.TargetingCameraProperties.Yaw+ " in yaw, we are "
-            +(distanceFromHub+ 0.6778625)+" meters away from the hub"); 
+            /*System.out.println("x:" + ComputerVision.TargetingCameraProperties.x + "|| y:" +ComputerVision.TargetingCameraProperties.y);*/
+            this.aimBotVelocity = ComputerVision.findShooterPower(new PointV(0, distanceFromHub));
+            System.out.println((distanceFromHub)+"||"+this.aimBotVelocity); 
+            pitchEntrys.setDouble(distanceFromHub);
 
             //Shouldn't add till tested
-            /*
-            this.aimBotVelocity = ComputerVision.findShooterPower(new PointV(0, distanceFromHub));
-            this.currentSetting.rpm = this.aimBotVelocity*60/(4*Math.PI);
+            
+            this.hoodSolenoid.set(Value.kForward);
+            //this.currentSetting.rpm = this.aimBotVelocity*60/(0.1016*Math.PI);
             this.targetPosition = ComputerVision.TargetingCameraProperties.Yaw;
 
-            */
+            
             
             
             
