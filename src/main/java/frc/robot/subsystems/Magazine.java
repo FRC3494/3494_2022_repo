@@ -154,24 +154,40 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
     Timer sendBallTimer = new Timer();
 
     private void sendBallMagazine() {
-        double horizontalSpeed = runThrough ? RobotConfig.Magazine.LAUNCH_SPEED : 0;
+        if (runThrough) {
+            this.runRaw(RobotConfig.Magazine.LAUNCH_SPEED, RobotConfig.Magazine.LAUNCH_SPEED, RobotConfig.Magazine.LAUNCH_SPEED);
 
-        if (!this.startedSendTimer) this.runRaw(0, 0, RobotConfig.Magazine.LAUNCH_SPEED);
-        else this.runRaw(horizontalSpeed, horizontalSpeed, RobotConfig.Magazine.LAUNCH_SPEED);
-
-        if (!this.treeStemLinebreak.Broken() && !this.startedSendTimer) {
-            this.sendBallTimer.start();
-            this.startedSendTimer = true;
-        }
-        
-        if (this.sendBallTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_TO_SEND_BALL)) {
-            this.runRaw(0, 0, 0);
-            this.sendBall = false;
-            this.reloadingVertical = true;
-            this.sendBallTimer.stop();
-            this.sendBallTimer.reset();
-            this.startedSendTimer = false;
-            this.runThrough = false;
+            if (!this.startedSendTimer) {
+                this.sendBallTimer.start();
+                this.startedSendTimer = true;
+            }
+            
+            if (this.sendBallTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_TO_RUN_THROUGH_BALLS)) {
+                this.runRaw(0, 0, 0);
+                this.sendBall = false;
+                this.reloadingVertical = true;
+                this.sendBallTimer.stop();
+                this.sendBallTimer.reset();
+                this.startedSendTimer = false;
+                this.runThrough = false;
+            }
+        } else {
+            this.runRaw(0, 0, RobotConfig.Magazine.LAUNCH_SPEED);
+    
+            if (!this.treeStemLinebreak.Broken() && !this.startedSendTimer) {
+                this.sendBallTimer.start();
+                this.startedSendTimer = true;
+            }
+            
+            if (this.sendBallTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_TO_SEND_BALL)) {
+                this.runRaw(0, 0, 0);
+                this.sendBall = false;
+                this.reloadingVertical = true;
+                this.sendBallTimer.stop();
+                this.sendBallTimer.reset();
+                this.startedSendTimer = false;
+                this.runThrough = false;
+            }
         }
     }
     public boolean getSendingBall() {

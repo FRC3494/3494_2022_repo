@@ -157,7 +157,7 @@ public class OI implements ITickable {
     }
 
     public int SetShooterSetting() {
-        if (this.secondaryXbox.getYButton()) return 3;
+        if (this.secondaryXbox.getYButton()) return 4;
         if (this.secondaryXbox.getXButton()) return 2;
         if (this.secondaryXbox.getAButton()) return 1;
         if (this.secondaryXbox.getBButton()) return 0;
