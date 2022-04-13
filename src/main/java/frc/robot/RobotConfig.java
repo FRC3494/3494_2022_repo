@@ -64,10 +64,12 @@ public final class RobotConfig extends AutoConfigurable {
             public static double minVel  = 0;
 
             public static double g = 9.81;
-            public static HashMap<Double, Double> frictionLookUpMap = new HashMap<Double, Double>() {{
-                put(0.860806, 2400.0);
-                put(2.994406, 2600.0);
-                put(3.604006, 2600.0);
+            public static HashMap<Double, Double> velLookUpMap = new HashMap<Double, Double>() {{
+                put(0.1, 2400.0);
+                put(1.2954, 2600.0);
+                
+                put(2.159, 2800.0);//Middle is 51 inches
+                put(3.604006, 2600.0); //Far is 85 inches
             }}; // distance, velocity 
 
             public static String TARGETING_CAMERA_URL = "http://wpilibpi-shooter.local:1181/stream.mjpg";
@@ -88,10 +90,10 @@ public final class RobotConfig extends AutoConfigurable {
 
         public static double SHOOTER_RPM_TOLERANCE = 20;
 
-        public static double TURRET_SPEED = 0.2; //0.7
+        public static double TURRET_SPEED = 0.5; //0.7
 
-        public static double TURRET_FRONT_POSITION = -0.1;
-        public static double TURRET_BACK_POSITION = -0.6;
+        public static double TURRET_FRONT_POSITION = -0.08;
+        public static double TURRET_BACK_POSITION = -0.58;
 
         public static double FORWARD_SOFT_LIMIT = 0;
         public static double REVERSE_SOFT_LIMIT = -0.689;
@@ -110,6 +112,7 @@ public final class RobotConfig extends AutoConfigurable {
             public static int TurretMotorPort = 2;
             public static double maxHoodAngle = 24;
             public static double minHoodAngle = 5;
+            public static double turretError = 0.05;
         }
 
         public static class ShooterPIDF { //Tu= 0.242
@@ -142,7 +145,7 @@ public final class RobotConfig extends AutoConfigurable {
     }
 
     public static class Intake {
-        public static double INTAKE_SPEED = 0.8;
+        public static double INTAKE_SPEED = 0.4;
 
         public static double PowerCurve(double x) {
             if (x > 1) return 1;
@@ -166,7 +169,7 @@ public final class RobotConfig extends AutoConfigurable {
         public static double SECONDS_RELOAD_RUN_UP = 0.02;
         public static double SECONDS_RELOAD_RUN_DOWN = 0.20;
 
-        public static int NUMBER_OF_LEDS = 55;
+        public static int NUMBER_OF_LEDS = 98;
 
         public static AddressableLEDBuffer zeroPattern(AddressableLEDBuffer in) {
             for (int i = 0; i < in.getLength(); i++) {
