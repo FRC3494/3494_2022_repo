@@ -5,7 +5,6 @@ public class ShooterSetting {
     public double rpm;
     public boolean hood;
     public boolean feedThrough;
-
     public static ShooterSetting Off = new ShooterSetting("Off", 0, false, false);
 
     public ShooterSetting(String name, double rpm, boolean hood, boolean feedThrough) {
@@ -13,5 +12,6 @@ public class ShooterSetting {
         this.rpm = rpm;
         this.hood = hood;
         this.feedThrough = feedThrough;
+
     }
 }

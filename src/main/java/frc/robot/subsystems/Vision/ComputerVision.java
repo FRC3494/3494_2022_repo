@@ -89,35 +89,10 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
         this.cvThread.setDaemon(true);
         this.cvThread.start();
     }
-    public static void InitializeHashMap(){
-        RobotConfig.Shooter.VisionSettings.frictionLookUpMap.put(0.0, 0.0);
-        RobotConfig.Shooter.VisionSettings.frictionLookUpMap.put(20.0, 4000.5);
-        RobotConfig.Shooter.VisionSettings.frictionLookUpMap.put(10.0, 2000.0);
-
-
-    }
-    public static double findShooterPower(PointV hubCenter){
-        double power;
-        double distance = Math.sqrt(Math.pow(hubCenter.x, 2) + Math.pow(hubCenter.y, 2));
-        //Compute possible shots and find viable shots
-        double velAtLowAngle = getVel(distance, RobotConfig.Shooter.VisionSettings.maxHoodAngle, RobotConfig.Shooter.VisionSettings.HubHeightMeters);
-        double velAtHighAngle = getVel(distance, RobotConfig.Shooter.VisionSettings.minHoodAngle, RobotConfig.Shooter.VisionSettings.HubHeightMeters);
-        //double velAtHighAngle = getVel(distance, RobotConfig.Shooter.VisionSettings.minHoodAngle, RobotConfig.Shooter.VisionSettings.HubHeightMeters);
-
-        double heightAtHubEdgeLowAngle = getheight(distance-0.61, RobotConfig.Shooter.VisionSettings.maxHoodAngle, velAtLowAngle);
-        double heightAtHubEdgeHighAngle = getheight(distance-0.61, RobotConfig.Shooter.VisionSettings.minHoodAngle, velAtHighAngle);
-        //double heightAtHubEdgeHighAngle = getheight(distance-0.61, RobotConfig.Shooter.VisionSettings.minHoodAngle, velAtHighAngle);
-        
-        if (heightAtHubEdgeHighAngle > RobotConfig.Shooter.VisionSettings.HubHeightMeters + RobotConfig.Shooter.VisionSettings.ballRadiusMeters){ //(heightAtHubEdgeLowAngle > RobotConfig.Shooter.VisionSettings.HubHeightMeters + RobotConfig.Shooter.VisionSettings.ballRadiusMeters){
-            //System.out.println(RobotConfig.Shooter.VisionSettings.minHoodAngle);
-           
-            System.out.println("When the shooter is at"+RobotConfig.Shooter.VisionSettings.minHoodAngle+ "degrees, At a distance of "+distance + " and a velocity of "+velAtHighAngle + " we hit the hub" + heightAtHubEdgeHighAngle);
-        }
-        if (heightAtHubEdgeLowAngle > RobotConfig.Shooter.VisionSettings.HubHeightMeters + RobotConfig.Shooter.VisionSettings.ballRadiusMeters){ //(heightAtHubEdgeLowAngle > RobotConfig.Shooter.VisionSettings.HubHeightMeters + RobotConfig.Shooter.VisionSettings.ballRadiusMeters){
-            System.out.println("When the shooter is at 21 degrees, At a distance of "+distance + " and a velocity of "+velAtLowAngle + " we hit the hub");
-        }
-        
-        power = velAtHighAngle;
+    
+    public static double findShooterPower(double distance){
+        double power = 0.0;
+        power = getRPMLookUp(distance);
         return power;
     }
     public static double getheight(double distance, double angle, double v0){
@@ -129,32 +104,26 @@ public class ComputerVision extends DiSubsystem implements IInitializable, IDisp
     public static double getRPMEquation(double ballVelocity){
         return Math.pow(ballVelocity, 2) + 6*ballVelocity + 4;
     }
-    public static double getRPMLookUp(double ballVelocity){
+    public static double getRPMLookUp(double distance){
         Map.Entry<Double, Double> closeVelLess = Map.entry(0.0, 0.0);
         Map.Entry<Double, Double> closeVelMore = Map.entry(0.0, 0.0);
-        boolean firstLess = true;
-        boolean firstMore = true;
         //Find the vel in the lookup map of either side of the target Velocity
-        for(Map.Entry<Double, Double> set : RobotConfig.Shooter.VisionSettings.frictionLookUpMap.entrySet()) {
-            if(set.getKey() < ballVelocity){
-                if(firstLess) { closeVelLess = set; firstLess = false;}
-                else if(set.getKey() < closeVelLess.getKey()){
-                    closeVelLess = set;
-                }
+        for(Map.Entry<Double, Double> set :RobotConfig.Shooter.VisionSettings.velLookUpMap.entrySet()) {
+            if(set.getKey() < distance &&  Math.abs(distance-set.getKey()) < Math.abs(distance-closeVelLess.getKey())){
+                closeVelLess = set;
             }
-            else if(set.getKey() > ballVelocity){
-                if(firstMore){closeVelMore = set; firstMore = false;}
-                if(set.getKey() > closeVelMore.getKey()){
-                    closeVelMore = set;
-                }
-
+            else if(set.getKey() > distance && Math.abs(distance-set.getKey()) < Math.abs(distance-closeVelMore.getKey())){
+                closeVelMore = set;
             }
-            else{
+            else if(set.getKey() == distance){
                 return set.getValue();
+                
             }
         }
         //Using thoose use linear interpolation to estimate what our RPM (set.getValue()) should be
-        return (closeVelMore.getValue() + closeVelLess.getValue())/2;
+        
+        double slope = (closeVelMore.getValue()-closeVelLess.getValue())  /  (closeVelMore.getKey()-closeVelLess.getKey());
+        return (distance - closeVelLess.getKey()) * slope + closeVelLess.getValue();
     }
     public static double calculateDistanceToTargetMeters(
             double targetMetersAboveCamera,

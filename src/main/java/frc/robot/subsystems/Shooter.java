@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.networktables.NetworkTable;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -24,8 +24,7 @@ import frc.robot.RobotMap;
 import frc.robot.sensors.Linebreaker;
 import frc.robot.subsystems.Vision.ComputerVision;
 import frc.robot.subsystems.Vision.Coordinates;
-import frc.robot.subsystems.Vision.PointV;
-import frc.robot.subsystems.Vision.ComputerVision.TargetingCameraProperties;
+
 import frc.robot.utilities.ShooterSetting;
 import frc.robot.utilities.di.DiInterfaces.IDisposable;
 import frc.robot.utilities.di.DiInterfaces.IInitializable;
@@ -102,7 +101,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     }
 
     public void run(ShooterSetting setting) {
-        if (aimbotEnabled) return;
+        //if (aimbotEnabled) return;
 
         this.currentSetting = setting;
         this.turretPidController.setIAccum(0);
@@ -182,33 +181,41 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
     public void onTick() {
         //ledRing.set(this.turretMotorEncoder.getVelocity() != 0);
-        
+        ledRing.set(true);
         if (this.aimbotEnabled) {
             
             ledRing.set(true);
-            this.targetPosition += ComputerVision.TargetingCameraProperties.Yaw;
+            //this.targetPosition += ComputerVision.TargetingCameraProperties.Yaw;
             distanceFromHub = ComputerVision.calculateDistanceToTargetMeters
             (RobotConfig.Shooter.VisionSettings.HubHeightMeters-RobotConfig.Shooter.VisionSettings.CAMERA_HEIGHT_METERS,          
             ComputerVision.TargetingCameraProperties.Pitch);
             //the 0.6778625 is half of the diameter of the outer side of the upper hub in meters
             //this gives us distance to center of the hub 
             /*System.out.println("x:" + ComputerVision.TargetingCameraProperties.x + "|| y:" +ComputerVision.TargetingCameraProperties.y);*/
-            this.aimBotVelocity = ComputerVision.findShooterPower(new PointV(0, distanceFromHub));
-            System.out.println((distanceFromHub)+"||"+this.aimBotVelocity); 
-            pitchEntrys.setDouble(distanceFromHub);
+            //this.aimBotVelocity = ComputerVision.findShooterPower(distanceFromHub);
+            //System.out.println((distanceFromHub)+"||"+this.aimBotVelocity); 
+            //pitchEntrys.setDouble(distanceFromHub);
 
             //Shouldn't add till tested
             
-            this.hoodSolenoid.set(Value.kForward);
+            //this.hoodSolenoid.set(Value.kForward);
             //this.currentSetting.rpm = this.aimBotVelocity*60/(0.1016*Math.PI);
-            this.targetPosition = ComputerVision.TargetingCameraProperties.Yaw;
-
-            
-            
-            
-            
+            if(ComputerVision.TargetingCameraProperties.Yaw > -0.69813 && Math.abs(this.targetPosition -  (this.getTurretRotations() + ComputerVision.TargetingCameraProperties.Yaw/(2*Math.PI))) < RobotConfig.Shooter.Aimbot.turretError ){    
+                this.targetPosition = (this.getTurretRotations() + ComputerVision.TargetingCameraProperties.Yaw/(2*Math.PI));   
+                System.out.println("Current:" + this.getTurretRotations()*2*Math.PI);
+                System.out.println("Add:" + ComputerVision.TargetingCameraProperties.Yaw);
+        
+            }
+            else{
+                if(this.getTurretRotations() ==  RobotConfig.Shooter.FORWARD_SOFT_LIMIT){
+                    this.targetPosition = RobotConfig.Shooter.REVERSE_SOFT_LIMIT;
+                }
+                else{
+                    this.targetPosition = RobotConfig.Shooter.FORWARD_SOFT_LIMIT;
+                }
+                
+            }
         }
-
         if (this.currentSetting.rpm == 0) this.shooterMotor.set(0);//this.shooterPidController.setReference(this.targetRPM, ControlType.k);
         else this.shooterPidController.setReference(this.currentSetting.rpm, ControlType.kVelocity);
 
@@ -249,9 +256,12 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
             }
 
         } else if (!this.runRelative || this.getTurretRotations() > RobotConfig.Shooter.FORWARD_SOFT_LIMIT + 0.005 || this.getTurretRotations() < RobotConfig.Shooter.REVERSE_SOFT_LIMIT - 0.005) {
-            if (this.targetPosition > RobotConfig.Shooter.FORWARD_SOFT_LIMIT) this.targetPosition = RobotConfig.Shooter.FORWARD_SOFT_LIMIT;
-            if (this.targetPosition < RobotConfig.Shooter.REVERSE_SOFT_LIMIT) this.targetPosition = RobotConfig.Shooter.REVERSE_SOFT_LIMIT;
-
+            if (this.targetPosition > RobotConfig.Shooter.FORWARD_SOFT_LIMIT){
+                this.targetPosition = RobotConfig.Shooter.FORWARD_SOFT_LIMIT;
+            } 
+            if (this.targetPosition < RobotConfig.Shooter.REVERSE_SOFT_LIMIT){
+                this.targetPosition = RobotConfig.Shooter.REVERSE_SOFT_LIMIT;
+            }
             this.turretPidController.setReference(this.turretRotationsToMotorRotations(this.targetPosition), ControlType.kPosition);
         } else {
             if (this.targetPosition > RobotConfig.Shooter.FORWARD_SOFT_LIMIT && this.relativePower > 0) {

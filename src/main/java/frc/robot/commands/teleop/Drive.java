@@ -77,8 +77,11 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
             return;
         }
 
-        this.drivetrain.arcadeDriveWithAntiTip(RobotConfig.Drivetrain.PowerCurve(this.oi.GetForwardSpeed()) * RobotConfig.Drivetrain.FORWARD_SENSITIVITY, RobotConfig.Drivetrain.PowerCurve(this.oi.GetTurnSpeed()) * RobotConfig.Drivetrain.TURN_SENSITIVITY);
-
+        if(!this.climbing){
+            this.drivetrain.arcadeDriveWithAntiTip(RobotConfig.Drivetrain.PowerCurve(this.oi.GetForwardSpeed()) * RobotConfig.Drivetrain.FORWARD_SENSITIVITY, RobotConfig.Drivetrain.PowerCurve(this.oi.GetTurnSpeed()) * RobotConfig.Drivetrain.TURN_SENSITIVITY);
+        }
+        else{ this.drivetrain.arcadeDrive(RobotConfig.Drivetrain.PowerCurve(this.oi.GetForwardSpeed()) * RobotConfig.Drivetrain.FORWARD_SENSITIVITY, RobotConfig.Drivetrain.PowerCurve(this.oi.GetTurnSpeed()) * RobotConfig.Drivetrain.TURN_SENSITIVITY);}
+        
         if (this.oi.StartSinging()) this.singing = true;
 
 
