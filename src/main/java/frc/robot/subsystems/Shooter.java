@@ -53,6 +53,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     int zeroStage = 0;
     boolean runRelative = false;
     double relativePower = 0;
+    boolean runLeft = true;
 
     private double aimBotVelocity;
     private DoubleSolenoid hoodSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
@@ -202,17 +203,20 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
             //this.currentSetting.rpm = this.aimBotVelocity*60/(0.1016*Math.PI);
             if(ComputerVision.TargetingCameraProperties.Yaw > -0.69813 && Math.abs(this.targetPosition -  (this.getTurretRotations() + ComputerVision.TargetingCameraProperties.Yaw/(2*Math.PI))) < RobotConfig.Shooter.Aimbot.turretError ){    
                 this.targetPosition = (this.getTurretRotations() + ComputerVision.TargetingCameraProperties.Yaw/(2*Math.PI));   
-                System.out.println("Current:" + this.getTurretRotations()*2*Math.PI);
-                System.out.println("Add:" + ComputerVision.TargetingCameraProperties.Yaw);
+
         
             }
             else{
                 if(this.getTurretRotations() ==  RobotConfig.Shooter.FORWARD_SOFT_LIMIT){
-                    this.targetPosition = RobotConfig.Shooter.REVERSE_SOFT_LIMIT;
+                    this.runLeft = false;
                 }
-                else{
+                else if (this.getTurretRotations() == RobotConfig.Shooter.REVERSE_SOFT_LIMIT){
+                    this.runLeft = true;
+                }                
+                if(runLeft){
                     this.targetPosition = RobotConfig.Shooter.FORWARD_SOFT_LIMIT;
                 }
+                else{ this.targetPosition = RobotConfig.Shooter.REVERSE_SOFT_LIMIT;}
                 
             }
         }
