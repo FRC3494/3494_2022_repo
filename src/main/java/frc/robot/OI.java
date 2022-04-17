@@ -38,10 +38,12 @@ public class OI implements ITickable {
         if (this.secondaryXbox.getBButtonPressed()) this.buttonSequence += 'b';
         if (this.secondaryXbox.getStartButtonPressed()) this.buttonSequence += 's';*/
 
-        if (this.secondaryXbox.getLeftTriggerAxis() > 0.25) {
+        if (this.secondaryXbox.getLeftTriggerAxis() > 0.25 || this.primaryXbox.getRightBumper()) {
             if (!this.queueBallPressed) this.queueBall = true;
             this.queueBallPressed = true;
         } else this.queueBallPressed = false;
+
+        
 
         this.pressingPOV = this.secondaryXbox.getPOV() != -1;
 
@@ -157,7 +159,7 @@ public class OI implements ITickable {
     }
 
     public int SetShooterSetting() {
-        if (this.secondaryXbox.getYButton()) return 4;
+        if (this.secondaryXbox.getYButton()) return 5;
         if (this.secondaryXbox.getXButton()) return 2;
         if (this.secondaryXbox.getAButton()) return 1;
         if (this.secondaryXbox.getBButton()) return 0;

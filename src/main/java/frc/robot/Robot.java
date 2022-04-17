@@ -5,12 +5,13 @@ import java.lang.reflect.InvocationTargetException;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.Pneumatics;
-import frc.robot.opmodes.autonomous.FourBalls;
 import frc.robot.opmodes.autonomous.ShootCloseHighThenDriveThenShootCloseHigh;
 import frc.robot.opmodes.autonomous.ShootCloseHighThenDriveThenShootFarHigh;
 import frc.robot.opmodes.autonomous.ShootCloseLowThenDrive;
 import frc.robot.opmodes.autonomous.ShootCloseLowThenDriveThenShootCloseLow;
-import frc.robot.opmodes.autonomous.TestODO;
+import frc.robot.opmodes.autonomous.ShootMiddleHighThenDriveThenShootMiddleHigh;
+import frc.robot.opmodes.autonomous.ShortyDriveThenShootMiddleHighTwice;
+import frc.robot.opmodes.autonomous.ShortyShootMiddleHighThenDriveThenShootMiddleHigh;
 import frc.robot.opmodes.debug.Test;
 import frc.robot.opmodes.teleop.Teleop;
 import frc.robot.subsystems.Climber;
@@ -30,7 +31,7 @@ public class Robot extends DiRobot {
 
     @Override
     public void Install() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        AutoConfigurable.DontGrabFrom.enableConfiguration = true; // disable for comp
+        AutoConfigurable.DontGrabFrom.enableConfiguration = false; // disable for comp
         this.Container.bind(RobotConfig.class).asSingle();
         this.Container.bind(OI.class).asSingle();
 
@@ -39,9 +40,12 @@ public class Robot extends DiRobot {
         this.autoChooser.addOption(ShootCloseLowThenDrive.class.getSimpleName(), ShootCloseLowThenDrive.class);
         this.autoChooser.addOption(ShootCloseLowThenDriveThenShootCloseLow.class.getSimpleName(), ShootCloseLowThenDriveThenShootCloseLow.class);
         this.autoChooser.addOption(ShootCloseHighThenDriveThenShootCloseHigh.class.getSimpleName(), ShootCloseHighThenDriveThenShootCloseHigh.class);
+        this.autoChooser.addOption(ShootMiddleHighThenDriveThenShootMiddleHigh.class.getSimpleName(), ShootMiddleHighThenDriveThenShootMiddleHigh.class);
+        this.autoChooser.addOption(ShortyShootMiddleHighThenDriveThenShootMiddleHigh.class.getSimpleName(), ShortyShootMiddleHighThenDriveThenShootMiddleHigh.class);
+        this.autoChooser.addOption(ShortyDriveThenShootMiddleHighTwice.class.getSimpleName(), ShortyDriveThenShootMiddleHighTwice.class);
         this.autoChooser.addOption(ShootCloseHighThenDriveThenShootFarHigh.class.getSimpleName(), ShootCloseHighThenDriveThenShootFarHigh.class);
-        this.autoChooser.addOption(FourBalls.class.getSimpleName(), FourBalls.class);
-        this.autoChooser.addOption(TestODO.class.getSimpleName(), TestODO.class);
+        //this.autoChooser.addOption(FourBalls.class.getSimpleName(), FourBalls.class);
+        //this.autoChooser.addOption(TestODO.class.getSimpleName(), TestODO.class);
         Shuffleboard.getTab("Autonomous").add(this.autoChooser).withSize(3, 1);
 
         this.Container.bindSubsystem(Electronics.class);

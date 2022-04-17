@@ -20,11 +20,14 @@ public class ShootBallTask extends AutoTask {
     @Override
     public void begin() {
         this.endTime = System.currentTimeMillis() + 3000;
+
         this.magazine.sendBall(shooter.getSetting().feedThrough);
+        this.magazine.reportShooterReady(this.shooter.atRPM() && this.shooter.isCentered() && !this.shooter.isZeroing());
     }
  
     @Override
     public boolean execute() {
+        this.magazine.reportShooterReady(this.shooter.atRPM() && this.shooter.isCentered() && !this.shooter.isZeroing());
         return !this.magazine.getSendingBall() || (this.endTime < System.currentTimeMillis());
     }
 

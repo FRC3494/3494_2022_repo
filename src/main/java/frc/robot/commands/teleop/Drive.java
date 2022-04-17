@@ -44,12 +44,10 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
 
     boolean autoClimberDeploy = false;
     boolean climbing = false;
+    boolean useAimBot = true;
     int autoClimbStage = 0;
     Timer autoClimbTimer = new Timer();
     Timer climbRampTimer = new Timer();
-
-    boolean shootABall = false;
-    boolean waitForShooterReady = false;
 
     public void onInitialize() {
         this.autoClimbTimer.reset();
@@ -58,7 +56,6 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
         this.drivetrain.stopAutoNav();
 
         this.shooter.enableTurret(true);
-        this.shooter.runTurret(RobotConfig.Shooter.TURRET_FRONT_POSITION);
     }
 
     public void onTick() {
@@ -96,12 +93,14 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
         } else this.shooter.stop();
 
         this.shooter.runTurretRelative(RobotConfig.Shooter.TurretPowerCurve(this.oi.GetTurretPower()) * RobotConfig.Shooter.TURRET_SPEED);
+        
         if (this.oi.GetTurretGoToFront()) this.shooter.runTurret(RobotConfig.Shooter.TURRET_FRONT_POSITION);
         if (this.oi.GetTurretGoToBack()) this.shooter.runTurret(RobotConfig.Shooter.TURRET_BACK_POSITION);
 
         if (this.oi.ToggleAimBot()) {
-            if (this.shooter.aimbotEnabled()) this.shooter.disableAimBot();
-            else this.shooter.enableAimBot();
+            this.useAimBot = !this.useAimBot;
+            //if (this.shooter.aimbotEnabled()) this.shooter.disableAimBot();
+            //else this.shooter.enableAimBot();
         }
 
 
@@ -163,17 +162,19 @@ public class Drive extends DiCommand implements IInitializable, ITickable, IDisp
             //if (this.oi.GetNeedOuttake()) {
                 leftMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED;
                 rightMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED;
-                stemMagazineSpeed = RobotConfig.Magazine.OUTTAKE_SPEED / 4;
+                stemMagazineSpeed = 0;//RobotConfig.Magazine.OUTTAKE_SPEED / 4;
             //}
     
             this.magazine.run(leftMagazineSpeed, rightMagazineSpeed, stemMagazineSpeed);
         } else {
-            if (this.oi.QueueBall() && newSetting != -1) waitForShooterReady = true;
+            this.magazine.reportShooterReady(this.shooter.atRPM() && (!useAimBot || this.shooter.isCentered()));
 
-            if (waitForShooterReady && this.shooter.atRPM()) {
-                this.magazine.sendBall(RobotConfig.Shooter.RPMS.get(this.selectedSetting).feedThrough);
-                waitForShooterReady = false;
-            }
+            if (this.oi.QueueBall() && newSetting != -1) this.magazine.sendBall(RobotConfig.Shooter.RPMS.get(this.selectedSetting).feedThrough);
+
+            if (this.magazine.getSendingBall() && this.useAimBot) this.shooter.enableAimBot();
+            else this.shooter.disableAimBot();
+
+            if (newSetting == -1 && this.magazine.getSendingBall()) this.magazine.cancelBall(); 
 
             this.magazine.useFastSpeed(this.oi.GetFrontIntakePower() > 0 || this.oi.GetBackIntakePower() > 0);
         }

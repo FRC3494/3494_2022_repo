@@ -80,17 +80,18 @@ public final class RobotConfig extends AutoConfigurable {
         }
         public static List<ShooterSetting> RPMS = new ArrayList<>() { {
             add(new ShooterSetting("Close Low", 1100.0, true, true));
-            add(new ShooterSetting("Close High", 2400.0, false, true));
-            add(new ShooterSetting("Middle High", 2600.0, true, true));
-            add(new ShooterSetting("Far High", 2800.0, true, true)); //3250
-            add(new ShooterSetting("Auto Shot", 2800.0, true, true)); //3250
+            add(new ShooterSetting("Close High", 2450.0, false, true));
+            add(new ShooterSetting("Middle High", 2400.0, true, true));
+            add(new ShooterSetting("Far High", 2850.0, true, true)); //3250
+            add(new ShooterSetting("Auto Shot", 3000.0, true, true)); //3250
+            add(new ShooterSetting("Semi-Middle High", 2200.0, true, true));
             //add(new ShooterSetting("Full Power", 5000.0));
             //new Pair<>("Auto Shot", -1);
         } };
 
-        public static double SHOOTER_RPM_TOLERANCE = 20;
+        public static double SHOOTER_RPM_TOLERANCE = 50;
 
-        public static double TURRET_SPEED = 0.5; //0.7
+        public static double TURRET_SPEED = 0.85; //0.7
 
         public static double TURRET_FRONT_POSITION = -0.08;
         public static double TURRET_BACK_POSITION = -0.58;
@@ -112,7 +113,7 @@ public final class RobotConfig extends AutoConfigurable {
             public static int TurretMotorPort = 2;
             public static double maxHoodAngle = 24;
             public static double minHoodAngle = 5;
-            public static double turretError = 0.05;
+            public static double turretError = 2.0/360.0;
         }
 
         public static class ShooterPIDF { //Tu= 0.242
@@ -145,7 +146,7 @@ public final class RobotConfig extends AutoConfigurable {
     }
 
     public static class Intake {
-        public static double INTAKE_SPEED = 0.4;
+        public static double INTAKE_SPEED = 0.6;
 
         public static double PowerCurve(double x) {
             if (x > 1) return 1;
@@ -159,15 +160,18 @@ public final class RobotConfig extends AutoConfigurable {
         public static double IDLE_SPEED = 0.4;
         public static double INTAKE_SPEED = 0.65;
         public static double OUTTAKE_SPEED = -0.75;
-        public static double LAUNCH_SPEED = 0.25;
+        public static double HORIZONTAL_LAUNCH_SPEED = 0.2;
+        public static double VERTICAL_LAUNCH_SPEED = 0.3;
 
         public static double SECONDS_TO_EJECT_HORIZONTAL = 2;
         public static double SECONDS_TO_SEND_BALL = 1;
         public static double SECONDS_TO_RUN_THROUGH_BALLS = 2;
 
         public static double SECONDS_RELOAD_RUN_IN = 0.1;
-        public static double SECONDS_RELOAD_RUN_UP = 0.02;
+        public static double SECONDS_RELOAD_RUN_UP = 0.00;
         public static double SECONDS_RELOAD_RUN_DOWN = 0.20;
+
+        public static int MIN_NUM_READYS = 50;
 
         public static int NUMBER_OF_LEDS = 98;
 

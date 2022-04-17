@@ -2,13 +2,16 @@ package frc.robot.opmodes.autonomous;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.commands.autonomous.AimbotTask;
 import frc.robot.commands.autonomous.OdometryMovement;
 import frc.robot.utilities.AutoOpMode;
 
 public class TestODO extends AutoOpMode {
     @Override
     public void sequence() {
+        this.Sequencer.queue(new AimbotTask(true));
         this.Sequencer.queue(new OdometryMovement(new Pose2d(2, 2, new Rotation2d(0))));
+        this.Sequencer.queue(new AimbotTask(false));
         /*this.Sequencer.queue(new ShootTask(RobotConfig.Shooter.RPMS.get(1)));
         this.Sequencer.queue(new ShootBallTask());
         this.Sequencer.queue(new WaitTask(100));

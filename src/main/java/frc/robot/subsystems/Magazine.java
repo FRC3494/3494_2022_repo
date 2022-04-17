@@ -151,47 +151,56 @@ public class Magazine extends DiSubsystem implements IInitializable, ITickable, 
     boolean sendBall = false;
     boolean runThrough = false;
     boolean startedSendTimer = false;
+    int numberOfReadys = 0;
+    boolean fullyReady = false;
+
     Timer sendBallTimer = new Timer();
+    boolean shooterReady = false;
 
     private void sendBallMagazine() {
-        if (runThrough) {
-            this.runRaw(RobotConfig.Magazine.LAUNCH_SPEED, RobotConfig.Magazine.LAUNCH_SPEED, RobotConfig.Magazine.LAUNCH_SPEED);
+        this.countNumberOfStatus();
+        
+        this.runRaw((this.fullyReady && runThrough) ? RobotConfig.Magazine.HORIZONTAL_LAUNCH_SPEED : 0, (this.fullyReady && runThrough) ? RobotConfig.Magazine.HORIZONTAL_LAUNCH_SPEED : 0, (this.fullyReady) ? RobotConfig.Magazine.VERTICAL_LAUNCH_SPEED : 0);
 
-            if (!this.startedSendTimer) {
-                this.sendBallTimer.start();
-                this.startedSendTimer = true;
-            }
-            
-            if (this.sendBallTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_TO_RUN_THROUGH_BALLS)) {
-                this.runRaw(0, 0, 0);
-                this.sendBall = false;
-                this.reloadingVertical = true;
-                this.sendBallTimer.stop();
-                this.sendBallTimer.reset();
-                this.startedSendTimer = false;
-                this.runThrough = false;
-            }
+        if (!this.fullyReady) {
+            if (this.startedSendTimer) this.sendBallTimer.stop();
+            this.startedSendTimer = false;
         } else {
-            this.runRaw(0, 0, RobotConfig.Magazine.LAUNCH_SPEED);
-    
-            if (!this.treeStemLinebreak.Broken() && !this.startedSendTimer) {
-                this.sendBallTimer.start();
-                this.startedSendTimer = true;
-            }
-            
-            if (this.sendBallTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_TO_SEND_BALL)) {
-                this.runRaw(0, 0, 0);
-                this.sendBall = false;
-                this.reloadingVertical = true;
-                this.sendBallTimer.stop();
-                this.sendBallTimer.reset();
-                this.startedSendTimer = false;
-                this.runThrough = false;
-            }
+            this.sendBallTimer.start();
+            this.startedSendTimer = true;
         }
+        
+        if (this.sendBallTimer.advanceIfElapsed(RobotConfig.Magazine.SECONDS_TO_RUN_THROUGH_BALLS)) {
+            this.runRaw(0, 0, 0);
+            this.sendBall = false;
+            this.reloadingVertical = true;
+            this.sendBallTimer.stop();
+            this.sendBallTimer.reset();
+            this.startedSendTimer = false;
+            this.runThrough = false;
+            this.numberOfReadys = 0;
+            this.fullyReady = false;
+        }
+    }
+    private void countNumberOfStatus() {
+        if (this.shooterReady) this.numberOfReadys++;
+
+        if (this.numberOfReadys >= RobotConfig.Magazine.MIN_NUM_READYS) this.fullyReady = true;
     }
     public boolean getSendingBall() {
         return this.sendBall;
+    }
+    public void reportShooterReady(boolean ready) {
+        this.shooterReady = ready;
+    }
+    public void cancelBall() {
+        this.runRaw(0, 0, 0);
+        this.sendBall = false;
+        this.reloadingVertical = true;
+        this.sendBallTimer.stop();
+        this.sendBallTimer.reset();
+        this.startedSendTimer = false;
+        this.runThrough = false;
     }
 
     boolean runFast = false;
