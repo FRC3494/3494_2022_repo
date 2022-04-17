@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -36,7 +37,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     private SparkMaxPIDController shooterPidController;
     private RelativeEncoder shooterMotorEncoder;
 
-    private double distanceFromHub;
+    //private double distanceFromHub;
     ShooterSetting currentSetting = ShooterSetting.Off;
     
     private CANSparkMax turretMotor = new CANSparkMax(RobotMap.Shooter.TURRET_MOTOR_CHANNEL, MotorType.kBrushless);
@@ -46,16 +47,18 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     private Linebreaker zeroLinebreak = new Linebreaker(RobotMap.Shooter.ZERO_LINEBREAK_CHANNEL, true);
 
     private NetworkTableEntry pitchEntrys = null;
-    boolean enableTurret = false;
+    boolean enableTurret = true;
     double targetPosition = 0;
+    double lastZeroError = 0;
     double zeroPosition = 0;
-    boolean needsZero = true; // CHANGE TO TRUE YOU WALLNUT
+    boolean needsZero = true; // CHANGE TO TRUE YOU WALLNUT // thank you
     int zeroStage = 0;
     boolean runRelative = false;
     double relativePower = 0;
     boolean runLeft = true;
 
-    private double aimBotVelocity;
+    double aimbotlessSpeed = 0;
+    //private double aimBotVelocity;
     private DoubleSolenoid hoodSolenoid = new DoubleSolenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL, RobotMap.Shooter.HOOD_SOLENOID_CHANNEL + 1);
 
     private Solenoid ledRing = new Solenoid(RobotMap.Pneumatics.SHOOTER_PCM, PneumaticsModuleType.CTREPCM, RobotMap.Shooter.LIGHTS_CHANNEL);
@@ -124,6 +127,10 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         this.needsZero = true;
     }
 
+    public boolean isZeroing() {
+        return this.needsZero;
+    }
+
     public void runHood(boolean position) {
         this.hoodSolenoid.set((position) ? Value.kForward : Value.kReverse);
     }
@@ -135,6 +142,10 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     public void runTurret(double rotations) {
         if (this.aimbotEnabled) return;
 
+        this.runTurret_private(rotations);
+    }
+
+    public void runTurret_private(double rotations) {
         this.runRelative = false;
         this.targetPosition = rotations;
     }
@@ -142,6 +153,10 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     public void runTurretRelative(double speed) {
         if (this.aimbotEnabled) return;
 
+        runTurretRelative_private(speed);
+    }
+
+    private void runTurretRelative_private(double speed) {
         if (speed <= RobotConfig.Shooter.TURRET_SPEED / 2 && speed >= -RobotConfig.Shooter.TURRET_SPEED / 2) {
             this.runRelative = false;
 
@@ -180,16 +195,25 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
         return this.aimbotEnabled;
     }
 
+    public void aimbotlessPower(double speed){
+        this.aimbotlessSpeed = speed;
+    }
+    public boolean isCentered(){
+        return Math.abs(this.targetPosition - (this.getTurretRotations() + ComputerVision.TargetingCameraProperties.Yaw/(2*Math.PI))) < RobotConfig.Shooter.Aimbot.turretError || !aimbotEnabled || !ComputerVision.TargetingCameraProperties.TargetFound;
+    }
+
     public void onTick() {
+        //`if (DriverStation.isEnabled()) this.turretMotor.setIdleMode(IdleMode.kBrake);
+        //`else this.turretMotor.setIdleMode(IdleMode.kCoast);
+
         //ledRing.set(this.turretMotorEncoder.getVelocity() != 0);
-        ledRing.set(true);
+        //ledRing.set(true);
         if (this.aimbotEnabled) {
             
-            ledRing.set(true);
             //this.targetPosition += ComputerVision.TargetingCameraProperties.Yaw;
-            distanceFromHub = ComputerVision.calculateDistanceToTargetMeters
-            (RobotConfig.Shooter.VisionSettings.HubHeightMeters-RobotConfig.Shooter.VisionSettings.CAMERA_HEIGHT_METERS,          
-            ComputerVision.TargetingCameraProperties.Pitch);
+            //distanceFromHub = ComputerVision.calculateDistanceToTargetMeters
+            //(RobotConfig.Shooter.VisionSettings.HubHeightMeters-RobotConfig.Shooter.VisionSettings.CAMERA_HEIGHT_METERS,          
+            //ComputerVision.TargetingCameraProperties.Pitch);
             //the 0.6778625 is half of the diameter of the outer side of the upper hub in meters
             //this gives us distance to center of the hub 
             /*System.out.println("x:" + ComputerVision.TargetingCameraProperties.x + "|| y:" +ComputerVision.TargetingCameraProperties.y);*/
@@ -201,13 +225,11 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
             
             //this.hoodSolenoid.set(Value.kForward);
             //this.currentSetting.rpm = this.aimBotVelocity*60/(0.1016*Math.PI);
-            if(ComputerVision.TargetingCameraProperties.Yaw > -0.69813 && Math.abs(this.targetPosition -  (this.getTurretRotations() + ComputerVision.TargetingCameraProperties.Yaw/(2*Math.PI))) < RobotConfig.Shooter.Aimbot.turretError ){    
-                this.targetPosition = (this.getTurretRotations() + ComputerVision.TargetingCameraProperties.Yaw/(2*Math.PI));   
-
-        
-            }
-            else{
-                if(this.getTurretRotations() ==  RobotConfig.Shooter.FORWARD_SOFT_LIMIT){
+            if(ComputerVision.TargetingCameraProperties.TargetFound && !this.isCentered()){    
+                this.targetPosition = (this.getTurretRotations() + ComputerVision.TargetingCameraProperties.Yaw/(2*Math.PI));
+            } else {
+                //this.runTurretRelative_private(this.aimbotlessSpeed);
+                /*if(this.getTurretRotations() ==  RobotConfig.Shooter.FORWARD_SOFT_LIMIT){
                     this.runLeft = false;
                 }
                 else if (this.getTurretRotations() == RobotConfig.Shooter.REVERSE_SOFT_LIMIT){
@@ -216,7 +238,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
                 if(runLeft){
                     this.targetPosition = RobotConfig.Shooter.FORWARD_SOFT_LIMIT;
                 }
-                else{ this.targetPosition = RobotConfig.Shooter.REVERSE_SOFT_LIMIT;}
+                else{ this.targetPosition = RobotConfig.Shooter.REVERSE_SOFT_LIMIT;}*/
                 
             }
         }
@@ -235,19 +257,22 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
 
         if (this.needsZero) {
             switch (this.zeroStage) {
-                case 0: 
+                case 0:
+                    this.registerErrorStart();
+                    this.zeroStage++;
+                case 1: 
                     if (this.zeroLinebreak.Broken()) {
                         this.turretMotor.set(0);
                         this.zeroStage++;
                     } else this.turretMotor.set(RobotConfig.Shooter.TURRET_SPEED / 4);
                     break;
-                case 1:
+                case 2:
                     if (this.zeroLinebreak.Broken()) {
                         this.turretMotor.set(0);
                         this.zeroStage++;
                     } else this.turretMotor.set(-RobotConfig.Shooter.TURRET_SPEED / 8);
                     break;
-                case 2:
+                case 3:
                     if (!this.zeroLinebreak.Broken()) {
                         this.turretMotor.set(0);
                         this.zeroStage++;
@@ -255,6 +280,7 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
                     break;
                 default:
                     this.zeroPosition = this.turretMotorEncoder.getPosition();
+                    this.returnTurretByError();
                     this.zeroStage = 0;
                     this.needsZero = false;
             }
@@ -308,10 +334,27 @@ public class Shooter extends DiSubsystem implements IInitializable, IDisposable,
     }
 
     public double turretMotorRotationsToRotations(double rotations) {
-        return  ((rotations - this.zeroPosition) / RobotConfig.Shooter.TURRET_RATIO) / RobotConfig.Shooter.TURRET_VERSAPLANETARY_RATIO;
+        return this.rawTurretMotorRotationsToRotations(rotations - this.zeroPosition);
+    }
+
+    public double rawTurretMotorRotationsToRotations(double rotations) {
+        return ((rotations) / RobotConfig.Shooter.TURRET_RATIO) / RobotConfig.Shooter.TURRET_VERSAPLANETARY_RATIO;
     }
 
     public double getTurretRotations() {
         return this.turretMotorRotationsToRotations(this.turretMotorEncoder.getPosition());
+    }
+    
+    double errorBeginning = 0;
+
+    private void registerErrorStart() {
+        this.errorBeginning = this.turretMotorEncoder.getPosition();
+    }
+
+    private void returnTurretByError() {
+        //this.runTurret(rotations);
+        this.runTurret_private(rawTurretMotorRotationsToRotations(this.errorBeginning - this.turretMotorEncoder.getPosition()));
+        //this.targetPosition = 
+        //this.turretMotorEncoder.getPosition();
     }
 }
