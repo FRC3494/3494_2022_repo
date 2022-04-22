@@ -1,10 +1,10 @@
 package frc.robot.commands.debug;
 
-import frc.robot.utilities.di.DiContainer.Inject;
-import frc.robot.utilities.di.DiInterfaces.IDisposable;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
-import frc.robot.utilities.di.DiInterfaces.ITickable;
-import frc.robot.utilities.wpilibdi.DiTest;
+import com.fizzyapple12.javadi.DiContainer.Inject;
+import com.fizzyapple12.javadi.DiInterfaces.IDisposable;
+import com.fizzyapple12.javadi.DiInterfaces.IInitializable;
+import com.fizzyapple12.javadi.DiInterfaces.ITickable;
+import com.fizzyapple12.wpilibdi.DiTest;
 import frc.robot.subsystems.Drivetrain;
 
 public class TestDrivetrain extends DiTest implements IInitializable, ITickable, IDisposable {

@@ -1,10 +1,10 @@
 package frc.robot.commands.teleop;
 
-import frc.robot.utilities.di.DiContainer.Inject;
-import frc.robot.utilities.di.DiInterfaces.IDisposable;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
-import frc.robot.utilities.di.DiInterfaces.ITickable;
-import frc.robot.utilities.wpilibdi.DiCommand;
+import com.fizzyapple12.javadi.DiContainer.Inject;
+import com.fizzyapple12.javadi.DiInterfaces.IDisposable;
+import com.fizzyapple12.javadi.DiInterfaces.IInitializable;
+import com.fizzyapple12.javadi.DiInterfaces.ITickable;
+import com.fizzyapple12.wpilibdi.DiCommand;
 import frc.robot.OI;
 import frc.robot.RobotConfig;
 import frc.robot.subsystems.Magazine;

@@ -7,11 +7,11 @@ import java.util.List;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc.robot.utilities.di.DiContainer.Inject;
-import frc.robot.utilities.di.DiInterfaces.IDisposable;
-import frc.robot.utilities.di.DiInterfaces.ITickable;
-import frc.robot.utilities.wpilibdi.DiCommand;
-import frc.robot.utilities.wpilibdi.DiOpMode;
+import com.fizzyapple12.javadi.DiContainer.Inject;
+import com.fizzyapple12.javadi.DiInterfaces.IDisposable;
+import com.fizzyapple12.javadi.DiInterfaces.ITickable;
+import com.fizzyapple12.wpilibdi.DiCommand;
+import com.fizzyapple12.wpilibdi.DiOpMode;
 
 public abstract class AutoOpMode extends DiOpMode {
     @Inject

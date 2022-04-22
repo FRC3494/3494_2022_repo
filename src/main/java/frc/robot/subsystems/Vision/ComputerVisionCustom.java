@@ -16,9 +16,9 @@ import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import frc.robot.RobotConfig;
-import frc.robot.utilities.di.DiInterfaces.IDisposable;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
-import frc.robot.utilities.wpilibdi.DiSubsystem;
+import com.fizzyapple12.javadi.DiInterfaces.IDisposable;
+import com.fizzyapple12.javadi.DiInterfaces.IInitializable;
+import com.fizzyapple12.wpilibdi.DiSubsystem;
 
 public class ComputerVisionCustom extends DiSubsystem implements IInitializable, IDisposable  {
     Thread cvThread;

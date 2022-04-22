@@ -1,7 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.utilities.di.DiInterfaces.ITickable;
+import com.fizzyapple12.javadi.DiInterfaces.ITickable;
 
 public class OI implements ITickable {
     XboxController primaryXbox = new XboxController(0);

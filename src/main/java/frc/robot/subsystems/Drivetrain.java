@@ -22,11 +22,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.robot.RobotConfig;
 import frc.robot.RobotMap;
-import frc.robot.utilities.di.DiContainer.Inject;
-import frc.robot.utilities.di.DiInterfaces.IDisposable;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
-import frc.robot.utilities.di.DiInterfaces.ITickable;
-import frc.robot.utilities.wpilibdi.DiSubsystem;
+import com.fizzyapple12.javadi.DiContainer.Inject;
+import com.fizzyapple12.javadi.DiInterfaces.IDisposable;
+import com.fizzyapple12.javadi.DiInterfaces.IInitializable;
+import com.fizzyapple12.javadi.DiInterfaces.ITickable;
+import com.fizzyapple12.wpilibdi.DiSubsystem;
 
 public class Drivetrain extends DiSubsystem implements IInitializable, ITickable, IDisposable {
     private WPI_TalonFX leftLeader = new WPI_TalonFX(RobotMap.Drivetrain.LEFT_LEADER_CHANNEL);

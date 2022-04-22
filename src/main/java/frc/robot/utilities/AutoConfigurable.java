@@ -10,8 +10,8 @@ import org.opencv.core.Scalar;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
-import frc.robot.utilities.di.DiInterfaces.ITickable;
+import com.fizzyapple12.javadi.DiInterfaces.IInitializable;
+import com.fizzyapple12.javadi.DiInterfaces.ITickable;
 
 public class AutoConfigurable implements ITickable, IInitializable {
     public static class DontGrabFrom {

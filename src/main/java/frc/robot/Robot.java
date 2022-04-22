@@ -23,8 +23,8 @@ import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Vision.ComputerVision;
 import frc.robot.utilities.AutoConfigurable;
-import frc.robot.utilities.wpilibdi.DiOpMode;
-import frc.robot.utilities.wpilibdi.DiRobot;
+import com.fizzyapple12.wpilibdi.DiOpMode;
+import com.fizzyapple12.wpilibdi.DiRobot;
 
 public class Robot extends DiRobot {
     SendableChooser<Class<?>> autoChooser;

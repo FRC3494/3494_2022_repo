@@ -3,7 +3,7 @@ package frc.robot.commands.autonomous;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.AutoTask;
-import frc.robot.utilities.di.DiContainer.Inject;
+import com.fizzyapple12.javadi.DiContainer.Inject;
 
 public class TurnTask extends AutoTask {
     @Inject

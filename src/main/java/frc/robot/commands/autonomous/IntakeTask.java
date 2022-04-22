@@ -3,7 +3,7 @@ package frc.robot.commands.autonomous;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.AutoTask;
-import frc.robot.utilities.di.DiContainer.Inject;
+import com.fizzyapple12.javadi.DiContainer.Inject;
 
 public class IntakeTask extends AutoTask {
     @Inject

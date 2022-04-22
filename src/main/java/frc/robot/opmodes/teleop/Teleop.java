@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.teleop.Drive;
-import frc.robot.utilities.wpilibdi.DiOpMode;
+import com.fizzyapple12.wpilibdi.DiOpMode;
 
 public class Teleop extends DiOpMode {
     @Override

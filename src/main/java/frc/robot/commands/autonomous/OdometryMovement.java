@@ -3,7 +3,7 @@ package frc.robot.commands.autonomous;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utilities.AutoTask;
-import frc.robot.utilities.di.DiContainer.Inject;
+import com.fizzyapple12.javadi.DiContainer.Inject;
 
 public class OdometryMovement extends AutoTask {
     @Inject

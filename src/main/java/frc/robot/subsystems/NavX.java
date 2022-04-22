@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.utilities.di.DiInterfaces.IInitializable;
-import frc.robot.utilities.wpilibdi.DiSubsystem;
+import com.fizzyapple12.javadi.DiInterfaces.IInitializable;
+import com.fizzyapple12.wpilibdi.DiSubsystem;
 
 public class NavX extends DiSubsystem implements IInitializable {
     private AHRS ahrs = new AHRS();

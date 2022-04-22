@@ -6,7 +6,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 import frc.robot.utilities.AutoTask;
-import frc.robot.utilities.di.DiContainer.Inject;
+import com.fizzyapple12.javadi.DiContainer.Inject;
 
 public abstract class CustomTask extends AutoTask {
     @Inject

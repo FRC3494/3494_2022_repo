@@ -72,6 +72,9 @@ dependencies {
     simulationRelease wpi.sim.enableRelease()
 
     testImplementation 'junit:junit:4.12'
+
+    implementation 'com.fizzyapple12.javadi:javadi:1.0.0'
+    implementation 'com.fizzyapple12.wpilibdi:wpilibdi:1.0.0'
 }
 
 // Simulation configuration (e.g. environment variables).

@@ -2,8 +2,8 @@ package frc.robot.opmodes.debug;
 
 import java.lang.reflect.InvocationTargetException;
 
-import frc.robot.utilities.wpilibdi.DiOpMode;
-import frc.robot.utilities.wpilibdi.DiTestProctor;
+import com.fizzyapple12.wpilibdi.DiOpMode;
+import com.fizzyapple12.wpilibdi.DiTestProctor;
 
 public class Test extends DiOpMode {
     @Override
